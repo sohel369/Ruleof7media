@@ -1,0 +1,523 @@
+{
+  "affiliates": [
+    {
+      "code": "rapidwrap-sydney",
+      "name": "David Carter",
+      "company": "Rapid Wrap Sydney",
+      "email": "david@rapidwrapsydney.com.au",
+      "tier": "Starter",
+      "territory": "Sydney CBD",
+      "earnings": 250,
+      "pendingCommission": 125,
+      "paidCommission": 125,
+      "recurringCommission": 125,
+      "oneTimeCommission": 125,
+      "clicks": 47,
+      "conversions": 3,
+      "assignedLeadsCount": 3,
+      "createdAt": "2026-07-01T12:00:00.000Z"
+    },
+    {
+      "code": "it-solution",
+      "name": "Md Sohel Rana",
+      "company": "IT Solution",
+      "email": "sohel0130844@gmail.com",
+      "tier": "Elite",
+      "territory": "Dhaka North",
+      "earnings": 1170,
+      "pendingCommission": 695,
+      "paidCommission": 475,
+      "recurringCommission": 585,
+      "oneTimeCommission": 585,
+      "clicks": 268,
+      "conversions": 12,
+      "assignedLeadsCount": 8,
+      "createdAt": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "code": "sohel-it",
+      "name": "rana",
+      "company": "sohel it",
+      "email": "sohe0000l@gmail.com",
+      "tier": "Starter",
+      "territory": "Thakurgaon",
+      "country": "Global",
+      "audienceSize": "< 1,000",
+      "earnings": 0,
+      "pendingCommission": 0,
+      "paidCommission": 0,
+      "recurringCommission": 0,
+      "oneTimeCommission": 0,
+      "clicks": 0,
+      "conversions": 0,
+      "assignedLeadsCount": 0,
+      "createdAt": "2026-07-18T16:49:30.519Z"
+    }
+  ],
+  "leads": [
+    {
+      "leadId": "lead_1783268172632_550",
+      "score": 79,
+      "stage": "Hot",
+      "status": "Completed",
+      "routingStatus": "Pending",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-06T17:21:26.457Z"
+        },
+        {
+          "event": "Video 1 Quiz Passed (3/3)",
+          "timestamp": "2026-07-06T17:21:26.457Z"
+        },
+        {
+          "event": "Video 2 Quiz Passed (3/3)",
+          "timestamp": "2026-07-06T17:23:42.314Z"
+        },
+        {
+          "event": "Video 3 Quiz Passed (3/3)",
+          "timestamp": "2026-07-06T17:24:52.169Z"
+        },
+        {
+          "event": "Video 4 Quiz Passed (3/3)",
+          "timestamp": "2026-07-06T17:25:47.094Z"
+        },
+        {
+          "event": "Video 5 Quiz Passed (3/3)",
+          "timestamp": "2026-07-06T17:30:38.441Z"
+        },
+        {
+          "event": "Video 6 Quiz Passed (3/3)",
+          "timestamp": "2026-07-06T17:31:20.449Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (1/1)",
+          "timestamp": "2026-07-06T17:36:47.753Z"
+        },
+        {
+          "event": "Video 1 Quiz Passed (3/3)",
+          "timestamp": "2026-07-17T18:33:19.208Z"
+        },
+        {
+          "event": "Video 2 Quiz Passed (3/3)",
+          "timestamp": "2026-07-17T18:33:56.817Z"
+        },
+        {
+          "event": "Video 1 Quiz Passed (3/3)",
+          "timestamp": "2026-07-18T15:21:00.996Z"
+        },
+        {
+          "event": "Video 2 Quiz Passed (3/3)",
+          "timestamp": "2026-07-18T15:34:47.022Z"
+        },
+        {
+          "event": "Video 3 Quiz Passed (3/3)",
+          "timestamp": "2026-07-18T15:35:28.491Z"
+        },
+        {
+          "event": "Video 4 Quiz Passed (3/3)",
+          "timestamp": "2026-07-18T15:36:27.564Z"
+        },
+        {
+          "event": "Video 5 Quiz Passed (3/3)",
+          "timestamp": "2026-07-18T15:37:31.645Z"
+        },
+        {
+          "event": "Video 6 Quiz Passed (3/3)",
+          "timestamp": "2026-07-18T15:38:32.108Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (1/1)",
+          "timestamp": "2026-07-18T15:39:46.829Z"
+        },
+        {
+          "event": "Video 6 Quiz Passed (3/3)",
+          "timestamp": "2026-07-18T15:42:12.403Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (1/1)",
+          "timestamp": "2026-07-18T15:46:19.946Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (1/1)",
+          "timestamp": "2026-07-18T15:51:16.161Z"
+        }
+      ],
+      "createdAt": "2026-07-06T17:21:26.458Z",
+      "refId": "it-solution",
+      "name": "Md Sohel Rana",
+      "email": "sohel0130844@gmail.com",
+      "company": "it solution",
+      "state": "dhaka",
+      "country": "Bangladesh",
+      "role": "ceo",
+      "industry": "Automotive Services",
+      "otherIndustry": "",
+      "serviceArea": "sydney",
+      "locations": "2-5",
+      "employees": "6-20",
+      "budget": "$500-$2,000",
+      "fleetSize": "1-3",
+      "vehicleTypes": [
+        "Trucks",
+        "Trailers",
+        "Cars/Sedans"
+      ],
+      "serviceTerritories": "dhaka",
+      "hasBranding": "Yes",
+      "allocDigital": "",
+      "allocTraditional": "",
+      "allocOther": "",
+      "localVsOnlinePct": "20% Local / 80% Online",
+      "goals": [
+        "Generate more local leads",
+        "Reduce ad waste",
+        "Increase trust",
+        "Other"
+      ],
+      "customGoals": "",
+      "quizAnswers": {
+        "1": {
+          "correct": 3,
+          "total": 3,
+          "selections": {
+            "0": 1,
+            "1": 1,
+            "2": 1,
+            "correct": 3,
+            "total": 3,
+            "selections": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "correct": 3,
+              "total": 3,
+              "selections": {
+                "0": 1,
+                "1": 1,
+                "2": 1
+              }
+            }
+          }
+        },
+        "2": {
+          "correct": 3,
+          "total": 3,
+          "selections": {
+            "0": 1,
+            "1": 1,
+            "2": 1,
+            "correct": 3,
+            "total": 3,
+            "selections": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "correct": 3,
+              "total": 3,
+              "selections": {
+                "0": 1,
+                "1": 1,
+                "2": 1
+              }
+            }
+          }
+        },
+        "3": {
+          "correct": 3,
+          "total": 3,
+          "selections": {
+            "0": 1,
+            "1": 1,
+            "2": 1,
+            "correct": 3,
+            "total": 3,
+            "selections": {
+              "0": 1,
+              "1": 1,
+              "2": 1
+            }
+          }
+        },
+        "4": {
+          "correct": 3,
+          "total": 3,
+          "selections": {
+            "0": 1,
+            "1": 1,
+            "2": 1,
+            "correct": 3,
+            "total": 3,
+            "selections": {
+              "0": 1,
+              "1": 1,
+              "2": 1
+            }
+          }
+        },
+        "5": {
+          "correct": 3,
+          "total": 3,
+          "selections": {
+            "0": 1,
+            "1": 1,
+            "2": 1,
+            "correct": 3,
+            "total": 3,
+            "selections": {
+              "0": 1,
+              "1": 1,
+              "2": 1
+            }
+          }
+        },
+        "6": {
+          "correct": 3,
+          "total": 3,
+          "selections": {
+            "0": 1,
+            "1": 1,
+            "2": 1,
+            "correct": 3,
+            "total": 3,
+            "selections": {
+              "0": 1,
+              "1": 1,
+              "2": 1,
+              "correct": 3,
+              "total": 3,
+              "selections": {
+                "0": 1,
+                "1": 1,
+                "2": 1
+              }
+            }
+          }
+        },
+        "7": {
+          "correct": 1,
+          "total": 1,
+          "selections": {
+            "0": 1,
+            "correct": 1,
+            "total": 1,
+            "selections": {
+              "0": 1,
+              "correct": 1,
+              "total": 1,
+              "selections": {
+                "0": 1,
+                "correct": 1,
+                "total": 1,
+                "selections": {
+                  "0": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "assignedAffiliateId": "it-solution",
+      "reviewTimeline": "Within 3 Months",
+      "phone": "01308446369",
+      "auditRequest": "Within Six Months",
+      "consultTime": "Evening",
+      "leadType": "B2B",
+      "subscriptionType": "Wrap Shop Subscription",
+      "commissionAmount": 55
+    },
+    {
+      "leadId": "lead_01",
+      "name": "Sarah Jenkins",
+      "email": "sarah@jenkinslogistics.com",
+      "company": "Jenkins Logistics",
+      "budget": "$5,000-$10,000",
+      "fleetSize": "10-50 Vehicles",
+      "score": 85,
+      "stage": "Hot",
+      "status": "Completed",
+      "refId": "rapidwrap-sydney",
+      "assignedAffiliateId": "rapidwrap-sydney",
+      "leadType": "B2B",
+      "subscriptionType": "Rule7 Subscription",
+      "commissionAmount": 125,
+      "routingStatus": "Auto-Routed",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-03T14:00:00.000Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (3/3)",
+          "timestamp": "2026-07-03T14:45:00.000Z"
+        }
+      ],
+      "createdAt": "2026-07-03T14:00:00.000Z"
+    },
+    {
+      "leadId": "lead_02",
+      "name": "Markus Aurelius",
+      "email": "markus@aureliustrading.de",
+      "company": "Aurelius Trading",
+      "budget": "$2,000-$5,000",
+      "fleetSize": "4-9 Vehicles",
+      "score": 75,
+      "stage": "Warm",
+      "status": "Completed",
+      "refId": "rapidwrap-sydney",
+      "assignedAffiliateId": "rapidwrap-sydney",
+      "leadType": "B2B",
+      "subscriptionType": "ScanThemAll Subscription",
+      "commissionAmount": 75,
+      "routingStatus": "Auto-Routed",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-04T09:00:00.000Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (3/3)",
+          "timestamp": "2026-07-04T09:30:00.000Z"
+        }
+      ],
+      "createdAt": "2026-07-04T09:00:00.000Z"
+    },
+    {
+      "leadId": "lead_03",
+      "name": "Thomas Miller",
+      "email": "tom@millercabinets.com",
+      "company": "Miller Cabinets",
+      "budget": "$500-$2,000",
+      "fleetSize": "1-3 Vehicles",
+      "score": 62,
+      "stage": "Cold",
+      "status": "Completed",
+      "refId": "rapidwrap-sydney",
+      "assignedAffiliateId": "rapidwrap-sydney",
+      "leadType": "B2C",
+      "subscriptionType": "Wrap Shop Subscription",
+      "commissionAmount": 50,
+      "routingStatus": "Auto-Routed",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-04T15:00:00.000Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (2/3)",
+          "timestamp": "2026-07-04T15:40:00.000Z"
+        }
+      ],
+      "createdAt": "2026-07-04T15:00:00.000Z"
+    },
+    {
+      "leadId": "lead_04",
+      "name": "Al Amin",
+      "email": "alamin@dhakatech.com",
+      "company": "Dhaka Tech Solutions",
+      "budget": "$10,000+",
+      "fleetSize": "50+ Vehicles",
+      "score": 95,
+      "stage": "Hot",
+      "status": "Completed",
+      "refId": "it-solution",
+      "assignedAffiliateId": "it-solution",
+      "leadType": "B2B",
+      "subscriptionType": "Rule7 Subscription",
+      "commissionAmount": 250,
+      "routingStatus": "Auto-Routed",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-04T10:00:00.000Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (3/3)",
+          "timestamp": "2026-07-04T10:50:00.000Z"
+        }
+      ],
+      "createdAt": "2026-07-04T10:00:00.000Z"
+    },
+    {
+      "leadId": "lead_05",
+      "name": "Robert Downey",
+      "email": "robert@starkindustries.com",
+      "company": "Stark Fleet Builders",
+      "budget": "$5,000-$10,000",
+      "fleetSize": "10-50 Vehicles",
+      "score": 88,
+      "stage": "Hot",
+      "status": "Completed",
+      "refId": "it-solution",
+      "assignedAffiliateId": "it-solution",
+      "leadType": "B2B",
+      "subscriptionType": "ScanThemAll Subscription",
+      "commissionAmount": 150,
+      "routingStatus": "Auto-Routed",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-04T11:00:00.000Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (3/3)",
+          "timestamp": "2026-07-04T11:35:00.000Z"
+        }
+      ],
+      "createdAt": "2026-07-04T11:00:00.000Z"
+    },
+    {
+      "leadId": "lead_06",
+      "name": "Kazi Rakib",
+      "email": "rakib@kazifoods.com",
+      "company": "Kazi Foods",
+      "budget": "$2,000-$5,000",
+      "fleetSize": "4-9 Vehicles",
+      "score": 72,
+      "stage": "Warm",
+      "status": "Completed",
+      "refId": "it-solution",
+      "assignedAffiliateId": "it-solution",
+      "leadType": "B2B",
+      "subscriptionType": "Wrap Shop Subscription",
+      "commissionAmount": 75,
+      "routingStatus": "Auto-Routed",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-04T12:00:00.000Z"
+        },
+        {
+          "event": "Video 7 Quiz Passed (3/3)",
+          "timestamp": "2026-07-04T12:45:00.000Z"
+        }
+      ],
+      "createdAt": "2026-07-04T12:00:00.000Z"
+    },
+    {
+      "leadId": "lead_07",
+      "name": "John Doe",
+      "email": "john@doe-services.com",
+      "company": "Doe Services",
+      "budget": "$500-$2,000",
+      "fleetSize": "1-3 Vehicles",
+      "score": 45,
+      "stage": "Cold",
+      "status": "Video 3 Complete",
+      "refId": "it-solution",
+      "assignedAffiliateId": "it-solution",
+      "leadType": "B2C",
+      "subscriptionType": "",
+      "commissionAmount": 0,
+      "routingStatus": "Pending",
+      "timeline": [
+        {
+          "event": "Funnel Session Initialized",
+          "timestamp": "2026-07-05T08:00:00.000Z"
+        }
+      ],
+      "createdAt": "2026-07-05T08:00:00.000Z"
+    }
+  ],
+  "events": []
+}

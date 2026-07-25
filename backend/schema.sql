@@ -1,5 +1,5 @@
--- Enable PostGIS for geospatial queries
-CREATE EXTENSION IF NOT EXISTS postgis;
+-- Enable PostGIS for geospatial queries (Commented out to prevent permission errors on Railway)
+-- CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- 1. Wrapping Shops
 CREATE TABLE IF NOT EXISTS wrapping_shops (
@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS wrapping_shops (
 -- 2. Leads (Client Contacts)
 CREATE TABLE IF NOT EXISTS leads (
     lead_id SERIAL PRIMARY KEY,
+    legacy_lead_id VARCHAR(255) UNIQUE,
+    ref_id VARCHAR(255),
     shop_id INTEGER REFERENCES wrapping_shops(shop_id) ON DELETE CASCADE,
     client_name VARCHAR(255) NOT NULL,
     client_email VARCHAR(255) NOT NULL,
@@ -55,8 +57,9 @@ CREATE TABLE IF NOT EXISTS client_outlets (
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(client_email);
 CREATE INDEX IF NOT EXISTS idx_leads_domain ON leads(domain);
-CREATE INDEX IF NOT EXISTS idx_leads_location ON leads USING GIST (ST_SetSRID(ST_MakePoint(client_lon, client_lat), 4326));
-CREATE INDEX IF NOT EXISTS idx_shops_location ON wrapping_shops USING GIST (ST_SetSRID(ST_MakePoint(central_base_lon, central_base_lat), 4326));
+-- CREATE INDEX IF NOT EXISTS idx_leads_location ON leads USING GIST (ST_SetSRID(ST_MakePoint(client_lon, client_lat), 4326));
+-- CREATE INDEX IF NOT EXISTS idx_shops_location ON wrapping_shops USING GIST (ST_SetSRID(ST_MakePoint(central_base_lon, central_base_lat), 4326));
+
 
 -- Function: Calculate distance (Haversine)
 CREATE OR REPLACE FUNCTION calculate_distance(

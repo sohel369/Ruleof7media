@@ -60,15 +60,16 @@ app.get('/api/leads', async (req, res) => {
   try {
     const { refId, assignedAffiliateId, stage, industry, search } = req.query;
     const result = await db.query('SELECT * FROM leads');
-    let leads = result.rows.map(row => ({
-      ...row,
-      name: row.client_name || row.name,
-      email: row.client_email || row.email,
-      company: row.client_business_name || row.company,
-      assignedAffiliateId: row.assigned_affiliate_id,
-      refId: row.ref_id,
-      leadId: row.legacy_lead_id || row.lead_id
-    }));
+      let leads = result.rows.map(row => ({
+        ...(row.extra_data || {}),
+        ...row,
+        name: row.client_name || row.name,
+        email: row.client_email || row.email,
+        company: row.client_business_name || row.company,
+        assignedAffiliateId: row.assigned_affiliate_id,
+        refId: row.ref_id,
+        leadId: row.legacy_lead_id || row.lead_id
+      }));
     
     // Filtering
     if (refId) {
@@ -127,19 +128,21 @@ app.post('/api/leads/step', async (req, res) => {
   try {
     const { leadId, step, data } = req.body;
     
-    // Save minimal data into PostgreSQL for step 1 so dashboard testing works
-    if (step === 1 && data.name && data.email) {
+    // Save or update data into PostgreSQL for all steps
+    if (data.name && data.email) {
        const refId = data.refId || data.ref || null;
+       const extraData = JSON.stringify(data);
        await db.query(
-         `INSERT INTO leads (legacy_lead_id, client_name, client_email, client_business_name, assigned_affiliate_id, ref_id)
-          VALUES ($1, $2, $3, $4, $5, $6)
+         `INSERT INTO leads (legacy_lead_id, client_name, client_email, client_business_name, assigned_affiliate_id, ref_id, extra_data)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
           ON CONFLICT (legacy_lead_id) DO UPDATE SET 
             client_name = EXCLUDED.client_name, 
             client_email = EXCLUDED.client_email, 
             client_business_name = EXCLUDED.client_business_name,
             assigned_affiliate_id = COALESCE(leads.assigned_affiliate_id, EXCLUDED.assigned_affiliate_id),
-            ref_id = EXCLUDED.ref_id`,
-         [leadId, data.name, data.email, data.company || '', refId, refId]
+            ref_id = EXCLUDED.ref_id,
+            extra_data = EXCLUDED.extra_data`,
+         [leadId, data.name, data.email, data.company || '', refId, refId, extraData]
        );
     }
 

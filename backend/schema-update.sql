@@ -1,4 +1,4 @@
-CREATE TABLE affiliates (
+CREATE TABLE IF NOT EXISTS affiliates (
     code VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255),
     company VARCHAR(255),

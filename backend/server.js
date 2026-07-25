@@ -28,27 +28,17 @@ app.use(express.json());
 async function initServer() {
   await db.connectDb();
   
-  // Auto-create necessary tables
+  // Auto-create necessary tables from schema files
   try {
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS affiliates (
-          code VARCHAR(255) PRIMARY KEY,
-          name VARCHAR(255),
-          company VARCHAR(255),
-          email VARCHAR(255),
-          website VARCHAR(255),
-          tier VARCHAR(50) DEFAULT 'Starter',
-          territory VARCHAR(255),
-          country VARCHAR(255),
-          audience_size VARCHAR(255),
-          clicks INTEGER DEFAULT 0,
-          conversions INTEGER DEFAULT 0,
-          assigned_leads_count INTEGER DEFAULT 0
-      );
-    `);
-    console.log('Verified affiliates table exists.');
+    const schemaSql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
+    await db.query(schemaSql);
+    console.log('Executed schema.sql successfully.');
+    
+    const schemaUpdateSql = fs.readFileSync(path.join(__dirname, 'schema-update.sql'), 'utf8');
+    await db.query(schemaUpdateSql);
+    console.log('Executed schema-update.sql successfully.');
   } catch (err) {
-    console.error('Error creating affiliates table:', err);
+    console.error('Error creating database tables from schema files:', err);
   }
 }
 

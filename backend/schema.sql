@@ -2,7 +2,7 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- 1. Wrapping Shops
-CREATE TABLE wrapping_shops (
+CREATE TABLE IF NOT EXISTS wrapping_shops (
     shop_id SERIAL PRIMARY KEY,
     business_name VARCHAR(255) NOT NULL,
     central_base_lat DECIMAL(10,8) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE wrapping_shops (
 );
 
 -- 2. Leads (Client Contacts)
-CREATE TABLE leads (
+CREATE TABLE IF NOT EXISTS leads (
     lead_id SERIAL PRIMARY KEY,
     shop_id INTEGER REFERENCES wrapping_shops(shop_id) ON DELETE CASCADE,
     client_name VARCHAR(255) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE leads (
 );
 
 -- 3. Lead Claims Audit
-CREATE TABLE lead_claims (
+CREATE TABLE IF NOT EXISTS lead_claims (
     claim_id SERIAL PRIMARY KEY,
     lead_id INTEGER REFERENCES leads(lead_id) ON DELETE CASCADE,
     shop_id INTEGER REFERENCES wrapping_shops(shop_id),
@@ -42,7 +42,7 @@ CREATE TABLE lead_claims (
 );
 
 -- 4. Multi-Outlet Clients
-CREATE TABLE client_outlets (
+CREATE TABLE IF NOT EXISTS client_outlets (
     outlet_id SERIAL PRIMARY KEY,
     lead_id INTEGER REFERENCES leads(lead_id) ON DELETE CASCADE,
     outlet_address TEXT,
@@ -53,10 +53,10 @@ CREATE TABLE client_outlets (
 );
 
 -- Indexes for performance
-CREATE INDEX idx_leads_email ON leads(client_email);
-CREATE INDEX idx_leads_domain ON leads(domain);
-CREATE INDEX idx_leads_location ON leads USING GIST (ST_SetSRID(ST_MakePoint(client_lon, client_lat), 4326));
-CREATE INDEX idx_shops_location ON wrapping_shops USING GIST (ST_SetSRID(ST_MakePoint(central_base_lon, central_base_lat), 4326));
+CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(client_email);
+CREATE INDEX IF NOT EXISTS idx_leads_domain ON leads(domain);
+CREATE INDEX IF NOT EXISTS idx_leads_location ON leads USING GIST (ST_SetSRID(ST_MakePoint(client_lon, client_lat), 4326));
+CREATE INDEX IF NOT EXISTS idx_shops_location ON wrapping_shops USING GIST (ST_SetSRID(ST_MakePoint(central_base_lon, central_base_lat), 4326));
 
 -- Function: Calculate distance (Haversine)
 CREATE OR REPLACE FUNCTION calculate_distance(

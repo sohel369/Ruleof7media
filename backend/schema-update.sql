@@ -15,3 +15,8 @@ CREATE TABLE IF NOT EXISTS affiliates (
 
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS assigned_affiliate_id VARCHAR(255) REFERENCES affiliates(code);
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS extra_data JSONB DEFAULT '{}'::jsonb;
+
+-- Add lat and lon for geocoding to affiliates
+ALTER TABLE affiliates ADD COLUMN IF NOT EXISTS lat DECIMAL(10,8);
+ALTER TABLE affiliates ADD COLUMN IF NOT EXISTS lon DECIMAL(11,8);
+

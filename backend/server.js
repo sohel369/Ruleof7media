@@ -9,6 +9,8 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_place
 
 const db = require('./db');
 const { calculateScore } = require('./scoring');
+const { sendEmail } = require('./mailer');
+const { geocodeAddress } = require('./utils');
 
 const app = express();
 const server = http.createServer(app);
@@ -27,8 +29,8 @@ app.use(express.json());
 // Initialize Database
 async function initServer() {
   await db.connectDb();
-  
-  // Auto-create necessary tables from schema files
+
+// Auto-create necessary tables from schema files
   try {
     const schemaSql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
     await db.query(schemaSql);
@@ -124,27 +126,92 @@ app.get('/api/leads/:id', async (req, res) => {
 });
 
 // 3. POST Save Funnel Step (Progressive Data Capture)
-app.post('/api/leads/step', async (req, res) => {
-  try {
-    const { leadId, step, data } = req.body;
-    
-    // Save or update data into PostgreSQL for all steps
-    if (data.name && data.email) {
-       const refId = data.refId || data.ref || null;
-       const extraData = JSON.stringify(data);
-       await db.query(
-         `INSERT INTO leads (legacy_lead_id, client_name, client_email, client_business_name, assigned_affiliate_id, ref_id, extra_data)
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
-          ON CONFLICT (legacy_lead_id) DO UPDATE SET 
-            client_name = EXCLUDED.client_name, 
-            client_email = EXCLUDED.client_email, 
-            client_business_name = EXCLUDED.client_business_name,
-            assigned_affiliate_id = COALESCE(leads.assigned_affiliate_id, EXCLUDED.assigned_affiliate_id),
-            ref_id = EXCLUDED.ref_id,
-            extra_data = EXCLUDED.extra_data`,
-         [leadId, data.name, data.email, data.company || '', refId, refId, extraData]
-       );
-    }
+  app.post('/api/leads/step', async (req, res) => {
+    try {
+      const { leadId, step, data } = req.body;
+      
+      // Save or update data into PostgreSQL for all steps
+      if (data.name && data.email) {
+         let assigned_affiliate_id = data.refId || data.ref || null;
+         let client_lat = null;
+         let client_lon = null;
+         let domain = data.email.split('@')[1];
+
+         if (step === 1) {
+            // Only geocode on step 1 to save API calls
+            if (data.state && data.country) {
+               const coords = await geocodeAddress(`${data.state}, ${data.country}`);
+               if (coords) { 
+                 client_lat = coords.lat; 
+                 client_lon = coords.lon; 
+               }
+            }
+
+            // Exclusivity and Proximity Routing
+            if (!assigned_affiliate_id) {
+                // Check exact email match
+                const emailCheck = await db.query(`SELECT assigned_affiliate_id FROM leads WHERE client_email = $1 AND assigned_affiliate_id IS NOT NULL LIMIT 1`, [data.email]);
+                if (emailCheck.rows.length > 0) {
+                    assigned_affiliate_id = emailCheck.rows[0].assigned_affiliate_id;
+                } else {
+                    // Check domain match
+                    const domainCheck = await db.query(`SELECT assigned_affiliate_id FROM leads WHERE domain = $1 AND assigned_affiliate_id IS NOT NULL LIMIT 1`, [domain]);
+                    if (domainCheck.rows.length > 0) {
+                        assigned_affiliate_id = domainCheck.rows[0].assigned_affiliate_id;
+                    } else if (client_lat !== null && client_lon !== null) {
+                        // Proximity check (30-mile radius, closest wins)
+                        const closestAffiliate = await db.query(`
+                            SELECT code, calculate_distance(lat, lon, $1, $2) as distance_miles
+                            FROM affiliates
+                            WHERE lat IS NOT NULL AND lon IS NOT NULL
+                              AND calculate_distance(lat, lon, $1, $2) <= 30
+                            ORDER BY distance_miles ASC
+                            LIMIT 1
+                        `, [client_lat, client_lon]);
+                        if (closestAffiliate.rows.length > 0) {
+                            assigned_affiliate_id = closestAffiliate.rows[0].code;
+                        }
+                    }
+                }
+            }
+         }
+
+         const extraData = JSON.stringify(data);
+         await db.query(
+           `INSERT INTO leads (legacy_lead_id, client_name, client_email, client_business_name, assigned_affiliate_id, ref_id, extra_data, client_lat, client_lon, domain)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            ON CONFLICT (legacy_lead_id) DO UPDATE SET 
+              client_name = EXCLUDED.client_name, 
+              client_email = EXCLUDED.client_email, 
+              client_business_name = EXCLUDED.client_business_name,
+              assigned_affiliate_id = COALESCE(leads.assigned_affiliate_id, EXCLUDED.assigned_affiliate_id),
+              ref_id = EXCLUDED.ref_id,
+              extra_data = EXCLUDED.extra_data,
+              domain = COALESCE(leads.domain, EXCLUDED.domain)`,
+           [leadId, data.name, data.email, data.company || '', assigned_affiliate_id, data.refId || data.ref || null, extraData, client_lat, client_lon, domain]
+         );
+      }
+
+      // Send Gmail Notification on completion (Step 7)
+      if (step === 7 && data.name && data.email) {
+         const leadRow = await db.query(`SELECT assigned_affiliate_id FROM leads WHERE legacy_lead_id = $1`, [leadId]);
+         const partnerCode = leadRow.rows[0]?.assigned_affiliate_id;
+         if (partnerCode) {
+            const partnerRow = await db.query(`SELECT email, name FROM affiliates WHERE code = $1`, [partnerCode]);
+            if (partnerRow.rows.length > 0) {
+                const partnerEmail = partnerRow.rows[0].email;
+                const html = `
+                  <h2>New Qualified Lead</h2>
+                  <p><strong>Name:</strong> ${data.name}</p>
+                  <p><strong>Email:</strong> ${data.email}</p>
+                  <p><strong>Company:</strong> ${data.company}</p>
+                  <p><strong>Score:</strong> 100 / Hot</p>
+                  <p>Login to your Partner Portal to view full details.</p>
+                `;
+                await sendEmail(partnerEmail, 'New Lead Assigned: ' + data.name, html);
+            }
+         }
+      }
 
     res.json({
       success: true,
@@ -221,18 +288,28 @@ app.post('/api/affiliates/apply', async (req, res) => {
     
     // Generate a simple unique referral code based on company name
     const code = company.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    
-    const existingResult = await db.query('SELECT * FROM affiliates WHERE code = $1', [code]);
-    if (existingResult.rows.length > 0) {
-      return res.status(400).json({ error: 'A partner with this company name already exists.' });
-    }
+        const existingResult = await db.query('SELECT * FROM affiliates WHERE code = $1', [code]);
+      if (existingResult.rows.length > 0) {
+        return res.status(400).json({ error: 'A partner with this company name already exists.' });
+      }
+      
+      let lat = null;
+      let lon = null;
+      if (territory && territory !== 'Global') {
+        const searchQuery = country !== 'Global' ? `${territory}, ${country}` : territory;
+        const coords = await geocodeAddress(searchQuery);
+        if (coords) {
+          lat = coords.lat;
+          lon = coords.lon;
+        }
+      }
 
-    const insertResult = await db.query(
-      `INSERT INTO affiliates (code, name, company, email, website, territory, country, audience_size, tier)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      [code, name, company, email, website || '', territory || 'Global', country || 'Global', audienceSize || '< 1,000', tier || 'Starter']
-    );
-    const newAffiliate = insertResult.rows[0];
+      const insertResult = await db.query(
+        `INSERT INTO affiliates (code, name, company, email, website, territory, country, audience_size, tier, lat, lon)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+        [code, name, company, email, website || '', territory || 'Global', country || 'Global', audienceSize || '< 1,000', tier || 'Starter', lat, lon]
+      );
+      const newAffiliate = insertResult.rows[0];
 
     // Notify CRM Admin of new affiliate application
     io.emit('new_lead', {

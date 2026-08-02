@@ -219,48 +219,50 @@ const QUIZZES = {
 const VIDEOS_CONTENT = {
   1: {
     url: "https://cinema8.com/video/5J7zYBVX",
-      title: "Video 1: Why Digital Ads May Increase Customer Acquisition Costs",
-    duration: 12,
+    title: "Video 1: Why Digital Ads May Increase Customer Acquisition Costs",
+    duration: 120,
+    durationText: "~120 seconds",
     description: "If your digital advertising budget keeps growing but results feel harder to predict, you're not alone. Many small businesses are watching money disappear into platforms that demand constant spend with no guarantee of return. In this video we break down exactly why internet advertising is burning budget right now — and what smarter options exist for businesses that need reliable visibility without the endless monthly drain.",
     points: ["Rising digital auction prices", "Ad blindness and banner fatigue", "The Rule of 7 in brand recall"]
   },
   2: {
     url: "https://cinema8.com/video/WD9Wb8VJ",
-      title: "Video 2: The Hidden Costs of Staying Invisible in a Crowded Market",
-    duration: 15,
+    title: "Video 2: The Hidden Costs of Staying Invisible in a Crowded Market",
+    duration: 150,
+    durationText: "~150 seconds",
     description: "You can spend thousands online and still be invisible to the customers driving past your door every day. This video reveals the hidden cost of staying invisible in your own local market — and why even large media companies invest in real-world presence to stay top-of-mind.",
     points: ["Bid bidding algorithms", "Why click quality is decreasing", "Controlling your acquisition channel"]
   },
   3: {
     url: "https://cinema8.com/video/AJE7vQgD",
       title: "Video 3: AI Noise vs. Real-World Trust – Why Digital Feels Broken",
-    duration: 18,
+    duration: 180,
     description: "Customers are scrolling past more ads than ever — and trusting them less. When every feed is filled with AI-generated content, authentic businesses struggle to stand out. This video examines why digital advertising feels broken and how real-world presence builds the trust that screens can no longer deliver.",
     points: ["Cost per thousand impressions comparison", "The visual density factor", "Fleet branding ROI"]
   },
   4: {
     url: "https://cinema8.com/video/YDpY5j0X",
       title: "Video 4: Recession-Proof Your Marketing: Stop Bleeding Cash on Unreliable Ads",
-    duration: 20,
+    duration: 200,
     description: "With costs rising and uncertainty in the economy, every marketing dollar must work harder. This video shows why continuing to pour money into unreliable digital ads is a risk — and how durable, low ongoing-cost approaches can protect your budget while still delivering consistent local visibility.",
     points: ["Mapping local service areas", "Routing logic and response times", "Dominating regional search offline"]
   },
   5: {
     title: "Video 5: Local Domination: Reaching Customers Where They Actually Are",
-    duration: 33,
+    duration: 330,
     durationText: "5 minutes 30 seconds",
     description: "Most of your best customers live and work within a short drive of your business. Yet digital campaigns often chase audiences far outside that zone. This video explores how to dominate your actual service area with high-frequency, relevant exposure — including groundbreaking practical options even if you don't own a fleet of vehicles.",
     points: ["Scale dynamics of fleet wraps", "Standardizing brand identity", "Resale value protection"]
   },
   6: {
     title: "Video 6: The Trust Factor – Why Physical Presence Builds Loyalty Faster",
-    duration: 16,
+    duration: 160,
     description: "Trust is the real currency in local business. This video reveals why professional physical presence builds credibility and loyalty faster than digital messages alone — and how the right real-world strategy creates daily recognition that turns into referrals and repeat business.",
     points: ["Designing scanning call-to-actions", "Cookie-less attribution", "Simulating instant CRM syncing"]
   },
   7: {
     title: "Video 7: Future-Proof Marketing: Low CPM Strategies That Deliver Real ROI",
-    duration: 34.5,
+    duration: 345,
     durationText: "5 minutes 45 seconds",
     description: "After exploring the problems with digital advertising, this final video delivers the complete solution. You'll see how to achieve dramatically lower cost-per-thousand impressions, consistent local reach, and a marketing approach that continues working Year after year — without the ongoing budget bleed of social media.",
     points: ["Selecting wrap designs that convert", "Activating your tracking dashboard", "Finalizing your Rule7 qualification score"]
@@ -1475,7 +1477,7 @@ export const Funnel = () => {
               <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-2 py-1 rounded border border-neonCyan/20">
                 Gated Module {currentStep}
               </span>
-              <span className="text-xs text-slate-500">Duration: {videoContent?.durationText || `~${videoContent?.duration * 10} seconds`}</span>
+              <span className="text-xs text-slate-500">Duration: {videoContent?.durationText || `~${videoContent?.duration} seconds`}</span>
             </div>
             <h1 className="text-xl font-grotesk font-bold text-white mb-2">{videoContent?.title}</h1>
             <p className="text-sm text-slate-400 mb-6">{videoContent?.description}</p>
@@ -1548,8 +1550,8 @@ export const Funnel = () => {
                         {/* Bottom Progress Bar */}
                         <div className="space-y-1 z-20">
                           <div className="flex justify-between text-[10px] text-slate-400">
-                            <span>{Math.round((videoProgress / 100) * (videoContent?.duration * 10))}s</span>
-                            <span>{videoContent?.duration * 10}s</span>
+                            <span>{Math.round((videoProgress / 100) * (videoContent?.duration))}s</span>
+                            <span>{videoContent?.duration}s</span>
                           </div>
                           <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
                             <div 

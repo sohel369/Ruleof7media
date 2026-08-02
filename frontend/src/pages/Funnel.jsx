@@ -1490,6 +1490,23 @@ export const Funnel = () => {
                 <>
                   <iframe src={videoContent.url} className="w-full h-full absolute inset-0 border-0 z-0" allowFullScreen></iframe>
                   
+                  {/* Overlay for unlocking quiz manually if they finish early or want to skip */}
+                  <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {videoProgress < 100 ? (
+                      <button 
+                        onClick={skipVideo}
+                        className="text-xs bg-slate-900/80 hover:bg-slate-800 hover:text-white text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50 backdrop-blur-sm transition-all shadow-lg flex items-center gap-2"
+                      >
+                        <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+                        Unlock Quiz
+                      </button>
+                    ) : (
+                      <div className="text-xs bg-neonGreen/90 text-black font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-2">
+                        <Check className="w-4 h-4" /> Quiz Unlocked
+                      </div>
+                    )}
+                  </div>
+                  
                   {/* We auto-start the background timer so quiz unlocks eventually */}
                   {!isPlaying && videoProgress < 100 && (
                     <div className="absolute inset-0 pointer-events-none" ref={(el) => { if (el && !isPlaying) handlePlay(); }}></div>

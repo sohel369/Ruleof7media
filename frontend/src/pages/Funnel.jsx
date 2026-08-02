@@ -1480,68 +1480,103 @@ export const Funnel = () => {
             <h1 className="text-xl font-grotesk font-bold text-white mb-2">{videoContent?.title}</h1>
             <p className="text-sm text-slate-400 mb-6">{videoContent?.description}</p>
 
-            {/* MOCK VIDEO PLAYER */}
+            {/* VIDEO PLAYER */}
             <div className="relative aspect-video rounded-xl bg-black border border-slate-800 flex flex-col justify-center items-center group overflow-hidden shadow-2xl">
+              
               {videoContent?.url ? (
-                <iframe src={videoContent.url} className="w-full h-full absolute inset-0 border-0" allowFullScreen></iframe>
-              ) : null}
-              {videoProgress < 100 ? (
+                // REAL VIDEO MODE
                 <>
-                  {/* Play Overlay */}
-                  <div className={`absolute inset-0 flex flex-col justify-between p-4 z-10 ${videoContent?.url && isPlaying ? 'pointer-events-none' : 'bg-gradient-to-t from-black/80 to-transparent'}`}>
-                    <div className={`flex justify-end ${videoContent?.url && isPlaying ? 'pointer-events-auto opacity-0 hover:opacity-100 transition-opacity' : ''}`}>
+                  <iframe src={videoContent.url} className="w-full h-full absolute inset-0 border-0 z-0" allowFullScreen></iframe>
+                  
+                  {/* Overlay for unlocking quiz manually if they don't want to wait */}
+                  <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {videoProgress < 100 ? (
                       <button 
                         onClick={skipVideo}
                         className="text-xs bg-slate-900/80 hover:bg-slate-800 hover:text-white text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50 backdrop-blur-sm transition-all shadow-lg"
                       >
-                        Skip Video (Test Mode)
+                        Unlock Quiz
                       </button>
-                    </div>
-
-                    {!isPlaying && (
-                      <div className="flex flex-col items-center justify-center absolute inset-0">
-                      <button 
-                        onClick={handlePlay}
-                        className="w-16 h-16 bg-neonRed hover:bg-neonRed/90 hover:scale-105 active:scale-95 text-white rounded-full flex items-center justify-center transition-all shadow-xl glow-pink z-20"
-                      >
-                        {isPlaying ? (
-                          <div className="flex gap-1.5 items-center">
-                            <span className="w-1.5 h-6 bg-white rounded-full animate-pulse"></span>
-                            <span className="w-1.5 h-6 bg-white rounded-full animate-pulse"></span>
-                          </div>
-                        ) : (
-                          <Play className="w-6 h-6 fill-white ml-1" />
-                        )}
-                      </button>
-                      <span className="text-xs font-semibold text-slate-300 mt-4 tracking-wider uppercase bg-slate-950/70 py-1 px-3 rounded-full backdrop-blur-sm">
-                        {isPlaying ? 'Streaming Session Live...' : 'Click to Watch Lesson'}
-                      </span>
-                    </div>
+                    ) : (
+                      <div className="text-xs bg-neonGreen/90 text-black font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-2">
+                        <Check className="w-4 h-4" /> Quiz Unlocked
+                      </div>
                     )}
-
-                    {/* Bottom Progress Bar */}
-                    <div className="space-y-1 z-20">
-                      <div className="flex justify-between text-[10px] text-slate-400">
-                        <span>{Math.round((videoProgress / 100) * (videoContent?.duration * 10))}s</span>
-                        <span>{videoContent?.duration * 10}s</span>
-                      </div>
-                      <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                        <div 
-                          className="h-full bg-neonRed transition-all duration-300"
-                          style={{ width: `${videoProgress}%` }}
-                        ></div>
-                      </div>
-                    </div>
                   </div>
+                  
+                  {/* We auto-start the background timer so quiz unlocks eventually */}
+                  {!isPlaying && videoProgress < 100 && (
+                    <div className="absolute inset-0 pointer-events-none" ref={() => { if(!isPlaying) handlePlay(); }}></div>
+                  )}
                 </>
               ) : (
-                <div className="absolute inset-0 bg-slate-950 flex flex-col items-center justify-center p-6 text-center animate-slide-in">
-                  <div className="w-12 h-12 rounded-full bg-neonGreen/20 text-neonGreen flex items-center justify-center mb-3 border border-neonGreen/30">
-                    <Check className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-bold text-white text-base">Module Completed</h3>
-                  <p className="text-xs text-slate-400 max-w-xs mt-1">Video lesson completed. Please complete the quiz on the right to proceed.</p>
-                </div>
+                // MOCK VIDEO MODE (For videos without URL yet)
+                <>
+                  {videoProgress < 100 ? (
+                    <>
+                      {/* Play Overlay */}
+                      <div className="absolute inset-0 flex flex-col justify-between p-4 z-10 bg-gradient-to-t from-black/80 to-transparent">
+                        <div className="flex justify-end">
+                          <button 
+                            onClick={skipVideo}
+                            className="text-xs bg-slate-900/80 hover:bg-slate-800 hover:text-white text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50 backdrop-blur-sm transition-all shadow-lg"
+                          >
+                            Skip Video (Test Mode)
+                          </button>
+                        </div>
+    
+                        {!isPlaying && (
+                          <div className="flex flex-col items-center justify-center absolute inset-0">
+                            <button 
+                              onClick={handlePlay}
+                              className="w-16 h-16 bg-neonRed hover:bg-neonRed/90 hover:scale-105 active:scale-95 text-white rounded-full flex items-center justify-center transition-all shadow-xl glow-pink z-20"
+                            >
+                              <Play className="w-6 h-6 fill-white ml-1" />
+                            </button>
+                            <span className="text-xs font-semibold text-slate-300 mt-4 tracking-wider uppercase bg-slate-950/70 py-1 px-3 rounded-full backdrop-blur-sm">
+                              Click to Watch Lesson
+                            </span>
+                          </div>
+                        )}
+                        {isPlaying && (
+                          <div className="flex flex-col items-center justify-center absolute inset-0">
+                            <div className="w-16 h-16 bg-neonRed rounded-full flex items-center justify-center transition-all shadow-xl glow-pink z-20">
+                              <div className="flex gap-1.5 items-center">
+                                <span className="w-1.5 h-6 bg-white rounded-full animate-pulse"></span>
+                                <span className="w-1.5 h-6 bg-white rounded-full animate-pulse"></span>
+                              </div>
+                            </div>
+                            <span className="text-xs font-semibold text-slate-300 mt-4 tracking-wider uppercase bg-slate-950/70 py-1 px-3 rounded-full backdrop-blur-sm">
+                              Streaming Session Live...
+                            </span>
+                          </div>
+                        )}
+    
+                        {/* Bottom Progress Bar */}
+                        <div className="space-y-1 z-20">
+                          <div className="flex justify-between text-[10px] text-slate-400">
+                            <span>{Math.round((videoProgress / 100) * (videoContent?.duration * 10))}s</span>
+                            <span>{videoContent?.duration * 10}s</span>
+                          </div>
+                          <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                            <div 
+                              className="h-full bg-neonRed transition-all duration-300"
+                              style={{ width: `${videoProgress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-8 text-center bg-black/80 absolute inset-0 z-10 backdrop-blur-sm">
+                      <div className="w-16 h-16 bg-neonGreen/20 rounded-full flex items-center justify-center mb-4">
+                        <Check className="w-8 h-8 text-neonGreen font-bold" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">Module Completed</h3>
+                      <p className="text-sm text-slate-300">Video lesson completed. Please complete the quiz on the right to proceed.</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
             

@@ -1,0 +1,615 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video 7 — Future-Proof Marketing | Rule7Media</title>
+  <meta name="description" content="Congratulations on reaching the final video! Discover how to execute local visibility structures and secure real returns." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    /* ── Training Nav ── */
+    .training-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1100;
+      background: rgba(11,15,25,0.92); backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      height: 72px; display: flex; align-items: center;
+      padding: 0 2rem; justify-content: space-between;
+      transition: transform 0.3s ease;
+    }
+    .training-nav .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .training-nav .nav-logo-icon {
+      width: 40px; height: 40px; background: #dc2626; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem;
+      box-shadow: 0 4px 20px rgba(220,38,38,0.35); transition: transform 0.2s;
+    }
+    .training-nav .nav-logo:hover .nav-logo-icon { transform: rotate(10deg); }
+    .training-nav .nav-logo-text { font-family: 'Space Grotesk',sans-serif; font-size: 1.35rem; font-weight: 800; color: white; letter-spacing: -0.5px; }
+    .training-nav .nav-logo-text span { color: #dc2626; }
+    .training-nav .nav-links { display: flex; align-items: center; gap: 4px; }
+    .training-nav .nav-links a {
+      padding: 8px 16px; font-size: 0.8rem; font-weight: 700;
+      color: #94a3b8; text-decoration: none; text-transform: uppercase;
+      letter-spacing: 0.06em; border-radius: 8px; transition: color 0.2s, background 0.2s;
+    }
+    .training-nav .nav-links a:hover { color: #ef4444; background: rgba(239,68,68,0.07); }
+    .training-nav .nav-mobile-btn {
+      display: none; background: none; border: none; color: white;
+      font-size: 1.3rem; cursor: pointer; padding: 8px; border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .training-nav .nav-mobile-btn:hover { background: rgba(255,255,255,0.08); }
+    .mobile-drawer {
+      display: none; position: fixed; top: 72px; left: 0; right: 0;
+      background: rgba(11,15,25,0.98); backdrop-filter: blur(20px);
+      padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-direction: column; gap: 4px; z-index: 1099;
+    }
+    .mobile-drawer.open { display: flex; }
+    .mobile-drawer a {
+      padding: 12px 16px; font-size: 0.85rem; font-weight: 700;
+      color: #94a3b8; text-decoration: none; text-transform: uppercase;
+      letter-spacing: 0.06em; border-radius: 10px; transition: color 0.2s, background 0.2s;
+    }
+    .mobile-drawer a:hover { color: #ef4444; background: rgba(239,68,68,0.08); }
+    @media (max-width: 768px) {
+      .training-nav .nav-links { display: none; }
+      .training-nav .nav-mobile-btn { display: block; }
+    }
+
+    /* ── Layout ── */
+    .training-container {
+      max-width: 900px; margin: 0 auto;
+      padding: 7rem 1rem 4rem; display: flex; flex-direction: column; gap: 2.5rem;
+    }
+
+    /* ── Video Section ── */
+    .video-section {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg); padding: 2rem;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    }
+    .video-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.3);
+      color: #ef4444; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 4px 12px; border-radius: 999px; margin-bottom: 1rem;
+    }
+
+    /* ── 7-Step Video Progress Tracker ── */
+    .vpb-wrap {
+      margin: 1.25rem 0 0.25rem; padding: 1rem 1.25rem;
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+    }
+    .vpb-label-row {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.75rem;
+    }
+    .vpb-track { display: flex; align-items: center; gap: 0; overflow-x: auto; padding-bottom: 2px; }
+    .vpb-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+    .vpb-dot {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; transition: all 0.3s;
+    }
+    .vpb-step.done    .vpb-dot { background: rgba(5,240,160,0.15); border: 2px solid var(--neon-green); color: var(--neon-green); }
+    .vpb-step.current .vpb-dot { background: rgba(0,240,255,0.15); border: 2px solid var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,240,255,0.3); }
+    .vpb-step.locked  .vpb-dot { background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.2); }
+    .vpb-step-label { font-size: 0.63rem; font-weight: 600; white-space: nowrap; letter-spacing: 0.02em; }
+    .vpb-step.done    .vpb-step-label { color: var(--neon-green); }
+    .vpb-step.current .vpb-step-label { color: var(--neon-cyan); }
+    .vpb-step.locked  .vpb-step-label { color: rgba(255,255,255,0.2); }
+    .vpb-line { flex: 1; height: 2px; min-width: 12px; max-width: 32px; background: rgba(255,255,255,0.08); margin-bottom: 18px; transition: background 0.3s; }
+    .vpb-line.done { background: var(--neon-green); }
+
+    /* ── Video Header ── */
+    .video-header h2 {
+      font-family: 'Space Grotesk',sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 0.6rem;
+      background: var(--gradient-primary); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; line-height: 1.2;
+    }
+    .video-header p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.75rem; }
+    .video-meta-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .video-meta-pill { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--text-secondary); font-weight: 600; }
+    .video-meta-pill i { color: var(--neon-cyan); font-size: 0.8rem; }
+
+    /* ── Thumbnail + Play ── */
+    .video-thumb-wrap {
+      position: relative; border-radius: var(--radius-md); overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07); background: #0d1117; cursor: pointer;
+    }
+    .video-thumb-wrap .thumb-img {
+      width: 100%; display: block; object-fit: cover; aspect-ratio: 16/9;
+      transition: transform 0.4s ease, filter 0.4s ease; filter: brightness(0.75);
+    }
+    .video-thumb-wrap:hover .thumb-img { transform: scale(1.03); filter: brightness(0.55); }
+    .play-overlay {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px; pointer-events: none;
+    }
+    .play-btn-circle {
+      width: 72px; height: 72px; background: rgba(220,38,38,0.92); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 12px rgba(220,38,38,0.2), 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .video-thumb-wrap:hover .play-btn-circle {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 18px rgba(220,38,38,0.15), 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .play-btn-circle i { font-size: 1.6rem; color: white; margin-left: 4px; }
+    .play-label { font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: 0.05em; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    .video-wrapper {
+      position: relative; padding-top: 56.25%; overflow: hidden;
+      border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05); display: none;
+    }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+    /* ── Form Section ── */
+    .lead-form-section {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg); padding: 2.5rem; transition: all var(--transition-base);
+    }
+    .form-group { margin-bottom: 1.4rem; }
+    .form-group label { display: block; margin-bottom: 0.45rem; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+    .form-input {
+      width: 100%; padding: 0.8rem 1.1rem; border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm); background: rgba(255,255,255,0.03);
+      color: var(--text-primary); font-family: inherit; font-size: 0.92rem;
+      transition: all 0.2s; box-sizing: border-box;
+    }
+    .form-input:focus { outline: none; border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(0,240,255,0.1); background: rgba(255,255,255,0.05); }
+    .form-input.error { border-color: #ff3d3d; box-shadow: 0 0 0 3px rgba(255,61,61,0.12); }
+    select.form-input {
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 1rem center;
+      padding-right: 2.5rem; cursor: pointer;
+    }
+    select.form-input option { background: #0b0f19; color: white; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 600px) { .form-grid-2 { grid-template-columns: 1fr; } }
+    
+    .cta-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 28px; border-radius: var(--radius-full); font-weight: 700;
+      font-size: 1rem; text-decoration: none; cursor: pointer; border: none;
+      background: var(--gradient-primary); color: #fff; box-shadow: var(--glow-cyan);
+      transition: all 0.25s; width: 100%;
+    }
+    .cta-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 35px rgba(0,240,255,0.45); }
+    .cta-button:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+    .privacy-note {
+      font-size: 0.75rem; color: var(--text-muted); margin: 1rem 0;
+      line-height: 1.5; display: flex; align-items: flex-start; gap: 6px;
+    }
+    .privacy-note i { color: var(--neon-cyan); margin-top: 1px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <!-- Priority Countdown Banner -->
+  <div id="priority-banner" class="priority-banner">
+    <div class="priority-content">
+      <span class="priority-label">Priority Access Remaining:</span>
+      <span id="countdown" class="countdown-time">Calculating...</span>
+    </div>
+  </div>
+
+  <!-- ─── TRAINING NAV ─── -->
+  <nav class="training-nav" id="training-nav">
+    <a href="../landing.html" class="nav-logo">
+      <div class="nav-logo-icon"><i class="fa-solid fa-film"></i></div>
+      <span class="nav-logo-text">Rule7<span>Media</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../landing.html">Home</a>
+      <a href="https://rule7media.com/howitworks" target="_blank" rel="noopener">How It Works</a>
+      <a href="https://rule7media.com/cpmrates" target="_blank" rel="noopener">Benefits</a>
+      <a href="https://rule7media.com/contact" target="_blank" rel="noopener">Contact</a>
+    </div>
+    <button class="nav-mobile-btn" id="nav-hamburger" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars" id="nav-ham-icon"></i>
+    </button>
+  </nav>
+  <div class="mobile-drawer" id="nav-drawer">
+    <a href="../landing.html">Home</a>
+    <a href="https://rule7media.com/howitworks" target="_blank" rel="noopener">How It Works</a>
+    <a href="https://rule7media.com/cpmrates" target="_blank" rel="noopener">Benefits</a>
+    <a href="https://rule7media.com/contact" target="_blank" rel="noopener">Contact</a>
+  </div>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <div class="training-container">
+
+    <!-- ── Video Hero ── -->
+    <section class="video-section" id="video-section">
+
+      <div class="video-badge">
+        <i class="fa-solid fa-circle-play"></i> Module 7 of 7
+      </div>
+
+      <!-- 7-Step Video Progress Tracker -->
+      <div class="vpb-wrap">
+        <div class="vpb-label-row">
+          <i class="fa-solid fa-list-check" style="margin-right:5px;color:var(--neon-cyan);"></i>Your Progress
+        </div>
+        <div class="vpb-track" id="video-progress-bar"></div>
+      </div>
+
+      <div class="video-header">
+        <h2>Future-Proof Marketing: Low CPM Strategies That Deliver Real ROI</h2>
+        <p>Congratulations on reaching the final video! Discover how to execute local visibility structures and secure real returns.</p>
+      </div>
+
+      <div class="video-meta-row">
+        <span class="video-meta-pill"><i class="fa-regular fa-clock"></i> ~15–20 min</span>
+        <span class="video-meta-pill"><i class="fa-solid fa-graduation-cap"></i> Final Module</span>
+        <span class="video-meta-pill"><i class="fa-solid fa-circle-check"></i> Completion step</span>
+      </div>
+
+      <!-- Thumbnail + Play -->
+      <div class="video-thumb-wrap" id="video-thumb" onclick="playVideo()">
+        <img
+          src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+          alt="Video 7 thumbnail — Future-Proof Marketing"
+          class="thumb-img"
+          onerror="this.src='https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'"
+        />
+        <div class="play-overlay">
+          <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
+          <span class="play-label">▶ &nbsp;Play Video</span>
+        </div>
+      </div>
+
+      <!-- iFrame (hidden until Play clicked) -->
+      <div class="video-wrapper" id="video-iframe-wrap">
+        <iframe id="video-iframe" src="" title="Future-Proof Marketing"
+          frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+      </div>
+
+    </section>
+
+    <!-- ── Final Business Profile Form ── -->
+    <section class="lead-form-section" id="form-container">
+      <div id="form-unlocked-content">
+
+        <div style="margin-bottom:1.75rem;">
+          <div class="video-badge" style="margin-bottom:0.75rem;">
+            <i class="fa-solid fa-trophy"></i> Course Completed
+          </div>
+          <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:800;color:white;margin-bottom:0.6rem;">
+            Congratulations on completing the full series!
+          </h3>
+          <p style="color:var(--text-secondary);font-size:0.88rem;line-height:1.65;">
+            To provide truly customized recommendations for your business — including projected ROI for efficient visibility solutions — we’d appreciate these final details. This will allow our team to prepare specific ideas tailored to your situation before any conversation.
+          </p>
+        </div>
+
+        <form id="step-7-form" novalidate>
+
+          <div class="form-grid-2">
+            <!-- Timeline -->
+            <div class="form-group">
+              <label for="review-timeline">When are you next reviewing marketing options? <span style="color:#ef4444;">*</span></label>
+              <select id="review-timeline" name="timeline" class="form-input">
+                <option value="">Select Timeline</option>
+                <option value="Currently">Currently</option>
+                <option value="Within 3 Months">Within 3 Months</option>
+                <option value="Within 6 Months">Within 6 Months</option>
+                <option value="Within 12 Months">Within 12 Months</option>
+              </select>
+            </div>
+
+            <!-- Phone (Optional) -->
+            <div class="form-group">
+              <label for="phone">Decision Maker's Phone Number (Optional)</label>
+              <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Goals / Challenges (Multi-select) -->
+          <div class="form-group mt-2">
+            <label class="block text-sm font-semibold text-slate-400 mb-3">Key Marketing Goals / Challenges* (Select all that apply) <span id="goals-error-msg" class="text-red-500 font-bold ml-2 hidden">Please select at least one goal</span></label>
+            <div id="goals-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/40 p-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" name="goals" value="Generate more local leads" class="rounded border-slate-800 bg-slate-900 text-cyan-500">
+                <span>Generate more local leads</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/40 p-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" name="goals" value="Improve brand visibility" class="rounded border-slate-800 bg-slate-900 text-cyan-500">
+                <span>Improve brand visibility</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/40 p-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" name="goals" value="Reduce ad waste" class="rounded border-slate-800 bg-slate-900 text-cyan-500">
+                <span>Reduce ad waste</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/40 p-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" name="goals" value="Increase trust" class="rounded border-slate-800 bg-slate-900 text-cyan-500">
+                <span>Increase trust</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/40 p-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" name="goals" value="Grow sales" class="rounded border-slate-800 bg-slate-900 text-cyan-500">
+                <span>Grow sales</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/40 p-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" name="goals" value="Improve ROI" class="rounded border-slate-800 bg-slate-900 text-cyan-500">
+                <span>Improve ROI</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/40 p-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+                <input type="checkbox" name="goals" value="Other" class="rounded border-slate-800 bg-slate-900 text-cyan-500">
+                <span>Other</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-grid-2 mt-4">
+            <!-- Consult Time (Optional) -->
+            <div class="form-group">
+              <label for="consult-time">Best Time for a Quick Consultation (Optional)</label>
+              <select id="consult-time" name="consult_time" class="form-input">
+                <option value="">Select Time</option>
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+                <option value="Anytime">Anytime</option>
+              </select>
+            </div>
+
+            <!-- Free Audit? -->
+            <div class="form-group">
+              <label for="audit-req">Would you like a free “Marketing Efficiency Audit” or vehicle visibility assessment based on the data provided? <span style="color:#ef4444;">*</span></label>
+              <select id="audit-req" name="audit_req" class="form-input">
+                <option value="">Select Option</option>
+                <option value="As soon as possible">As soon as possible</option>
+                <option value="Within 3 months">Within 3 months</option>
+                <option value="Within Six Months">Within Six Months</option>
+                <option value="Within 12 months">Within 12 months</option>
+                <option value="No Thank You">No Thank You</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Privacy note -->
+          <p class="privacy-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            🔒 Your information helps us deliver better insights and is never shared with third parties.
+          </p>
+
+          <!-- Submit -->
+          <button type="submit" class="cta-button" id="continue-btn">
+            Complete Assessment &nbsp;<i class="fa-solid fa-check-double"></i>
+          </button>
+
+        </form>
+      </div>
+    </section>
+
+  </div><!-- /training-container -->
+
+  <footer id="shared-footer"></footer>
+
+  <script src="../common.js"></script>
+  <script>
+    /* ── NAV ── */
+    (function initNav() {
+      const btn    = document.getElementById('nav-hamburger');
+      const drawer = document.getElementById('nav-drawer');
+      const icon   = document.getElementById('nav-ham-icon');
+      if (!btn || !drawer) return;
+      btn.addEventListener('click', () => {
+        drawer.classList.toggle('open');
+        icon.className = drawer.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+      });
+      let lastY = 0;
+      const nav = document.getElementById('training-nav');
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        nav.style.transform = (y > lastY && y > 60) ? 'translateY(-100%)' : 'translateY(0)';
+        lastY = y;
+      }, { passive: true });
+    })();
+
+    /* ── VIDEO ── */
+    function playVideo() {
+      document.getElementById('video-thumb').style.display       = 'none';
+      document.getElementById('video-iframe-wrap').style.display = 'block';
+      document.getElementById('video-iframe').src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
+    }
+
+    /* ── 7-STEP PROGRESS TRACKER ── */
+    function renderVideoProgress(currentModule) {
+      const progress  = parseInt(localStorage.getItem('r7_progress') || '0');
+      const labels    = ['Video 1','Video 2','Video 3','Video 4','Video 5','Video 6','Video 7'];
+      const container = document.getElementById('video-progress-bar');
+      if (!container) return;
+      let html = '';
+      for (let i = 1; i <= 7; i++) {
+        const isPageComplete = (i === 1 && progress >= 1) || localStorage.getItem('r7_v' + i + '_complete') === 'true';
+        const isDone    = isPageComplete || i < currentModule;
+        const isCurrent = i === currentModule && !isPageComplete;
+        const cls  = isDone ? 'done' : isCurrent ? 'current' : 'locked';
+        const icon = isDone
+          ? '<i class="fa-solid fa-check"></i>'
+          : isCurrent
+            ? '<i class="fa-solid fa-circle-dot"></i>'
+            : '<i class="fa-regular fa-circle"></i>';
+        html += `<div class="vpb-step ${cls}">
+          <div class="vpb-dot">${icon}</div>
+          <span class="vpb-step-label">${labels[i-1]}</span>
+        </div>`;
+        if (i < 7) html += `<div class="vpb-line${isDone ? ' done' : ''}"></div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    /* ── FORM VALIDATION ── */
+    function markError(el) {
+      el.classList.add('error');
+      if (el.type === 'checkbox') {
+        const parent = el.closest('label');
+        if (parent) parent.classList.add('border-red-500', 'bg-red-500/10');
+        el.addEventListener('change', () => {
+          document.querySelectorAll('input[name="goals"]').forEach(cb => {
+            const p = cb.closest('label');
+            if (p) p.classList.remove('border-red-500', 'bg-red-500/10');
+          });
+          document.getElementById('goals-error-msg').classList.add('hidden');
+        }, { once: true });
+      } else {
+        el.addEventListener('input', () => el.classList.remove('error'), { once: true });
+        el.addEventListener('change', () => el.classList.remove('error'), { once: true });
+      }
+    }
+
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', () => {
+
+      /* Render 7-step progress bar — Videos 1-6 done; Video 7 = current */
+      renderVideoProgress(7);
+
+      /* Returning visitor — already completed Video 7 */
+      if (localStorage.getItem('r7_v7_complete') === 'true') {
+        /* Prefill saved values */
+        document.getElementById('review-timeline').value = localStorage.getItem('r7_timeline') || '';
+        document.getElementById('phone').value           = localStorage.getItem('r7_phone') || '';
+        document.getElementById('consult-time').value    = localStorage.getItem('r7_consult_time') || '';
+        document.getElementById('audit-req').value       = localStorage.getItem('r7_audit_req') || '';
+        const savedGoals = JSON.parse(localStorage.getItem('r7_goals') || '[]');
+        document.querySelectorAll('input[name="goals"]').forEach(cb => {
+          if (savedGoals.includes(cb.value)) cb.checked = true;
+        });
+      }
+
+      /* Form submit */
+      document.getElementById('step-7-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const timelineEl = document.getElementById('review-timeline');
+        const phoneEl    = document.getElementById('phone');
+        const timeEl     = document.getElementById('consult-time');
+        const auditEl    = document.getElementById('audit-req');
+
+        // Multi-select goals checkboxes
+        const checkedGoals = [];
+        const checkboxes = document.querySelectorAll('input[name="goals"]');
+        checkboxes.forEach(cb => {
+          if (cb.checked) checkedGoals.push(cb.value);
+        });
+
+        let valid = true;
+
+        if (!timelineEl.value) { markError(timelineEl); valid = false; }
+        if (!auditEl.value)    { markError(auditEl);    valid = false; }
+        
+        if (checkedGoals.length === 0) {
+          checkboxes.forEach(cb => markError(cb));
+          document.getElementById('goals-error-msg').classList.remove('hidden');
+          valid = false;
+        }
+
+        if (!valid) return;
+
+        const timelineVal = timelineEl.value;
+        const phoneVal    = phoneEl.value.trim();
+        const timeVal     = timeEl.value;
+        const auditVal    = auditEl.value;
+
+        /* Save to localStorage */
+        localStorage.setItem('r7_timeline',     timelineVal);
+        localStorage.setItem('r7_phone',        phoneVal);
+        localStorage.setItem('r7_consult_time', timeVal);
+        localStorage.setItem('r7_audit_req',    auditVal);
+        localStorage.setItem('r7_goals',        JSON.stringify(checkedGoals));
+        localStorage.setItem('r7_v7_complete',  'true');
+
+        /* Update funnel progress to 7/7 */
+        localStorage.setItem('r7_progress', '7');
+
+        /* Save to leads DB (dashboard) */
+        if (typeof saveLeadStep === 'function') {
+          saveLeadStep(7, {
+            timeline:     timelineVal,
+            phone:        phoneVal,
+            consultTime:  timeVal,
+            auditRequest: auditVal,
+            goals:        checkedGoals
+          });
+        }
+
+        /* Visual feedback then redirect */
+        const btn = document.getElementById('continue-btn');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> &nbsp;Saving...';
+        btn.disabled  = true;
+        setTimeout(() => { window.location.href = '../thank-you.html'; }, 700);
+      });
+
+    });
+  </script>
+
+  <script>
+    (function() {
+      const PRIORITY_DAYS = 14;
+      const STORAGE_KEY = 'priorityEnd';
+      const URGENT_THRESHOLD_DAYS = 3;
+
+      const banner = document.getElementById('priority-banner');
+      const countdownEl = document.getElementById('countdown');
+
+      function initializePriorityWindow() {
+        if (!localStorage.getItem(STORAGE_KEY)) {
+          const endDate = new Date();
+          endDate.setDate(endDate.getDate() + PRIORITY_DAYS);
+          localStorage.setItem(STORAGE_KEY, endDate.toISOString());
+        }
+      }
+
+      function updateCountdown() {
+        if (!banner || !countdownEl) return;
+        const end = new Date(localStorage.getItem(STORAGE_KEY));
+        const now = new Date();
+        const remainingMs = end - now;
+
+        if (remainingMs <= 0) {
+          countdownEl.textContent = "Priority window closed";
+          banner.classList.add('urgent');
+          return;
+        }
+
+        const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (days > 0) {
+          countdownEl.textContent = `${days} day${days !== 1 ? 's' : ''} ${hours} hr${hours !== 1 ? 's' : ''}`;
+        } else {
+          countdownEl.textContent = `${hours} hr${hours !== 1 ? 's' : ''} ${minutes} min`;
+        }
+
+        if (days < URGENT_THRESHOLD_DAYS) {
+          banner.classList.add('urgent');
+        } else {
+          banner.classList.remove('urgent');
+        }
+      }
+
+      initializePriorityWindow();
+      updateCountdown();
+      setInterval(updateCountdown, 60000);
+    })();
+  </script>
+</body>
+</html>
+

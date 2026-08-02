@@ -1,0 +1,875 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video 6 — The Trust Factor | Rule7Media</title>
+  <meta name="description" content="Discover why consistent real-world visibility builds trust, strengthens brand recognition, and lowers customer acquisition costs more effectively than relying only on digital advertising." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    /* ── Training Nav ── */
+    .training-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1100;
+      background: rgba(11,15,25,0.92); backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      height: 72px; display: flex; align-items: center;
+      padding: 0 2rem; justify-content: space-between;
+      transition: transform 0.3s ease;
+    }
+    .training-nav .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .training-nav .nav-logo-icon {
+      width: 40px; height: 40px; background: #dc2626; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem;
+      box-shadow: 0 4px 20px rgba(220,38,38,0.35); transition: transform 0.2s;
+    }
+    .training-nav .nav-logo:hover .nav-logo-icon { transform: rotate(10deg); }
+    .training-nav .nav-logo-text { font-family: 'Space Grotesk',sans-serif; font-size: 1.35rem; font-weight: 800; color: white; letter-spacing: -0.5px; }
+    .training-nav .nav-logo-text span { color: #dc2626; }
+    .training-nav .nav-links { display: flex; align-items: center; gap: 4px; }
+    .training-nav .nav-links a {
+      padding: 8px 16px; font-size: 0.8rem; font-weight: 700;
+      color: #94a3b8; text-decoration: none; text-transform: uppercase;
+      letter-spacing: 0.06em; border-radius: 8px; transition: color 0.2s, background 0.2s;
+    }
+    .training-nav .nav-links a:hover { color: #ef4444; background: rgba(239,68,68,0.07); }
+    .training-nav .nav-mobile-btn {
+      display: none; background: none; border: none; color: white;
+      font-size: 1.3rem; cursor: pointer; padding: 8px; border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .training-nav .nav-mobile-btn:hover { background: rgba(255,255,255,0.08); }
+    .mobile-drawer {
+      display: none; position: fixed; top: 72px; left: 0; right: 0;
+      background: rgba(11,15,25,0.98); backdrop-filter: blur(20px);
+      padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-direction: column; gap: 4px; z-index: 1099;
+    }
+    .mobile-drawer.open { display: flex; }
+    .mobile-drawer a {
+      padding: 12px 16px; font-size: 0.85rem; font-weight: 700;
+      color: #94a3b8; text-decoration: none; text-transform: uppercase;
+      letter-spacing: 0.06em; border-radius: 10px; transition: color 0.2s, background 0.2s;
+    }
+    .mobile-drawer a:hover { color: #ef4444; background: rgba(239,68,68,0.08); }
+    @media (max-width: 768px) {
+      .training-nav .nav-links { display: none; }
+      .training-nav .nav-mobile-btn { display: block; }
+    }
+
+    /* ── Layout ── */
+    .training-container {
+      max-width: 900px; margin: 0 auto;
+      padding: 7rem 1rem 4rem; display: flex; flex-direction: column; gap: 2.5rem;
+    }
+
+    /* ── Video Section ── */
+    .video-section {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg); padding: 2rem;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    }
+    .video-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.3);
+      color: #ef4444; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 4px 12px; border-radius: 999px; margin-bottom: 1rem;
+    }
+
+    /* ── 7-Step Video Progress Tracker ── */
+    .vpb-wrap {
+      margin: 1.25rem 0 0.25rem; padding: 1rem 1.25rem;
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+    }
+    .vpb-label-row {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.75rem;
+    }
+    .vpb-track { display: flex; align-items: center; gap: 0; overflow-x: auto; padding-bottom: 2px; }
+    .vpb-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+    .vpb-dot {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; transition: all 0.3s;
+    }
+    .vpb-step.done    .vpb-dot { background: rgba(5,240,160,0.15); border: 2px solid var(--neon-green); color: var(--neon-green); }
+    .vpb-step.current .vpb-dot { background: rgba(0,240,255,0.15); border: 2px solid var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,240,255,0.3); }
+    .vpb-step.locked  .vpb-dot { background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.2); }
+    .vpb-step-label { font-size: 0.63rem; font-weight: 600; white-space: nowrap; letter-spacing: 0.02em; }
+    .vpb-step.done    .vpb-step-label { color: var(--neon-green); }
+    .vpb-step.current .vpb-step-label { color: var(--neon-cyan); }
+    .vpb-step.locked  .vpb-step-label { color: rgba(255,255,255,0.2); }
+    .vpb-line { flex: 1; height: 2px; min-width: 12px; max-width: 32px; background: rgba(255,255,255,0.08); margin-bottom: 18px; transition: background 0.3s; }
+    .vpb-line.done { background: var(--neon-green); }
+
+    /* ── Video Header ── */
+    .video-header h2 {
+      font-family: 'Space Grotesk',sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 0.6rem;
+      background: var(--gradient-primary); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; line-height: 1.2;
+    }
+    .video-header p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.75rem; }
+    .video-meta-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .video-meta-pill { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--text-secondary); font-weight: 600; }
+    .video-meta-pill i { color: var(--neon-cyan); font-size: 0.8rem; }
+
+    /* ── Thumbnail + Play ── */
+    .video-thumb-wrap {
+      position: relative; border-radius: var(--radius-md); overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07); background: #0d1117; cursor: pointer;
+    }
+    .video-thumb-wrap .thumb-img {
+      width: 100%; display: block; object-fit: cover; aspect-ratio: 16/9;
+      transition: transform 0.4s ease, filter 0.4s ease; filter: brightness(0.75);
+    }
+    .video-thumb-wrap:hover .thumb-img { transform: scale(1.03); filter: brightness(0.55); }
+    .play-overlay {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px; pointer-events: none;
+    }
+    .play-btn-circle {
+      width: 72px; height: 72px; background: rgba(220,38,38,0.92); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 12px rgba(220,38,38,0.2), 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .video-thumb-wrap:hover .play-btn-circle {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 18px rgba(220,38,38,0.15), 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .play-btn-circle i { font-size: 1.6rem; color: white; margin-left: 4px; }
+    .play-label { font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: 0.05em; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    .video-wrapper {
+      position: relative; padding-top: 56.25%; overflow: hidden;
+      border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05); display: none;
+    }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+    /* ── Quiz ── */
+    .quiz-card, .lead-form-section {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg); padding: 2.5rem; transition: all var(--transition-base);
+    }
+    .quiz-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .quiz-progress-pills { display: flex; gap: 6px; }
+    .quiz-progress-pill { width: 28px; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); transition: background 0.4s; }
+    .quiz-progress-pill.done   { background: var(--neon-green); }
+    .quiz-progress-pill.active { background: var(--neon-cyan); }
+    .quiz-question-block { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1.5rem; }
+    .quiz-question-block:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+    .quiz-q-label { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
+    .quiz-q-num {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800; color: var(--neon-cyan); flex-shrink: 0;
+    }
+    .quiz-q-num.solved { background: rgba(5,240,160,0.1); border-color: rgba(5,240,160,0.25); color: var(--neon-green); }
+    .quiz-q-text { font-weight: 600; font-size: 0.97rem; color: white; line-height: 1.45; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.75rem; }
+    .quiz-option {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 1.1rem; background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 0.9rem; color: var(--text-secondary);
+      transition: all 0.2s; user-select: none;
+    }
+    .quiz-option:hover:not(.disabled) { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.16); color: var(--text-primary); }
+    .opt-letter {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 6px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.72rem; font-weight: 800; color: rgba(255,255,255,0.45);
+      margin-right: 10px; flex-shrink: 0; transition: all 0.2s;
+    }
+    .quiz-option:hover:not(.disabled) .opt-letter { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+    .quiz-option.correct   .opt-letter { background: rgba(5,240,160,0.15); border-color: var(--neon-green); color: var(--neon-green); }
+    .quiz-option.incorrect .opt-letter { background: rgba(255,61,61,0.15); border-color: #ff3d3d; color: #ff3d3d; }
+    .opt-text { flex: 1; }
+    .quiz-option .opt-icon { font-size: 1rem; flex-shrink: 0; color: rgba(255,255,255,0.2); }
+    .quiz-option.correct   { background: rgba(5,240,160,0.07); border-color: var(--neon-green); color: var(--neon-green); }
+    .quiz-option.correct   .opt-icon { color: var(--neon-green); }
+    .quiz-option.incorrect { background: rgba(255,61,61,0.07); border-color: #ff3d3d; color: #ff3d3d; }
+    .quiz-option.incorrect .opt-icon { color: #ff3d3d; }
+    .quiz-option.disabled { pointer-events: none; opacity: 0.65; }
+    .quiz-option.correct.disabled { opacity: 1; }
+    .question-feedback { display: none; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.82rem; line-height: 1.5; margin-top: 0.6rem; }
+    .question-feedback.correct   { display: block; background: rgba(5,240,160,0.05); border: 1px solid rgba(5,240,160,0.18); color: #05f0a0; }
+    .question-feedback.incorrect { display: block; background: rgba(255,61,61,0.05); border: 1px solid rgba(255,61,61,0.18); color: #ff6b6b; }
+    .quiz-all-done-banner {
+      display: none; margin-top: 1.5rem; padding: 1rem 1.25rem;
+      background: rgba(5,240,160,0.06); border: 1px solid rgba(5,240,160,0.2);
+      border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--text-primary); line-height: 1.55;
+    }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 1.4rem; }
+    .form-group label { display: block; margin-bottom: 0.45rem; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+    .form-input {
+      width: 100%; padding: 0.8rem 1.1rem; border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm); background: rgba(255,255,255,0.03);
+      color: var(--text-primary); font-family: inherit; font-size: 0.92rem;
+      transition: all 0.2s; box-sizing: border-box;
+    }
+    .form-input:focus { outline: none; border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(0,240,255,0.1); background: rgba(255,255,255,0.05); }
+    .form-input.error { border-color: #ff3d3d; box-shadow: 0 0 0 3px rgba(255,61,61,0.12); }
+    select.form-input {
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 1rem center;
+      padding-right: 2.5rem; cursor: pointer;
+    }
+    select.form-input option { background: #0b0f19; color: white; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 600px) { .form-grid-2 { grid-template-columns: 1fr; } }
+    .locked-form-message {
+      text-align: center; padding: 2.5rem 2rem; color: var(--text-secondary);
+      border: 2px dashed rgba(255,255,255,0.07); border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.01);
+    }
+    .locked-form-message i { font-size: 2.2rem; margin-bottom: 0.75rem; color: rgba(255,255,255,0.15); display: block; }
+    .locked-form-message h4 { color: var(--text-primary); font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .locked-form-message p { font-size: 0.83rem; }
+    .cta-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 28px; border-radius: var(--radius-full); font-weight: 700;
+      font-size: 1rem; text-decoration: none; cursor: pointer; border: none;
+      background: var(--gradient-primary); color: #fff; box-shadow: var(--glow-cyan);
+      transition: all 0.25s; width: 100%;
+    }
+    .cta-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 35px rgba(0,240,255,0.45); }
+    .cta-button:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+    .privacy-note {
+      font-size: 0.75rem; color: var(--text-muted); margin: 1rem 0;
+      line-height: 1.5; display: flex; align-items: flex-start; gap: 6px;
+    }
+    .privacy-note i { color: var(--neon-cyan); margin-top: 1px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <!-- Priority Countdown Banner -->
+  <div id="priority-banner" class="priority-banner">
+    <div class="priority-content">
+      <span class="priority-label">Priority Access Remaining:</span>
+      <span id="countdown" class="countdown-time">Calculating...</span>
+    </div>
+  </div>
+
+  <!-- ─── TRAINING NAV ─── -->
+  <nav class="training-nav" id="training-nav">
+    <a href="../landing.html" class="nav-logo">
+      <div class="nav-logo-icon"><i class="fa-solid fa-film"></i></div>
+      <span class="nav-logo-text">Rule7<span>Media</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../landing.html">Home</a>
+      <a href="https://rule7media.com/howitworks" target="_blank" rel="noopener">How It Works</a>
+      <a href="https://rule7media.com/cpmrates" target="_blank" rel="noopener">Benefits</a>
+      <a href="https://rule7media.com/contact" target="_blank" rel="noopener">Contact</a>
+    </div>
+    <button class="nav-mobile-btn" id="nav-hamburger" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars" id="nav-ham-icon"></i>
+    </button>
+  </nav>
+  <div class="mobile-drawer" id="nav-drawer">
+    <a href="../landing.html">Home</a>
+    <a href="https://rule7media.com/howitworks" target="_blank" rel="noopener">How It Works</a>
+    <a href="https://rule7media.com/cpmrates" target="_blank" rel="noopener">Benefits</a>
+    <a href="https://rule7media.com/contact" target="_blank" rel="noopener">Contact</a>
+  </div>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <div class="training-container">
+
+    <!-- ── Video Hero ── -->
+    <section class="video-section" id="video-section">
+
+      <div class="video-badge">
+        <i class="fa-solid fa-circle-play"></i> Module 6 of 7
+      </div>
+
+      <!-- 7-Step Video Progress Tracker -->
+      <div class="vpb-wrap">
+        <div class="vpb-label-row">
+          <i class="fa-solid fa-list-check" style="margin-right:5px;color:var(--neon-cyan);"></i>Your Progress
+        </div>
+        <div class="vpb-track" id="video-progress-bar"></div>
+      </div>
+
+      <div class="video-header">
+        <h2>The Trust Factor — Why Physical Presence Builds Loyalty Faster</h2>
+        <p>Discover why consistent real-world visibility builds trust, strengthens brand recognition, and lowers customer acquisition costs more effectively than relying only on digital advertising.</p>
+      </div>
+
+      <div class="video-meta-row">
+        <span class="video-meta-pill"><i class="fa-regular fa-clock"></i> ~15–18 min</span>
+        <span class="video-meta-pill"><i class="fa-solid fa-graduation-cap"></i> Intermediate</span>
+        <span class="video-meta-pill"><i class="fa-solid fa-shield-halved"></i> Quiz after video</span>
+      </div>
+
+      <!-- Thumbnail + Play -->
+      <div class="video-thumb-wrap" id="video-thumb" onclick="playVideo()">
+        <img
+          src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+          alt="Video 6 thumbnail — The Trust Factor"
+          class="thumb-img"
+          onerror="this.src='https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'"
+        />
+        <div class="play-overlay">
+          <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
+          <span class="play-label">▶ &nbsp;Play Video</span>
+        </div>
+      </div>
+
+      <!-- iFrame (hidden until Play clicked) -->
+      <div class="video-wrapper" id="video-iframe-wrap">
+        <iframe id="video-iframe" src="" title="The Trust Factor"
+          frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+      </div>
+
+    </section>
+
+    <!-- ── Quiz ── -->
+    <section class="quiz-card" id="quiz-section">
+
+      <div class="quiz-header-row">
+        <div>
+          <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:800;color:white;margin-bottom:4px;">Knowledge Verification</h3>
+          <p style="color:var(--text-secondary);font-size:0.87rem;">Answer all 3 questions correctly to unlock the form below.</p>
+        </div>
+        <div class="quiz-progress-pills">
+          <div class="quiz-progress-pill" id="pill-1"></div>
+          <div class="quiz-progress-pill" id="pill-2"></div>
+          <div class="quiz-progress-pill" id="pill-3"></div>
+        </div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-question-block" data-q="1" style="margin-top:2rem;">
+        <div class="quiz-q-label">
+          <div class="quiz-q-num" id="qnum-1">Q1</div>
+          <div class="quiz-q-text">In industries like health, legal, and real estate, what often signals reliability to prospects?</div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="a" onclick="handleAnswer(this)">
+            <span class="opt-letter">a</span><span class="opt-text">Heavy reliance on flashy digital-only presence</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+          <div class="quiz-option" data-val="b" data-correct="true" onclick="handleAnswer(this)">
+            <span class="opt-letter">b</span><span class="opt-text">Consistent, premium professional branding in visible real settings</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+          <div class="quiz-option" data-val="c" onclick="handleAnswer(this)">
+            <span class="opt-letter">c</span><span class="opt-text">Anonymous or budget-looking appearances</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+        </div>
+        <div class="question-feedback" id="qfb-1"
+          data-correct-msg="<i class='fa-solid fa-circle-check'></i> <strong>Correct!</strong> Consistent, high-quality real-world branding shows permanence and signals reliability to local prospects."
+          data-wrong-msg="<i class='fa-solid fa-circle-xmark'></i> <strong>Incorrect.</strong> Think about what visual signals convey established credibility and trust to physical observers. Try again.">
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question-block" data-q="2">
+        <div class="quiz-q-label">
+          <div class="quiz-q-num" id="qnum-2">Q2</div>
+          <div class="quiz-q-text">How does real-world repetition typically affect brand recall?</div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="a" onclick="handleAnswer(this)">
+            <span class="opt-letter">a</span><span class="opt-text">It decreases trust</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+          <div class="quiz-option" data-val="b" data-correct="true" onclick="handleAnswer(this)">
+            <span class="opt-letter">b</span><span class="opt-text">It significantly increases recognition and preference</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+          <div class="quiz-option" data-val="c" onclick="handleAnswer(this)">
+            <span class="opt-letter">c</span><span class="opt-text">Has no impact compared to online</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+        </div>
+        <div class="question-feedback" id="qfb-2"
+          data-correct-msg="<i class='fa-solid fa-circle-check'></i> <strong>Correct!</strong> According to the Rule of 7, seeing a message repeatedly in daily life builds familiarity, brand preference, and conversion intent."
+          data-wrong-msg="<i class='fa-solid fa-circle-xmark'></i> <strong>Incorrect.</strong> Think about the core lesson of the Rule of 7: repeated sightings lead to brand comfort. Try again.">
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question-block" data-q="3">
+        <div class="quiz-q-label">
+          <div class="quiz-q-num" id="qnum-3">Q3</div>
+          <div class="quiz-q-text">What is one powerful way to reduce customer acquisition costs long-term?</div>
+        </div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="a" onclick="handleAnswer(this)">
+            <span class="opt-letter">a</span><span class="opt-text">Only using pay-per-click models</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+          <div class="quiz-option" data-val="b" data-correct="true" onclick="handleAnswer(this)">
+            <span class="opt-letter">b</span><span class="opt-text">Creating always-on local visibility that drives referrals and direct inquiries</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+          <div class="quiz-option" data-val="c" onclick="handleAnswer(this)">
+            <span class="opt-letter">c</span><span class="opt-text">Focusing exclusively on distant leads</span>
+            <i class="fa-regular fa-circle opt-icon"></i>
+          </div>
+        </div>
+        <div class="question-feedback" id="qfb-3"
+          data-correct-msg="<i class='fa-solid fa-circle-check'></i> <strong>Correct!</strong> Building ongoing local visibility generates constant direct organic traffic and referral leads, dropping reliance on expensive digital ad auctions."
+          data-wrong-msg="<i class='fa-solid fa-circle-xmark'></i> <strong>Incorrect.</strong> Think about which option builds organic, always-on local authority without paying ad networks per click. Try again.">
+        </div>
+      </div>
+
+      <!-- All-done banner -->
+      <div class="quiz-all-done-banner" id="quiz-done-banner">
+        <i class="fa-solid fa-party-horn" style="color:var(--neon-green);margin-right:6px;"></i>
+        <strong>Excellent work!</strong> You've reached Video 7. Please complete the short business profile below to unlock the final module.
+      </div>
+
+    </section>
+
+    <!-- ── Data Collection Form ── -->
+    <section class="lead-form-section" id="form-container">
+
+      <!-- Locked state -->
+      <div class="locked-form-message" id="form-lock-msg">
+        <i class="fa-solid fa-lock"></i>
+        <h4>Form Locked</h4>
+        <p>Complete all 3 quiz questions correctly above to unlock this section.</p>
+      </div>
+
+      <!-- Unlocked form -->
+      <div id="form-unlocked-content" style="display:none;">
+
+        <div style="margin-bottom:1.75rem;">
+          <div class="video-badge" style="margin-bottom:0.75rem;">
+            <i class="fa-solid fa-file-lines"></i> Business Profile — Step 6
+          </div>
+          <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:800;color:white;margin-bottom:0.6rem;">
+            Almost there — unlock Video 7!
+          </h3>
+          <p style="color:var(--text-secondary);font-size:0.88rem;line-height:1.65;">
+            Many businesses are reassessing their marketing spend in the current environment. Sharing your current budget and allocation (even approximately) helps us demonstrate exactly how the low-CPM approaches discussed in Video 7 could impact your bottom line. All information is kept confidential.
+          </p>
+        </div>
+
+        <form id="step-6-form" novalidate>
+
+          <!-- Budget Range -->
+          <div class="form-group">
+            <label for="budget">Current Monthly Marketing Budget <span style="color:#ef4444;">*</span></label>
+            <select id="budget" name="budget" class="form-input">
+              <option value="">Select Range</option>
+              <option value="Under $500">Under $500</option>
+              <option value="$500-$2,000">$500 – $2,000</option>
+              <option value="$2,000-$5,000">$2,000 – $5,000</option>
+              <option value="$5,000-$10,000">$5,000 – $10,000</option>
+              <option value="$10,000+">$10,000+</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+
+          <!-- Allocation % -->
+          <div class="form-group">
+            <label class="block text-sm font-semibold text-slate-400 mb-2">
+              Rough Allocation (%) (Optional) <span id="alloc-error-msg" class="text-red-500 font-bold ml-2 hidden">Error: Allocations must sum to 100% (currently <span id="alloc-current-sum">0</span>%)</span>
+            </label>
+            <div class="grid sm:grid-cols-3 gap-4">
+              <div>
+                <label for="alloc-digital" class="text-xs text-slate-400 mb-1 block">Digital / Social Media %</label>
+                <input type="number" id="alloc-digital" name="alloc_digital" min="0" max="100" placeholder="e.g. 60" class="form-input" />
+              </div>
+              <div>
+                <label for="alloc-trad" class="text-xs text-slate-400 mb-1 block">Traditional / Print %</label>
+                <input type="number" id="alloc-trad" name="alloc_trad" min="0" max="100" placeholder="e.g. 20" class="form-input" />
+              </div>
+              <div>
+                <label for="alloc-other" class="text-xs text-slate-400 mb-1 block">Other (Signage, Vehicles, Events) %</label>
+                <input type="number" id="alloc-other" name="alloc_other" min="0" max="100" placeholder="e.g. 20" class="form-input" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Local vs Online Customer Source -->
+          <div class="form-group mt-6">
+            <label class="block text-sm font-semibold text-slate-400 mb-2">
+              What percentage of your new customers come from local vs. online sources? (Optional) <span id="pct-error-msg" class="text-red-500 font-bold ml-2 hidden">Error: Percentages must sum to 100% (currently <span id="pct-current-sum">0</span>%)</span>
+              <span class="block text-xs text-slate-500 mt-1 font-normal">Helper Note: Local + Online should total approximately 100%.</span>
+            </label>
+            <div class="flex items-center gap-4">
+              <span class="text-xs text-slate-400">Local Sources %</span>
+              <input type="number" id="local-pct" name="local_pct" min="0" max="100" placeholder="50" class="form-input text-center" style="max-width:90px;" />
+              <span class="text-xs text-slate-400">Online Sources %</span>
+              <input type="number" id="online-pct" name="online_pct" min="0" max="100" placeholder="50" class="form-input text-center" style="max-width:90px;" />
+            </div>
+          </div>
+
+          <!-- Privacy note -->
+          <p class="privacy-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            Your information helps us deliver better insights and is never shared with third parties.
+          </p>
+
+          <!-- Submit -->
+          <button type="submit" class="cta-button" id="continue-btn">
+            Continue to Video 7 &nbsp;<i class="fa-solid fa-arrow-right"></i>
+          </button>
+
+        </form>
+      </div>
+    </section>
+
+  </div><!-- /training-container -->
+
+  <footer id="shared-footer"></footer>
+
+  <script src="../common.js"></script>
+  <script>
+    /* ── NAV ── */
+    (function initNav() {
+      const btn    = document.getElementById('nav-hamburger');
+      const drawer = document.getElementById('nav-drawer');
+      const icon   = document.getElementById('nav-ham-icon');
+      if (!btn || !drawer) return;
+      btn.addEventListener('click', () => {
+        drawer.classList.toggle('open');
+        icon.className = drawer.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+      });
+      let lastY = 0;
+      const nav = document.getElementById('training-nav');
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        nav.style.transform = (y > lastY && y > 60) ? 'translateY(-100%)' : 'translateY(0)';
+        lastY = y;
+      }, { passive: true });
+    })();
+
+    /* ── VIDEO ── */
+    function playVideo() {
+      document.getElementById('video-thumb').style.display       = 'none';
+      document.getElementById('video-iframe-wrap').style.display = 'block';
+      document.getElementById('video-iframe').src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
+    }
+
+    /* ── 7-STEP PROGRESS TRACKER ── */
+    function renderVideoProgress(currentModule) {
+      const progress  = parseInt(localStorage.getItem('r7_progress') || '0');
+      const labels    = ['Video 1','Video 2','Video 3','Video 4','Video 5','Video 6','Video 7'];
+      const container = document.getElementById('video-progress-bar');
+      if (!container) return;
+      let html = '';
+      for (let i = 1; i <= 7; i++) {
+        const isPageComplete = (i === 1 && progress >= 1) || localStorage.getItem('r7_v' + i + '_complete') === 'true';
+        const isDone    = isPageComplete || i < currentModule;
+        const isCurrent = i === currentModule && !isPageComplete;
+        const cls  = isDone ? 'done' : isCurrent ? 'current' : 'locked';
+        const icon = isDone
+          ? '<i class="fa-solid fa-check"></i>'
+          : isCurrent
+            ? '<i class="fa-solid fa-circle-dot"></i>'
+            : '<i class="fa-regular fa-circle"></i>';
+        html += `<div class="vpb-step ${cls}">
+          <div class="vpb-dot">${icon}</div>
+          <span class="vpb-step-label">${labels[i-1]}</span>
+        </div>`;
+        if (i < 7) html += `<div class="vpb-line${isDone ? ' done' : ''}"></div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    /* ── QUIZ LOGIC ── */
+    let solvedCount = 0;
+    const TOTAL_Q   = 3;
+
+    function handleAnswer(optEl) {
+      const block = optEl.closest('.quiz-question-block');
+      if (block.classList.contains('solved')) return;
+
+      const qNum    = block.dataset.q;
+      const isRight = optEl.dataset.correct === 'true';
+      const allOpts = block.querySelectorAll('.quiz-option');
+      const fb      = document.getElementById('qfb-' + qNum);
+      const qNumEl  = document.getElementById('qnum-' + qNum);
+      const pill    = document.getElementById('pill-' + qNum);
+
+      /* Reset this block's options */
+      allOpts.forEach(o => {
+        o.classList.remove('correct', 'incorrect');
+        o.querySelector('.opt-icon').className = 'fa-regular fa-circle opt-icon';
+      });
+
+      if (isRight) {
+        /* ✅ Correct */
+        block.classList.add('solved');
+        allOpts.forEach(o => o.classList.add('disabled'));
+        optEl.classList.add('correct');
+        optEl.querySelector('.opt-icon').className = 'fa-solid fa-circle-check opt-icon';
+        allOpts.forEach(o => { if (o !== optEl) o.style.opacity = '0.4'; });
+        if (fb)     { fb.className = 'question-feedback correct'; fb.innerHTML = fb.dataset.correctMsg; }
+        if (qNumEl) qNumEl.classList.add('solved');
+        if (pill)   { pill.classList.remove('active'); pill.classList.add('done'); }
+        solvedCount++;
+        updateQuizPills();
+        if (solvedCount === TOTAL_Q) onAllSolved();
+      } else {
+        /* ❌ Wrong — only this option turns red, rest remain clickable */
+        optEl.classList.add('incorrect');
+        optEl.querySelector('.opt-icon').className = 'fa-solid fa-circle-xmark opt-icon';
+        if (fb) { fb.className = 'question-feedback incorrect'; fb.innerHTML = fb.dataset.wrongMsg; }
+      }
+    }
+
+    function updateQuizPills() {
+      for (let i = 1; i <= TOTAL_Q; i++) {
+        const pill  = document.getElementById('pill-' + i);
+        const block = document.querySelector('.quiz-question-block[data-q="' + i + '"]');
+        if (!pill || !block) continue;
+        if (block.classList.contains('solved')) {
+          pill.classList.remove('active'); pill.classList.add('done');
+        } else if (i === getNextUnsolved()) {
+          pill.classList.add('active');
+        }
+      }
+    }
+
+    function getNextUnsolved() {
+      for (let i = 1; i <= TOTAL_Q; i++) {
+        const b = document.querySelector('.quiz-question-block[data-q="' + i + '"]');
+        if (b && !b.classList.contains('solved')) return i;
+      }
+      return null;
+    }
+
+    function onAllSolved() {
+      const banner = document.getElementById('quiz-done-banner');
+      if (banner) { banner.style.display = 'block'; banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      setTimeout(() => {
+        unlockForm();
+        document.getElementById('form-container').scrollIntoView({ behavior: 'smooth' });
+      }, 900);
+    }
+
+    function unlockForm() {
+      document.getElementById('form-lock-msg').style.display        = 'none';
+      document.getElementById('form-unlocked-content').style.display = 'block';
+    }
+
+    /* ── FORM VALIDATION ── */
+    function markError(el) {
+      el.classList.add('error');
+      el.addEventListener('input', () => el.classList.remove('error'), { once: true });
+      el.addEventListener('change', () => el.classList.remove('error'), { once: true });
+    }
+
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', () => {
+
+      /* Render 7-step progress bar — Videos 1-5 done; Video 6 = current */
+      renderVideoProgress(6);
+
+      /* Mark first quiz pill active */
+      const p1 = document.getElementById('pill-1');
+      if (p1) p1.classList.add('active');
+
+      /* Returning visitor — already completed Video 6 */
+      if (localStorage.getItem('r7_v6_complete') === 'true') {
+        /* Auto-solve all quiz blocks */
+        document.querySelectorAll('.quiz-question-block').forEach(b => {
+          b.classList.add('solved');
+          b.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
+          const correct = b.querySelector('[data-correct="true"]');
+          if (correct) {
+            correct.classList.add('correct');
+            correct.querySelector('.opt-icon').className = 'fa-solid fa-circle-check opt-icon';
+          }
+        });
+        for (let i = 1; i <= 3; i++) {
+          const pill = document.getElementById('pill-' + i);
+          if (pill) { pill.classList.remove('active'); pill.classList.add('done'); }
+          const qn = document.getElementById('qnum-' + i);
+          if (qn) qn.classList.add('solved');
+        }
+        solvedCount = TOTAL_Q;
+        const banner = document.getElementById('quiz-done-banner');
+        if (banner) banner.style.display = 'block';
+        unlockForm();
+
+        /* Prefill saved values */
+        document.getElementById('budget').value        = localStorage.getItem('r7_budget') || '';
+        document.getElementById('alloc-digital').value = localStorage.getItem('r7_alloc_digital') || '';
+        document.getElementById('alloc-trad').value    = localStorage.getItem('r7_alloc_trad') || '';
+        document.getElementById('alloc-other').value   = localStorage.getItem('r7_alloc_other') || '';
+        document.getElementById('local-pct').value     = localStorage.getItem('r7_local_pct') || '';
+        document.getElementById('online-pct').value    = localStorage.getItem('r7_online_pct') || '';
+      }
+
+      /* Form submit */
+      document.getElementById('step-6-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const budgetEl       = document.getElementById('budget');
+        const allocDigitalEl = document.getElementById('alloc-digital');
+        const allocTradEl    = document.getElementById('alloc-trad');
+        const allocOtherEl   = document.getElementById('alloc-other');
+        const localPctEl     = document.getElementById('local-pct');
+        const onlinePctEl    = document.getElementById('online-pct');
+
+        let valid = true;
+
+        if (!budgetEl.value) { markError(budgetEl); valid = false; }
+        
+        // Sum validation for Allocations (only if at least one allocation input is filled)
+        const hasAlloc = allocDigitalEl.value.trim() || allocTradEl.value.trim() || allocOtherEl.value.trim();
+        if (hasAlloc) {
+          const digVal = parseInt(allocDigitalEl.value) || 0;
+          const tradVal = parseInt(allocTradEl.value) || 0;
+          const othVal = parseInt(allocOtherEl.value) || 0;
+          const allocSum = digVal + tradVal + othVal;
+
+          if (!allocDigitalEl.value.trim()) { markError(allocDigitalEl); valid = false; }
+          if (!allocTradEl.value.trim())    { markError(allocTradEl);    valid = false; }
+          if (!allocOtherEl.value.trim())   { markError(allocOtherEl);   valid = false; }
+
+          if (valid && allocSum !== 100) {
+            markError(allocDigitalEl);
+            markError(allocTradEl);
+            markError(allocOtherEl);
+            document.getElementById('alloc-current-sum').textContent = allocSum;
+            document.getElementById('alloc-error-msg').classList.remove('hidden');
+            valid = false;
+          } else {
+            document.getElementById('alloc-error-msg').classList.add('hidden');
+          }
+        } else {
+          document.getElementById('alloc-error-msg').classList.add('hidden');
+        }
+
+        // Sum validation for Local vs Online (only if at least one percentage input is filled)
+        const hasPct = localPctEl.value.trim() || onlinePctEl.value.trim();
+        if (hasPct) {
+          const locVal = parseInt(localPctEl.value) || 0;
+          const onlVal = parseInt(onlinePctEl.value) || 0;
+          const pctSum = locVal + onlVal;
+
+          if (!localPctEl.value.trim())  { markError(localPctEl);  valid = false; }
+          if (!onlinePctEl.value.trim()) { markError(onlinePctEl); valid = false; }
+
+          if (valid && pctSum !== 100) {
+            markError(localPctEl);
+            markError(onlinePctEl);
+            document.getElementById('pct-current-sum').textContent = pctSum;
+            document.getElementById('pct-error-msg').classList.remove('hidden');
+            valid = false;
+          } else {
+            document.getElementById('pct-error-msg').classList.add('hidden');
+          }
+        } else {
+          document.getElementById('pct-error-msg').classList.add('hidden');
+        }
+
+        if (!valid) return;
+
+        /* Save to localStorage */
+        localStorage.setItem('r7_budget',        budgetEl.value);
+        localStorage.setItem('r7_alloc_digital', allocDigitalEl.value.trim());
+        localStorage.setItem('r7_alloc_trad',    allocTradEl.value.trim());
+        localStorage.setItem('r7_alloc_other',   allocOtherEl.value.trim());
+        localStorage.setItem('r7_local_pct',     localPctEl.value.trim());
+        localStorage.setItem('r7_online_pct',    onlinePctEl.value.trim());
+        localStorage.setItem('r7_v6_complete',   'true');
+
+        /* Update funnel progress */
+        const cur = parseInt(localStorage.getItem('r7_progress') || '0');
+        if (cur < 6) localStorage.setItem('r7_progress', '6');
+
+        /* Save to leads DB (dashboard) */
+        if (typeof saveLeadStep === 'function') {
+          saveLeadStep(6, {
+            budget:       budgetEl.value,
+            allocDigital: allocDigitalEl.value.trim(),
+            allocTrad:    allocTradEl.value.trim(),
+            allocOther:   allocOtherEl.value.trim(),
+            localPct:     localPctEl.value.trim(),
+            onlinePct:    onlinePctEl.value.trim()
+          });
+        }
+
+        /* Visual feedback then redirect */
+        const btn = document.getElementById('continue-btn');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> &nbsp;Saving...';
+        btn.disabled  = true;
+        setTimeout(() => { window.location.href = 'video-7.html'; }, 700);
+      });
+
+    });
+  </script>
+
+  <script>
+    (function() {
+      const PRIORITY_DAYS = 14;
+      const STORAGE_KEY = 'priorityEnd';
+      const URGENT_THRESHOLD_DAYS = 3;
+
+      const banner = document.getElementById('priority-banner');
+      const countdownEl = document.getElementById('countdown');
+
+      function initializePriorityWindow() {
+        if (!localStorage.getItem(STORAGE_KEY)) {
+          const endDate = new Date();
+          endDate.setDate(endDate.getDate() + PRIORITY_DAYS);
+          localStorage.setItem(STORAGE_KEY, endDate.toISOString());
+        }
+      }
+
+      function updateCountdown() {
+        if (!banner || !countdownEl) return;
+        const end = new Date(localStorage.getItem(STORAGE_KEY));
+        const now = new Date();
+        const remainingMs = end - now;
+
+        if (remainingMs <= 0) {
+          countdownEl.textContent = "Priority window closed";
+          banner.classList.add('urgent');
+          return;
+        }
+
+        const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (days > 0) {
+          countdownEl.textContent = `${days} day${days !== 1 ? 's' : ''} ${hours} hr${hours !== 1 ? 's' : ''}`;
+        } else {
+          countdownEl.textContent = `${hours} hr${hours !== 1 ? 's' : ''} ${minutes} min`;
+        }
+
+        if (days < URGENT_THRESHOLD_DAYS) {
+          banner.classList.add('urgent');
+        } else {
+          banner.classList.remove('urgent');
+        }
+      }
+
+      initializePriorityWindow();
+      updateCountdown();
+      setInterval(updateCountdown, 60000);
+    })();
+  </script>
+</body>
+</html>
+

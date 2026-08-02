@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video 1 — Why is my internet advertising burning budget?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Alpine.js for interactivity -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    .training-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: clamp(6.5rem, 8vw, 8rem) 1rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+    .video-section {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    }
+    .video-header {
+      margin-bottom: 1.5rem;
+    }
+    .video-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .video-header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    .video-wrapper {
+      position: relative;
+      padding-top: 56.25%;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .quiz-card, .lead-form-section {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      transition: all var(--transition-base);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.8rem 1.2rem;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all var(--transition-base);
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+      background: rgba(255,255,255,0.06);
+    }
+    .quiz-question-block {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 1.5rem;
+    }
+    .quiz-question-block:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 1rem;
+    }
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.2rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: all var(--transition-base);
+    }
+    .quiz-option:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .quiz-option.selected {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.04);
+    }
+    .quiz-option.correct {
+      background: rgba(5, 240, 160, 0.08);
+      border-color: var(--neon-green);
+      box-shadow: var(--glow-green);
+      color: var(--neon-green);
+    }
+    .quiz-option.incorrect {
+      background: rgba(255, 61, 61, 0.08);
+      border-color: var(--neon-red);
+      color: var(--neon-red);
+    }
+    .quiz-option.disabled {
+      pointer-events: none;
+    }
+    .quiz-feedback {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      display: none;
+      line-height: 1.5;
+    }
+    .quiz-feedback.correct {
+      display: block;
+      background: rgba(5, 240, 160, 0.05);
+      border: 1px solid rgba(5, 240, 160, 0.2);
+      color: var(--text-primary);
+    }
+    .quiz-feedback.incorrect {
+      display: block;
+      background: rgba(255, 61, 61, 0.05);
+      border: 1px solid rgba(255, 61, 61, 0.2);
+      color: var(--text-primary);
+    }
+    .quiz-feedback i {
+      margin-right: 6px;
+    }
+    .question-feedback {
+      display: none;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      line-height: 1.4;
+      margin-top: 0.75rem;
+    }
+    .question-feedback.correct {
+      display: block;
+      background: rgba(5, 240, 160, 0.04);
+      border: 1px solid rgba(5, 240, 160, 0.15);
+      color: #05f0a0;
+    }
+    .question-feedback.incorrect {
+      display: block;
+      background: rgba(255, 61, 61, 0.04);
+      border: 1px solid rgba(255, 61, 61, 0.15);
+      color: #ff3d3d;
+    }
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      background: var(--gradient-primary);
+      color: #fff;
+      box-shadow: var(--glow-cyan);
+      transition: all var(--transition-base);
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.45);
+    }
+    .locked-form-message {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      border: 2px dashed var(--glass-border);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.01);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── SHARED HEADER (dynamic) ─── -->
+  <header id="shared-header"></header>
+
+  <!-- ─── MAIN CONTENT CONTAINER ─── -->
+  <div class="training-container">
+    
+    <!-- Video Player Box -->
+    <section class="video-section">
+      <div class="video-header">
+        <h2>Video 1: Why is my internet advertising burning budget?</h2>
+        <p>Analyze how digital channels fail to build trust and how ad inflation bleeds small business budgets in 2026.</p>
+      </div>
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Why is my internet advertising burning budget?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+      </div>
+    </section>
+
+    <!-- Quiz Box -->
+    <section class="quiz-card" id="quiz-section">
+      <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;color:white;">Knowledge Verification</h3>
+      <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">To unlock Video 2, please answer these three quick questions correctly:</p>
+      
+      <!-- Question 1 -->
+      <div class="quiz-question-block" data-q="1">
+        <div style="font-weight:600;font-size:1rem;color:white;">Q1: What is the typical CPM range for most social media advertising platforms in 2026?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="a">
+            <span>$0.50 – $2.00</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+          <div class="quiz-option" data-val="b" data-correct="true">
+            <span>$5 – $12+</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+          <div class="quiz-option" data-val="c">
+            <span>$0.10 – $0.50</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+        </div>
+        <div class="question-feedback mt-2 text-xs p-2 rounded border hidden" data-explanation="Social media and paid digital CPMs have risen significantly in recent years, often ranging from $5 to $12+ depending on targeting and industry."></div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="quiz-question-block" data-q="2">
+        <div style="font-weight:600;font-size:1rem;color:white;">Q2: In rising interest rate environments, what is one of the biggest risks for small businesses relying heavily on paid digital ads?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="a">
+            <span>Lower interest rates on loans</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+          <div class="quiz-option" data-val="b" data-correct="true">
+            <span>Rapidly increasing monthly ad costs with unpredictable ROI</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+          <div class="quiz-option" data-val="c">
+            <span>Free traffic surges</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+        </div>
+        <div class="question-feedback mt-2 text-xs p-2 rounded border hidden" data-explanation="As ad networks raise minimum bids and auction prices inflate, businesses face higher monthly spends without guaranteed returns."></div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="quiz-question-block" data-q="3">
+        <div style="font-weight:600;font-size:1rem;color:white;">Q3: What makes it harder for authentic business messages to cut through online today?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-val="a">
+            <span>Too few advertisers</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+          <div class="quiz-option" data-val="b" data-correct="true">
+            <span>Flood of AI-generated content creating digital noise</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+          <div class="quiz-option" data-val="c">
+            <span>Perfect algorithm targeting</span>
+            <i class="fa-regular fa-circle"></i>
+          </div>
+        </div>
+        <div class="question-feedback mt-2 text-xs p-2 rounded border hidden" data-explanation="The flood of AI-generated content creates a crowded digital space, making it harder for authentic local messages to stand out."></div>
+      </div>
+
+      <button id="submit-quiz-btn" class="cta-button" style="margin-top: 1.5rem; width: 100%;">Submit Answers &amp; Verify</button>
+      <div class="quiz-feedback" id="quiz-feedback-box"></div>
+    </section>
+
+    <!-- Lead Form Box -->
+    <section class="lead-form-section" id="form-container">
+      <div class="locked-form-message" id="form-lock-msg">
+        <i class="fa-solid fa-lock" style="font-size:2rem;margin-bottom:1rem;color:var(--text-muted);"></i>
+        <h4>Form Locked</h4>
+        <p style="font-size:0.85rem;margin-top:4px;">Please complete the quiz questions correctly above to unlock the data collection form.</p>
+      </div>
+
+      <div id="form-unlocked-content" style="display:none;">
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:1rem;color:white;">
+          Thank you for watching Video 1: 'Why is my internet advertising burning budget?'
+        </h3>
+        <p style="color:var(--text-secondary);font-size:0.88rem;line-height:1.5;margin-bottom:1.5rem;">
+          To unlock the full 7-video series and receive personalized insights on smarter marketing strategies, please provide the following details. This limited information allows us to deliver the complete series securely and ensures the content remains relevant to your location and needs.
+        </p>
+
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; line-height:1.5;">
+          <h4 style="font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:700; color:white; margin-bottom:0.75rem;">What you'll gain access to:</h4>
+          <ul style="font-size:0.82rem; color:var(--text-secondary); list-style-type: disc; padding-left: 1.25rem; margin-bottom:1rem;" class="space-y-1">
+            <li><strong>Video 2:</strong> The Hidden Costs of Staying Invisible in a Crowded Market</li>
+            <li><strong>Video 3:</strong> AI Noise vs. Real-World Trust – Why Digital Feels Broken</li>
+            <li><strong>Video 4:</strong> Recession-Proof Your Marketing: Stop Bleeding Cash on Unreliable Ads</li>
+            <li><strong>Video 5:</strong> Local Domination: Reaching Customers Where They Actually Are</li>
+            <li><strong>Video 6:</strong> The Trust Factor – Why Physical Presence Builds Loyalty Faster</li>
+            <li><strong>Video 7:</strong> Future-Proof Marketing: Low CPM Strategies That Deliver Real ROI</li>
+          </ul>
+          <p style="font-size:0.82rem; color:var(--text-secondary); line-height:1.4;">
+            These videos address the real pain points of rising ad costs, digital noise from AI content, economic uncertainty, and the fear of losing local customers to more visible competitors. They also reveal practical opportunities to achieve stronger visibility, better ROI, and sustainable growth with far more efficient methods.
+          </p>
+        </div>
+
+        <form id="step-1-form">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" required placeholder="Jane Doe" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="email">Business Email</label>
+              <input type="email" id="email" required placeholder="jane@company.com" class="form-input" />
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label for="state">State / Region</label>
+              <input type="text" id="state" required placeholder="Illinois" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="country">Country</label>
+              <input type="text" id="country" required placeholder="United States" class="form-input" />
+            </div>
+          </div>
+          
+          <p style="font-size:0.75rem;color:var(--text-muted);margin:1rem 0;line-height:1.4;">
+            By submitting, you’ll receive immediate access to Video 2 and the rest of the series as you progress. We respect your inbox and will only send relevant follow-ups.<br>
+            <strong>Privacy Assurance:</strong> Your information helps us deliver better insights and is never shared with third parties.
+          </p>
+
+          <button type="submit" class="cta-button" style="width: 100%;">Continue to Video 2 &rarr;</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ─── SHARED FOOTER (dynamic) ─── -->
+  <footer id="shared-footer"></footer>
+
+  <script src="../common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const qBlocks = document.querySelectorAll('.quiz-question-block');
+      const verifyBtn = document.getElementById('submit-quiz-btn');
+      const feedbackBox = document.getElementById('quiz-feedback-box');
+      const formLockMsg = document.getElementById('form-lock-msg');
+      const formContent = document.getElementById('form-unlocked-content');
+      const form = document.getElementById('step-1-form');
+
+      // Pre-fill quiz correct if already completed Video 1 in the past
+      if (localStorage.getItem('r7_v1_complete') === 'true') {
+        unlockForm();
+        // Prefill inputs
+        document.getElementById('name').value = localStorage.getItem('r7_name') || '';
+        document.getElementById('email').value = localStorage.getItem('r7_email') || '';
+        document.getElementById('state').value = localStorage.getItem('r7_state') || '';
+        document.getElementById('country').value = localStorage.getItem('r7_country') || '';
+      }
+
+      // Hide verify button and validate answers immediately on option click
+      if (verifyBtn) verifyBtn.classList.add('hidden');
+
+      // Handle option selections with immediate validation
+      qBlocks.forEach(block => {
+        const options = block.querySelectorAll('.quiz-option');
+        const qFeedback = block.querySelector('.question-feedback');
+        options.forEach(option => {
+          option.addEventListener('click', () => {
+            if (block.classList.contains('solved')) return;
+
+            // Reset other options visual state
+            options.forEach(opt => {
+              opt.classList.remove('selected', 'incorrect', 'correct');
+              const icon = opt.querySelector('i');
+              if (icon) {
+                icon.className = 'fa-regular fa-circle';
+              }
+            });
+
+            const isCorrect = option.getAttribute('data-correct') === 'true';
+
+            if (isCorrect) {
+              block.classList.add('solved');
+              options.forEach(opt => {
+                opt.classList.add('disabled');
+              });
+              option.className = 'quiz-option correct disabled selected';
+              const icon = option.querySelector('i');
+              if (icon) icon.className = 'fa-solid fa-circle-check';
+
+              if (qFeedback) {
+                qFeedback.className = 'question-feedback mt-2 text-xs p-2 rounded border correct';
+                qFeedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> <strong>Correct!</strong> ' + (qFeedback.getAttribute('data-explanation') || '');
+              }
+            } else {
+              option.className = 'quiz-option incorrect selected';
+              const icon = option.querySelector('i');
+              if (icon) icon.className = 'fa-solid fa-circle-xmark';
+
+              if (qFeedback) {
+                qFeedback.className = 'question-feedback mt-2 text-xs p-2 rounded border incorrect';
+                qFeedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Incorrect.</strong> Please try again.';
+              }
+            }
+
+            // Check if all questions are solved
+            const totalSolved = document.querySelectorAll('.quiz-question-block.solved').length;
+            if (totalSolved === qBlocks.length) {
+              feedbackBox.className = 'quiz-feedback correct';
+              feedbackBox.style.display = 'block';
+              feedbackBox.innerHTML = '<i class="fa-solid fa-circle-check"></i> <strong>All answers verified!</strong> Mobile wraps and recommendations build fast and cost-effective trust. Please submit the form below to unlock Video 2.';
+              setTimeout(() => {
+                unlockForm();
+                document.getElementById('form-container').scrollIntoView({ behavior: 'smooth' });
+              }, 800);
+            } else {
+              feedbackBox.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      function unlockForm() {
+        formLockMsg.style.display = 'none';
+        formContent.style.display = 'block';
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const nameVal = document.getElementById('name').value;
+        const emailVal = document.getElementById('email').value;
+        const stateVal = document.getElementById('state').value;
+        const countryVal = document.getElementById('country').value;
+        const locationVal = stateVal + ", " + countryVal;
+
+        // Save values to localStorage
+        localStorage.setItem('r7_name', nameVal);
+        localStorage.setItem('r7_email', emailVal);
+        localStorage.setItem('r7_state', stateVal);
+        localStorage.setItem('r7_country', countryVal);
+        localStorage.setItem('r7_v1_complete', 'true');
+        
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 14);
+        localStorage.setItem('priorityEnd', endDate.toISOString());
+        
+        // Update progress if smaller
+        let currentProgress = parseInt(localStorage.getItem('r7_progress') || '0');
+        if (currentProgress < 1) {
+          localStorage.setItem('r7_progress', '1');
+        }
+        
+        // Save to leads database
+        if (typeof saveLeadStep === 'function') {
+          saveLeadStep(1, {
+            name: nameVal,
+            email: emailVal,
+            state: stateVal,
+            country: countryVal,
+            location: locationVal
+          });
+        }
+
+        // Redirect to video 2
+        window.location.href = 'video-2.html';
+      });
+    });
+  </script>
+</body>
+</html>

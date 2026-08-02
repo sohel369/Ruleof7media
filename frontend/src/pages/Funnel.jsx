@@ -208,7 +208,7 @@ const QUIZZES = {
     questions: [
       {
         question: "What is the main driver to build local wrap brand supremacy?",
-        options: ["Relying solely on SEO", "A network of rolling wrapped fleets driving local viral impressions", "Lowering prices", "Newspaper print ads"],
+        options: ["Relying solely on SEO", "Consistency, frequency, familiarity, and trust-building where your customers, live work and play.", "Lowering prices", "Newspaper print ads"],
         correct: 1,
         feedback: "Correct! Consistent physical wrapped impressions in a target area establish local visual dominance."
       }
@@ -218,58 +218,102 @@ const QUIZZES = {
 
 const VIDEOS_CONTENT = {
   1: {
-    title: "Video 1: Why Digital Ads May Increase Customer Acquisition Costs",
+    url: "https://cinema8.com/video/5J7zYBVX",
+      title: "Video 1: Why Digital Ads May Increase Customer Acquisition Costs",
     duration: 12,
-    durationText: "7 Minutes 43 Seconds",
-    description: "In this session, we break down why traditional digital ads may burn through cash without generating positive local ROI. Learn the math behind skyrocketing CPCs and how to improve local ROI.",
+    description: "If your digital advertising budget keeps growing but results feel harder to predict, you're not alone. Many small businesses are watching money disappear into platforms that demand constant spend with no guarantee of return. In this video we break down exactly why internet advertising is burning budget right now — and what smarter options exist for businesses that need reliable visibility without the endless monthly drain.",
     points: ["Rising digital auction prices", "Ad blindness and banner fatigue", "The Rule of 7 in brand recall"]
   },
   2: {
-    title: "Video 2: The Hidden Costs of Staying Invisible in a Crowded Market",
+    url: "https://cinema8.com/video/WD9Wb8VJ",
+      title: "Video 2: The Hidden Costs of Staying Invisible in a Crowded Market",
     duration: 15,
-    durationText: "5 Minutes 55 Seconds",
-    description: "Discover how the major tech platforms squeeze small businesses with automated ad auctions. We reveal the hidden pricing mechanisms that drive ad inflation.",
-    points: ["Missed Chances", "Your Business Fades", "Wasted Spend"]
+    description: "You can spend thousands online and still be invisible to the customers driving past your door every day. This video reveals the hidden cost of staying invisible in your own local market — and why even large media companies invest in real-world presence to stay top-of-mind.",
+    points: ["Bid bidding algorithms", "Why click quality is decreasing", "Controlling your acquisition channel"]
   },
   3: {
-    title: "Video 3: AI Noise vs Real-World Trust",
+    url: "https://cinema8.com/video/AJE7vQgD",
+      title: "Video 3: AI Noise vs. Real-World Trust – Why Digital Feels Broken",
     duration: 18,
-    durationText: "6 Minutes 32 Seconds",
-    description: "We compare CPM rates across digital, billboard, television, and vehicle wrap channels. Learn how a single vehicle wrap generates up to 70,000 views per day.",
-    points: ["Credibility", "OOH Builds Familiarity", "Seamless Purchase Path"]
+    description: "Customers are scrolling past more ads than ever — and trusting them less. When every feed is filled with AI-generated content, authentic businesses struggle to stand out. This video examines why digital advertising feels broken and how real-world presence builds the trust that screens can no longer deliver.",
+    points: ["Cost per thousand impressions comparison", "The visual density factor", "Fleet branding ROI"]
   },
   4: {
-    title: "Video 4: Recession-Proof Your Marketing",
+    url: "https://cinema8.com/video/YDpY5j0X",
+      title: "Video 4: Recession-Proof Your Marketing: Stop Bleeding Cash on Unreliable Ads",
     duration: 20,
-    description: "Learn how geography affects conversion rates. We demonstrate how exclusive regional wrap territories secure market dominance.",
-    points: ["Community Presence", "Competitive Edge", "Understand Problems"]
+    description: "With costs rising and uncertainty in the economy, every marketing dollar must work harder. This video shows why continuing to pour money into unreliable digital ads is a risk — and how durable, low ongoing-cost approaches can protect your budget while still delivering consistent local visibility.",
+    points: ["Mapping local service areas", "Routing logic and response times", "Dominating regional search offline"]
   },
   5: {
-    title: "Video 5: Local Domination",
-    duration: 14,
-    description: "How wrapping multiple vehicles multiplies local visibility. We explore case studies of companies growing from 2 vans to 30 through moving billboards.",
-    points: ["Visible where customers buy", "Less reliance on algorithms", "More memorable"]
+    title: "Video 5: Local Domination: Reaching Customers Where They Actually Are",
+    duration: 33,
+    durationText: "5 minutes 30 seconds",
+    description: "Most of your best customers live and work within a short drive of your business. Yet digital campaigns often chase audiences far outside that zone. This video explores how to dominate your actual service area with high-frequency, relevant exposure — including groundbreaking practical options even if you don't own a fleet of vehicles.",
+    points: ["Scale dynamics of fleet wraps", "Standardizing brand identity", "Resale value protection"]
   },
   6: {
-    title: "Video 6: The Trust Factor",
+    title: "Video 6: The Trust Factor – Why Physical Presence Builds Loyalty Faster",
     duration: 16,
-    durationText: "5 Minutes 40 Seconds",
-    description: "Attributing offline wraps with absolute precision. We demonstrate QR scan routing, progressive profile builders, and real-time CRM updates.",
-    points: ["Always-on visibility", "Trusted exposure", "Lower-cost recall"]
+    description: "Trust is the real currency in local business. This video reveals why professional physical presence builds credibility and loyalty faster than digital messages alone — and how the right real-world strategy creates daily recognition that turns into referrals and repeat business.",
+    points: ["Designing scanning call-to-actions", "Cookie-less attribution", "Simulating instant CRM syncing"]
   },
   7: {
-    title: "Video 7: Complete Lead Qualification & Local Supremacy",
-    duration: 22,
-    description: "The final step to lock in your territory rights. We outline the step-by-step implementation map to launch your local wrapping campaign.",
+    title: "Video 7: Future-Proof Marketing: Low CPM Strategies That Deliver Real ROI",
+    duration: 34.5,
+    durationText: "5 minutes 45 seconds",
+    description: "After exploring the problems with digital advertising, this final video delivers the complete solution. You'll see how to achieve dramatically lower cost-per-thousand impressions, consistent local reach, and a marketing approach that continues working Year after year — without the ongoing budget bleed of social media.",
     points: ["Selecting wrap designs that convert", "Activating your tracking dashboard", "Finalizing your Rule7 qualification score"]
   }
 };
 
-const CINEMA8_VIDEOS = {
-  1: "5J7zYBVX",
-  2: "WD9Wb8VJ",
-  3: "AJE7vQgD",
-  4: "YDpY5j0X"
+
+const PriorityBanner = () => {
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [isUrgent, setIsUrgent] = useState(false);
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const endStr = localStorage.getItem('r7_priorityEnd');
+      if (!endStr) return;
+      const end = new Date(endStr);
+      const now = new Date();
+      const remainingMs = end - now;
+
+      if (remainingMs <= 0) {
+        setTimeLeft("Priority window closed");
+        setIsUrgent(true);
+        return;
+      }
+
+      const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+
+      if (days > 0) {
+        setTimeLeft(`${days} day${days !== 1 ? 's' : ''} ${hours} hr${hours !== 1 ? 's' : ''}`);
+      } else {
+        setTimeLeft(`${hours} hr${hours !== 1 ? 's' : ''} ${minutes} min`);
+      }
+
+      setIsUrgent(days < 3);
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!timeLeft) return null;
+
+  return (
+    <div className={`w-full py-2 px-4 text-center font-bold text-sm z-40 flex justify-center items-center gap-3 transition-colors duration-500 shadow-md ${isUrgent ? 'bg-gradient-to-r from-[#c53030] to-[#e53e3e] text-white' : 'bg-gradient-to-r from-[#1a365d] to-[#2b6cb0] text-white'}`}>
+      <span className="opacity-90">Priority Access Remaining:</span>
+      <span className={`bg-white/20 px-3 py-1 rounded-full tracking-wide ${isUrgent ? 'animate-pulse' : ''}`}>
+        {timeLeft}
+      </span>
+    </div>
+  );
 };
 
 export const Funnel = () => {
@@ -277,10 +321,9 @@ export const Funnel = () => {
   const location = useLocation();
   const { stepId } = useParams();
   
-  const isBonusPage = location.pathname.includes('/funnel/bonus');
+  const currentStep = stepId ? parseInt(stepId.replace('video-', '')) : 0;
   const isCompletePage = location.pathname === '/funnel/complete';
   const isLandingPage = location.pathname === '/funnel' || location.pathname === '/funnel/';
-  const currentStep = stepId && !isBonusPage && !isCompletePage ? parseInt(stepId.replace('video-', '')) : 0;
 
   // State
   const [formData, setFormData] = useState({
@@ -384,7 +427,8 @@ export const Funnel = () => {
               email: data.email || '',
               company: data.company || '',
               state: data.state || '',
-              country: data.country || '',
+              country: data.country ? (['United States', 'United Kingdom', 'Australia', 'Canada', 'Eurozone (EU)'].includes(data.country) ? data.country : 'Other') : '',
+              otherCountry: data.country && !['United States', 'United Kingdom', 'Australia', 'Canada', 'Eurozone (EU)'].includes(data.country) ? data.country : '',
               role: data.role || '',
               industry: data.industry ? (isStandard ? data.industry : 'Other') : '',
               otherIndustry: data.industry && !isStandard ? data.industry : '',
@@ -424,30 +468,8 @@ export const Funnel = () => {
     // Reset quiz state on every new step
     setQuizChecked(false);
     setQuizPassed(false);
-    setQuizUnlocked(false);
     setErrorMsg('');
   }, [currentStep, location.pathname]);
-
-  // Load player.js script once
-  useEffect(() => {
-    if (!window.playerjs) {
-      const script = document.createElement('script');
-      script.src = "https://cdn.embed.ly/player-0.1.0.min.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-
-  const handleIframeLoad = (e) => {
-    if (window.playerjs) {
-      const player = new window.playerjs.Player(e.target);
-      player.on('ready', () => {
-        player.on('ended', () => {
-          setQuizUnlocked(true);
-        });
-      });
-    }
-  };
 
   // Click outside listener for custom industry dropdown
   useEffect(() => {
@@ -460,6 +482,30 @@ export const Funnel = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  
+  // Dynamic SEO and Title Update
+  useEffect(() => {
+    let pageTitle = "Marketing Mastery Journey | Rule7Media";
+    let pageDescription = "Unlock the proven ROI frameworks of mobile transit branding.";
+    
+    if (isLandingPage) {
+      pageTitle = "Premium Local Branding | Rule7Media";
+    } else if (isCompletePage) {
+      pageTitle = "Congratulations - Profile Finalized | Rule7Media";
+    } else if (VIDEOS_CONTENT[currentStep]) {
+      pageTitle = `${VIDEOS_CONTENT[currentStep].title} | Rule7Media`;
+      pageDescription = VIDEOS_CONTENT[currentStep].description.substring(0, 150) + "...";
+    }
+
+    document.title = pageTitle;
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.name = "description";
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.content = pageDescription;
+  }, [currentStep, isLandingPage, isCompletePage]);
   // Video progress simulator
   useEffect(() => {
     if (isPlaying) {
@@ -578,6 +624,12 @@ export const Funnel = () => {
         setErrorMsg('Please fill in all details to proceed.');
         return;
       }
+      // Initialize Priority Window for 14 days
+      if (!localStorage.getItem('r7_priorityEnd')) {
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 14);
+        localStorage.setItem('r7_priorityEnd', endDate.toISOString());
+      }
     } else if (currentStep === 2) {
       if (!formData.company || !formData.industry || !formData.serviceArea) {
         setErrorMsg('Please fill in all details to proceed.');
@@ -680,7 +732,7 @@ export const Funnel = () => {
           
           const refQuery = refId ? `?ref=${refId}` : '';
           if (currentStep === 7) {
-            navigate(`/funnel/bonus${refQuery}`);
+            navigate(`/funnel/complete${refQuery}`);
           } else {
             navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
           }
@@ -735,12 +787,40 @@ export const Funnel = () => {
     });
   };
 
+  const [isSessionClaimed, setIsSessionClaimed] = useState(false);
+
+  const submitComplete = async (e) => {
+    e.preventDefault();
+    
+    // Save final details
+    const payload = {
+      leadId: leadId || ('lead_' + Date.now()),
+      step: 8,
+      data: {
+        ...formData,
+        sessionClaimed: true
+      }
+    };
+
+    try {
+      await fetch('/api/leads/step', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setIsSessionClaimed(true);
+    } catch (err) {
+      console.error(err);
+      setIsSessionClaimed(true); // Still show success for UX, even if offline
+    }
+  };
+
   // --- RENDERS ---
 
   if (isLandingPage) {
     // Premium Advertiser Landing Page (landing.html equivalent)
     return (
-      <div className="min-h-screen flex flex-col bg-darkBg text-slate-100 font-sans selection:bg-neonRed/30 selection:text-white">
+      <div className="min-h-screen relative overflow-x-hidden w-full max-w-[100vw] flex flex-col bg-darkBg text-slate-100 font-sans selection:bg-neonRed/30 selection:text-white">
         
         {/* Orbs background glow */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-neonRed/5 rounded-full filter blur-[120px] pointer-events-none"></div>
@@ -748,10 +828,10 @@ export const Funnel = () => {
         <div className="absolute bottom-1/4 left-10 w-[450px] h-[450px] bg-neonPurple/5 rounded-full filter blur-[110px] pointer-events-none"></div>
 
         {/* Sleek Premium Navigation Header */}
-        <nav className="fixed top-0 w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center bg-[#040409]/95 backdrop-blur-md border-b border-slate-900/80">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-neonRed to-neonPink flex items-center justify-center font-black text-white shadow-lg shadow-neonRed/35 text-lg">R</div>
-            <span className="font-grotesk font-black text-xl tracking-tight text-white">Rule7<span className="text-neonRed">Media</span></span>
+        <nav className="fixed top-0 inset-x-0 z-50 py-4 px-4 sm:px-6 md:px-12 flex justify-between items-center bg-[#040409]/95 backdrop-blur-md border-b border-slate-900/80 max-w-[100vw]">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-neonRed to-neonPink flex items-center justify-center font-black text-white shadow-lg shadow-neonRed/35 text-sm sm:text-lg">R</div>
+            <span className="font-grotesk font-black text-lg sm:text-xl tracking-tight text-white">Rule7<span className="text-neonRed">Media</span></span>
           </div>
 
           {/* Central Nav Links (Desktop) */}
@@ -762,21 +842,18 @@ export const Funnel = () => {
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/partner')} className="text-xs font-semibold text-slate-400 hover:text-white transition-colors mr-2">
-              Partner Network
-            </button>
+          <div className="flex items-center gap-2 sm:gap-3">
             {refId && (
               <div className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-bold uppercase bg-neonGreen/10 text-neonGreen px-3 py-1 rounded-full border border-neonGreen/20 animate-pulse">
                 <span className="w-1.5 h-1.5 rounded-full bg-neonGreen"></span>
-                Partner Active
+                Partner
               </div>
             )}
             <button
               onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}`)}
-              className="px-5 py-2.5 bg-gradient-to-r from-neonCyan/20 to-neonPurple/20 border border-neonCyan/30 text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:from-neonCyan/30 hover:to-neonPurple/30 transition-all duration-300"
+              className="px-3 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-neonCyan/20 to-neonPurple/20 border border-neonCyan/30 text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider rounded-lg sm:rounded-xl hover:from-neonCyan/30 hover:to-neonPurple/30 transition-all duration-300 whitespace-nowrap"
             >
-              Verify Eligibility
+              Verify <span className="hidden sm:inline">Eligibility</span>
             </button>
           </div>
         </nav>
@@ -786,15 +863,15 @@ export const Funnel = () => {
           {/* Left: Text copy & stats */}
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-neonCyan/10 text-neonCyan border border-neonCyan/25 shadow-inner w-fit">
-              <span>✨</span> Solve Your Digital Ads Problem
+              <span>✨</span> Grow Your Business With Vehicle Advertising
             </div>
             
             <h1 className="text-4xl sm:text-6xl font-black font-grotesk tracking-tight text-white leading-[1.08]">
-              Build Trust and Maximize Your <span className="bg-gradient-to-r from-neonCyan via-neonPurple to-neonPink bg-clip-text text-transparent">Local ROI</span>
+              Reach Thousands of Local Customers <span className="bg-gradient-to-r from-neonCyan via-neonPurple to-neonPink bg-clip-text text-transparent">Every Single Day</span>
             </h1>
 
             <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl">
-              Discover how your local business can overcome digital ad fatigue by leveraging data-driven strategies for measurable local brand presence and community trust. Watch our free 7-video series to unlock the proven ROI frameworks.
+              Discover how your local business can generate massive brand supremacy and community trust through professionally wrapped vehicles. Watch our free 7-video series to unlock the proven ROI frameworks of mobile transit branding.
             </p>
 
             <div className="pt-2 flex flex-col sm:flex-row gap-4">
@@ -808,18 +885,18 @@ export const Funnel = () => {
             </div>
 
             {/* Stats Bar */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-10 border-t border-slate-900 max-w-2xl">
+            <div className="grid grid-cols-3 gap-6 pt-10 border-t border-slate-900 max-w-lg">
               <div>
-                <span className="text-2xl font-black text-white font-grotesk block mb-1">Up to 70,000</span>
-                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block leading-snug">views per vehicle per day</span>
+                <span className="text-2xl font-black text-white font-grotesk block mb-1">20,000+</span>
+                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Daily Views / Car</span>
               </div>
               <div>
-                <span className="text-2xl font-black text-neonCyan font-grotesk block mb-1">30x-60x</span>
-                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block leading-snug">Lower CPM than major platforms</span>
+                <span className="text-2xl font-black text-neonCyan font-grotesk block mb-1">50x - 100x</span>
+                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Lower CPM than CPC</span>
               </div>
               <div>
-                <span className="text-2xl font-black text-neonPink font-grotesk block mb-1">5x Better</span>
-                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block leading-snug">instant brand recall than major platforms</span>
+                <span className="text-2xl font-black text-neonPink font-grotesk block mb-1">97%</span>
+                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Brand Recall</span>
               </div>
             </div>
           </div>
@@ -828,34 +905,14 @@ export const Funnel = () => {
           <div className="lg:col-span-5 relative w-full flex justify-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-neonCyan/10 to-neonPurple/10 rounded-3xl filter blur-2xl opacity-60"></div>
             <div className="relative glass-card p-3 rounded-3xl border border-slate-900 shadow-2xl w-full max-w-sm hover:scale-[1.02] transition-transform duration-300">
-              {/* Placeholder: Update image to not reveal full vehicle wrap too early */}
               <img 
                 src="/assets/vehicle_wrap.png" 
-                alt="Local marketing impact mockup"
+                alt="Wrapped vehicle advertising mockup"
                 className="w-full h-auto rounded-2xl object-cover shadow-lg"
               />
               <div className="p-4 text-center space-y-1.5">
-                <span className="text-[10px] font-bold text-neonCyan uppercase tracking-widest block">Strategic Local Visibility</span>
-                <p className="text-[10px] text-slate-400">Generate non-stop neighborhood visibility and digital dominance.</p>
-                
-                <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-slate-800 text-left">
-                  <div className="bg-slate-900/50 p-2.5 rounded-lg border border-slate-800 flex flex-col justify-center">
-                    <strong className="text-neonCyan block text-sm font-black tracking-tight">6x Better</strong>
-                    <span className="text-[9px] text-slate-400 leading-tight mt-0.5 font-semibold">1 week brand recall than major platforms</span>
-                  </div>
-                  <div className="bg-slate-900/50 p-2.5 rounded-lg border border-slate-800 flex flex-col justify-center">
-                    <strong className="text-neonPink block text-sm font-black tracking-tight">75%</strong>
-                    <span className="text-[9px] text-slate-400 leading-tight mt-0.5 font-semibold">Immediate Search Action</span>
-                  </div>
-                  <div className="bg-slate-900/50 p-2.5 rounded-lg border border-slate-800 flex flex-col justify-center">
-                    <strong className="text-neonGreen block text-sm font-black tracking-tight">62%</strong>
-                    <span className="text-[9px] text-slate-400 leading-tight mt-0.5 font-semibold">Purchase Influence of passersby</span>
-                  </div>
-                  <div className="bg-slate-900/50 p-2.5 rounded-lg border border-slate-800 flex flex-col justify-center">
-                    <strong className="text-neonAmber block text-sm font-black tracking-tight">92%</strong>
-                    <span className="text-[9px] text-slate-400 leading-tight mt-0.5 font-semibold">Positive Sentiment</span>
-                  </div>
-                </div>
+                <span className="text-[10px] font-bold text-neonCyan uppercase tracking-widest block">Premium Out-Of-Home Ads</span>
+                <p className="text-[10px] text-slate-400">Generate non-stop neighborhood visibility with wrapped local fleets.</p>
               </div>
             </div>
           </div>
@@ -874,8 +931,8 @@ export const Funnel = () => {
         {/* Benefits of Vehicle Advertising */}
         <section id="benefits" className="py-24 px-6 max-w-6xl mx-auto space-y-16">
           <div className="text-center max-w-xl mx-auto space-y-2">
-            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Why Traditional Digital Advertising Is Becoming Harder</h2>
-            <p className="text-xs text-slate-400">Avoid increasingly expensive online PPC auctions by exploring real-world offline visibility. Put your brand message directly where your local target market lives.</p>
+            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Why Out-of-Home Branding Outperforms</h2>
+            <p className="text-xs text-slate-400">Avoid expensive online PPC auctions. Put your brand message directly where your local target market lives.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
@@ -883,7 +940,7 @@ export const Funnel = () => {
               <div className="w-10 h-10 rounded-xl bg-neonCyan/10 flex items-center justify-center text-lg flex-shrink-0">📈</div>
               <div className="space-y-1.5">
                 <h4 className="font-bold text-white text-sm">Reach Thousands of Local Customers</h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">Your brand reaches customers where they live and work through continuous real-world visibility, capturing high-density community attention without relying on search boxes.</p>
+                <p className="text-slate-400 leading-relaxed text-[11px]">Vehicles drive where your prospects live and work, capturing high-density community attention without relying on search boxes.</p>
               </div>
             </div>
             
@@ -899,7 +956,7 @@ export const Funnel = () => {
               <div className="w-10 h-10 rounded-xl bg-neonAmber/10 flex items-center justify-center text-lg flex-shrink-0">🚗</div>
               <div className="space-y-1.5">
                 <h4 className="font-bold text-white text-sm">24/7 Mobile Exposure</h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">Your advertisement promotes your brand continuously. Your brand stays visible while your campaign remains active throughout the day, whether on job sites or servicing clients.</p>
+                <p className="text-slate-400 leading-relaxed text-[11px]">Your advertisement promotes your brand continuously. Your wraps work while driving, parked on job sites, or servicing clients.</p>
               </div>
             </div>
 
@@ -928,8 +985,8 @@ export const Funnel = () => {
 
             <div className="relative z-20 space-y-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-neonRed px-2.5 py-1 bg-neonRed/10 rounded-full border border-neonRed/20">Free Onboarding series</span>
-              <h3 className="text-2xl font-black text-white font-grotesk tracking-tight">Why Digital Ads May Be Burning More Budget Than Expected</h3>
-              <p className="text-xs text-slate-400 max-w-lg mx-auto">Discover the metrics behind skyrocketing CPC auctions and how to establish a strong local branding presence in your territory.</p>
+              <h3 className="text-2xl font-black text-white font-grotesk tracking-tight">Why Internet Ads Keep Burning Budget</h3>
+              <p className="text-xs text-slate-400 max-w-lg mx-auto">Discover the metrics behind skyrocketing CPC auctions and how to establish a local branding monopoly in your territory.</p>
             </div>
 
             <span className="text-[10px] font-bold uppercase text-slate-500 tracking-wider block relative z-20 group-hover:text-neonRed transition-colors">Click to begin Video 1 (12 mins) →</span>
@@ -955,7 +1012,7 @@ export const Funnel = () => {
         <section id="how-it-works" className="py-24 px-6 max-w-6xl mx-auto space-y-16">
           <div className="text-center max-w-xl mx-auto space-y-2">
             <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">The 4-Step Onboarding Flow</h2>
-            <p className="text-xs text-slate-400">From education to measurable real-world brand visibility.</p>
+            <p className="text-xs text-slate-400">From digital education to high-impact physical wrapped vehicles.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs text-slate-400">
@@ -979,8 +1036,8 @@ export const Funnel = () => {
 
             <div className="glass-card p-6 space-y-4 hover:border-slate-800 transition-all">
               <span className="text-neonGreen font-grotesk font-black text-lg block">04</span>
-              <h4 className="font-bold text-white text-sm">Verified Local Partner Match</h4>
-              <p className="leading-relaxed">Get routed to a certified local partner to construct your physical branding.</p>
+              <h4 className="font-bold text-white text-sm">Wrapping Match</h4>
+              <p className="leading-relaxed">Get routed to a certified wrapping shop partner to construct your wraps.</p>
             </div>
           </div>
         </section>
@@ -988,7 +1045,7 @@ export const Funnel = () => {
         {/* Why Businesses Choose Out-of-Home */}
         <section id="why-vehicle" className="py-24 px-6 bg-slate-950/20 border-t border-slate-900/60 text-center">
           <div className="max-w-4xl mx-auto space-y-12">
-            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Why Businesses Choose Strategic Local Visibility</h2>
+            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Why Businesses Choose Vehicle Advertising</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-xl mx-auto text-left text-xs text-slate-300">
               <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Lower CPM costs than search ads</div>
@@ -1014,7 +1071,7 @@ export const Funnel = () => {
         <section id="faq" className="py-24 px-6 max-w-5xl mx-auto space-y-12">
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Frequently Asked Questions</h2>
-            <p className="text-xs text-slate-400">Everything you need to know about local visibility frameworks.</p>
+            <p className="text-xs text-slate-400">Everything you need to know about vehicle advertising frameworks.</p>
           </div>
 
           <div className="space-y-4">
@@ -1028,24 +1085,12 @@ export const Funnel = () => {
                 a: "We integrate high-contrast QR scan tags into wrap designs. When prospects scan them, our system routes them to a local funnel page, registers their intent metrics, and attributes them to your area partner."
               },
               {
-                q: "How does real-world advertising compare with digital ads?",
-                a: "Digital platforms use competitive bidding models where click prices increase daily. Physical real-world visibility generates millions of continuous impressions over years for a simple, predictable cost, bringing your CPM down to pennies."
+                q: "Why is vehicle advertising cheaper than Google or Facebook Ads?",
+                a: "Google and Facebook use competitive bidding models where click prices increase daily. A single wrapped vehicle generates millions of impressions over years for a one-time wrapping cost, costing pennies per CPM."
               },
               {
                 q: "How do I get matched with a wrapping partner?",
                 a: "After completing the 7-video series, our engine profiles your fleet size, territory budget, and matches you with a certified, protected wrap shop partner in your area to construct and verify wraps."
-              },
-              {
-                q: "No Vehicle? No Problem",
-                a: "You don't need your own fleet to benefit. We have partner networks and alternative visibility strategies to ensure you get the local exposure you need without owning vehicles."
-              },
-              {
-                q: "Payment Options",
-                a: "We offer flexible payment options to ensure your marketing budget works for you. Ask our representatives about installment plans and performance-based options."
-              },
-              {
-                q: "QR Code Viral Marketing",
-                a: "We integrate high-contrast QR scan tags into our assets. When prospects scan them, our system routes them to a localized funnel page, providing an instant bridge from physical to digital marketing."
               }
             ].map((item, idx) => {
               const isOpen = activeFaq === idx;
@@ -1081,149 +1126,159 @@ export const Funnel = () => {
     );
   }
 
-  if (isBonusPage) {
-    return (
-      <div className="min-h-screen flex flex-col bg-darkBg">
-        <div className="flex-1 flex flex-col justify-center items-center py-20 px-4">
-          <div className="max-w-2xl w-full glass-card rounded-2xl p-8 text-center relative overflow-hidden animate-slide-in">
-            <div className="absolute -top-16 -left-16 w-56 h-56 bg-neonPink/8 rounded-full filter blur-3xl pointer-events-none"></div>
-            
-            <div className="text-center">
-              <span className="inline-block text-xs font-bold uppercase tracking-widest text-neonPink px-4 py-1.5 bg-neonPink/10 rounded-full border border-neonPink/20 mb-6 animate-pulse">
-                Bonus Level Unlocked
-              </span>
-            </div>
-            
-            <div className="bg-slate-950/60 rounded-xl border border-slate-900 overflow-hidden shadow-2xl mb-8 relative group">
-              <div className="aspect-video bg-black flex flex-col items-center justify-center border-b border-slate-900 relative">
-                <iframe 
-                  src="https://cinema8.com/video/YDpY5n0X"
-                  className="w-full h-full absolute inset-0 z-10"
-                  frameBorder="0" 
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                ></iframe>
-              </div>
-              
-              <div className="p-6 text-left">
-                <h3 className="text-xl font-black text-white font-grotesk tracking-tight mb-2">Expected Impact of Emerging Online Safety Legislation Requiring Digital ID</h3>
-                <div className="flex items-center gap-2 mb-4 text-xs font-bold text-slate-500">
-                   <span className="bg-slate-800 px-2 py-0.5 rounded text-slate-300">Duration: 7 Minutes 24 Seconds</span>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-neonPink mb-2">Lesson Takeaways</p>
-                  <ul className="text-sm text-slate-400 space-y-2 font-medium">
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonGreen" /> Audience reach declines</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonGreen" /> CPM rises</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonGreen" /> Real-world visibility gains value</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-8 rounded-xl border border-slate-800 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-neonCyan/10 rounded-full filter blur-2xl pointer-events-none"></div>
-              <h3 className="text-2xl font-black text-white mb-2 relative z-10 text-center sm:text-left">Claim Your Strategy Session</h3>
-              <p className="text-sm text-slate-400 mb-6 relative z-10 text-center sm:text-left">Fill out the form below to connect with our verified local partner and implement these strategies.</p>
-              
-              <form className="space-y-4 relative z-10" onSubmit={(e) => { e.preventDefault(); navigate('/funnel/complete' + (refId ? `?ref=${refId}` : '')); }}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">First Name</label>
-                    <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Surname</label>
-                    <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Company</label>
-                    <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Industry</label>
-                    <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Country</label>
-                    <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Zip/Postcode</label>
-                    <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Phone</label>
-                    <input type="tel" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Marketing Budget</label>
-                    <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required placeholder="e.g. $5,000/mo" />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Marketing Allocation</label>
-                  <input type="text" className="w-full p-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm focus:ring-1 focus:ring-neonCyan outline-none transition-all" required placeholder="e.g. 80% Digital, 20% Physical" />
-                </div>
-
-                <button type="submit" className="w-full p-4 mt-6 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg glow-cyan">
-                  Submit Request
-                </button>
-              </form>
-            </div>
-
-          </div>
-        </div>
-        <GlobalFooter />
-      </div>
-    );
-  }
-
   if (isCompletePage) {
     return (
-      <div className="min-h-screen flex flex-col bg-darkBg">
-        <div className="flex-1 flex flex-col justify-center items-center py-20 px-4">
-          <div className="max-w-2xl w-full glass-card rounded-2xl p-8 text-center relative overflow-hidden animate-slide-in">
-            <div className="absolute -top-16 -left-16 w-56 h-56 bg-neonGreen/8 rounded-full filter blur-3xl pointer-events-none"></div>
-            <div className="absolute bottom-0 right-0 w-40 h-40 bg-neonCyan/5 rounded-full filter blur-2xl pointer-events-none"></div>
-
-            <div className="flex items-center justify-center gap-1.5 mb-7">
-              {[1,2,3,4,5,6,7].map(n => (
-                <div key={n} className="w-8 h-8 rounded-full bg-neonGreen/20 border border-neonGreen/40 flex items-center justify-center">
-                  <Check className="w-4 h-4 text-neonGreen" />
-                </div>
-              ))}
-            </div>
-
-            <div className="w-20 h-20 bg-neonGreen/15 text-neonGreen rounded-full flex items-center justify-center mx-auto mb-6 border border-neonGreen/25 shadow-lg">
-              <Check className="w-10 h-10" />
-            </div>
-
-            <span className="text-xs font-bold uppercase tracking-widest text-neonGreen px-3 py-1 bg-neonGreen/10 rounded-full border border-neonGreen/20">
-              Training Complete
-            </span>
-
-            <h1 className="text-3xl font-grotesk font-black text-white mt-4 mb-2 leading-tight">
-              Congratulations! Your Application Is Submitted.
-            </h1>
-            <p className="text-slate-400 mt-4 leading-relaxed max-w-lg mx-auto">
-              Our team is reviewing your application. We'll contact you within 1–2 business days with the next steps.
-              <br/><br/>
-              <span className="text-neonCyan">Please keep an eye on your email for your strategy session details.</span>
-            </p>
+      <div className="min-h-screen relative overflow-x-hidden w-full max-w-[100vw] bg-black text-slate-300 font-sans flex flex-col pt-24">
+        <nav className="fixed top-0 inset-x-0 w-auto z-50 py-4 px-4 sm:px-6 flex justify-between items-center bg-darkBg/90 backdrop-blur-md border-b border-slate-900 max-w-[100vw]">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-bold text-white shadow-lg glow-pink">R</div>
+            <span className="font-grotesk font-bold text-xl tracking-tight text-white">Rule7<span className="text-neonRed">Media</span></span>
           </div>
-        </div>
+        </nav>
+
+        <main className="flex-1 max-w-4xl w-full mx-auto px-6 pb-16 flex flex-col gap-10">
+          
+          <div className="text-center space-y-4">
+            <h1 className="text-3xl md:text-5xl font-grotesk font-black text-white uppercase tracking-tight">
+              Congratulations on Completing the <span className="text-transparent bg-clip-text bg-gradient-to-r from-neonRed via-neonPink to-neonCyan">Marketing Mastery Journey</span>
+            </h1>
+            <p className="text-lg text-slate-400">You are one step away from the Real Game Changer by gamifying your marketing Strategy leading to Viral spread of your message.</p>
+          </div>
+
+          {/* Bonus Video */}
+          <div className="glass-card rounded-2xl p-6 border border-neonCyan/30 shadow-[0_0_30px_rgba(0,255,255,0.1)]">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-2 py-1 rounded border border-neonCyan/20">
+                Bonus Video
+              </span>
+              <span className="text-xs text-slate-500">Duration: 7 minutes 24 seconds</span>
+            </div>
+            <h2 className="text-xl font-grotesk font-bold text-white mb-2">Expected Impact of Emerging Online Safety Legislation Requiring Digital ID</h2>
+            <p className="text-sm text-slate-400 mb-6">New online safety laws in the USA, Eurozone, Australia, the UK, Canada and other countries are introducing stricter age verification and Digital ID requirements. For small businesses that rely on social media and digital advertising, this could mean reduced reach, higher costs, and more fragmented audiences.<br/><br/>This video examines what these changes are likely to mean for your advertising results — and why many businesses are already looking at reliable, privacy-friendly alternatives that deliver consistent local impressions without digital verification barriers.</p>
+            
+            <div className="relative aspect-video bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-xl group mb-6">
+               <img src="/assets/vehicle_wrap.png" alt="Bonus Video Thumbnail" className="w-full h-full object-cover opacity-30 group-hover:opacity-20 transition-opacity" />
+               <div className="absolute inset-0 flex items-center justify-center">
+                 <div className="w-16 h-16 rounded-full bg-neonCyan/20 flex items-center justify-center cursor-pointer hover:bg-neonCyan/40 transition-colors z-20 shadow-lg shadow-neonCyan/20">
+                    <Play className="w-8 h-8 fill-neonCyan ml-1" />
+                 </div>
+               </div>
+            </div>
+
+            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Lesson Takeaways</p>
+              <ul className="space-y-2 text-xs text-slate-300 ml-1">
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Audience reach declines</li>
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> CPM rises</li>
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Real-world visibility gains value</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Claim Strategy Session Form */}
+          <div className="glass-card rounded-2xl p-8 border border-neonRed/30 relative overflow-hidden mt-4 min-h-[300px] flex flex-col justify-center">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-neonRed/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+            
+            {isSessionClaimed ? (
+              <div className="relative z-10 text-center space-y-6 animate-slide-in">
+                <div className="w-20 h-20 bg-neonGreen/10 text-neonGreen rounded-full flex items-center justify-center mx-auto border border-neonGreen/30 shadow-[0_0_30px_rgba(0,255,128,0.2)]">
+                  <Check className="w-10 h-10" />
+                </div>
+                <h3 className="text-3xl font-black text-white font-grotesk tracking-tight">Profile Finalized!</h3>
+                <div className="p-5 bg-slate-900/60 rounded-xl border border-slate-800 text-left space-y-3 max-w-lg mx-auto">
+                  <div className="flex items-center gap-3 text-sm text-slate-300">
+                    <Check className="w-4 h-4 text-neonGreen flex-shrink-0" />
+                    <span>Your request has been successfully recorded in our system.</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-slate-300">
+                    <Check className="w-4 h-4 text-neonGreen flex-shrink-0" />
+                    <span>Our verified local wrapping partner has been notified.</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-slate-300">
+                    <Check className="w-4 h-4 text-neonGreen flex-shrink-0" />
+                    <span>They will contact you shortly to begin your Marketing Efficiency Audit.</span>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 italic mt-6">You will receive an email notification once the CRM integration is activated.</p>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">Claim Your Strategy Session</h3>
+                <p className="text-sm text-slate-400 mb-8 relative z-10">Fill out the form below to connect with our verified local partner and implement these strategies.</p>
+                
+                <form onSubmit={submitComplete} className="space-y-6 relative z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Name</label>
+                      <input type="text" name="name" value={formData.name || ''} onChange={handleInputChange} className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Email</label>
+                      <input type="email" name="email" value={formData.email || ''} onChange={handleInputChange} className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Company</label>
+                      <input type="text" name="company" value={formData.company || ''} onChange={handleInputChange} className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Industry Sector</label>
+                      <select name="industry" value={formData.industry || ''} onChange={handleInputChange} className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all">
+                        <option value="" disabled className="bg-darkBg text-slate-400">Select Industry</option>
+                        <option value="Home Services / Trades" className="bg-darkBg">Home Services / Trades</option>
+                        <option value="Real Estate" className="bg-darkBg">Real Estate</option>
+                        <option value="Healthcare / Dental" className="bg-darkBg">Healthcare / Dental</option>
+                        <option value="Professional Services" className="bg-darkBg">Professional Services</option>
+                        <option value="Retail / Hospitality" className="bg-darkBg">Retail / Hospitality</option>
+                        <option value="Logistics / Delivery" className="bg-darkBg">Logistics / Delivery</option>
+                        <option value="Other" className="bg-darkBg">Other</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Marketing Budget (Optional)</label>
+                      <input type="text" placeholder="e.g. $5000/mo" className="w-full glass-input rounded-lg p-3 text-white focus:ring-1 focus:ring-neonRed text-sm transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Market Allocation (Optional)</label>
+                      <input type="text" placeholder="e.g. 80% Digital / 20% Traditional" className="w-full glass-input rounded-lg p-3 text-white focus:ring-1 focus:ring-neonRed text-sm transition-all" />
+                    </div>
+                  </div>
+                  
+                  <button type="submit" className="w-full p-4 bg-neonRed hover:bg-neonRed/90 rounded-lg font-bold text-white text-sm transition-all duration-300 shadow-[0_0_20px_rgba(255,42,85,0.4)] flex items-center justify-center gap-2 mt-4 hover:scale-[1.02]">
+                    <span>Submit Profile & Claim Session</span>
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+
+          {/* Gotta Scan Them All Video */}
+          <div className="glass-card rounded-2xl p-6 border border-neonPink/30 shadow-[0_0_30px_rgba(255,10,214,0.1)] mt-6">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-neonPink bg-neonPink/10 px-2 py-1 rounded border border-neonPink/20">
+                Next Steps
+              </span>
+            </div>
+            <h2 className="text-xl font-grotesk font-bold text-white mb-2">Gotta Scan Them All™ – Gamify Your Local Marketing</h2>
+            <div className="space-y-4 mb-6">
+              <p className="text-sm text-slate-400"><strong className="text-slate-300">Pain Points Addressed:</strong> Marketing that feels flat and one-way, low customer engagement, difficulty standing out, and the desire for marketing that actually creates excitement and loyalty.</p>
+              <p className="text-sm text-slate-400">This is gamification that works in the real world. Your brand becomes part of a daily local challenge that people actively look for, engage with, and remember. Higher recall. More referrals. Stronger loyalty. Marketing that feels exciting instead of invisible.</p>
+              <p className="text-sm text-slate-400">Local businesses using this approach don’t just advertise — they create a game customers want to play. The result is attention, recognition, and growth that digital ads simply cannot match.</p>
+              <p className="text-sm text-slate-400">Watch now and discover how to turn everyday visibility into a powerful, addictive system that puts your business ahead of the competition.</p>
+            </div>
+            
+            <div className="relative aspect-video bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-xl group">
+               <div className="absolute inset-0 bg-gradient-to-tr from-neonPink/10 to-neonCyan/10"></div>
+               <img src="/assets/vehicle_wrap.png" alt="Gamification" className="w-full h-full object-cover opacity-20 group-hover:opacity-10 transition-opacity" />
+               <div className="absolute inset-0 flex items-center justify-center">
+                 <div className="w-16 h-16 rounded-full bg-neonPink/20 flex items-center justify-center cursor-pointer hover:bg-neonPink/40 transition-colors z-20 shadow-lg shadow-neonPink/20">
+                    <Play className="w-8 h-8 fill-neonPink ml-1" />
+                 </div>
+               </div>
+            </div>
+          </div>
+
+        </main>
         <GlobalFooter />
       </div>
     );
@@ -1232,8 +1287,8 @@ export const Funnel = () => {
   if (!leadId && currentStep >= 1) {
     // Lead Gating form
     return (
-      <div className="min-h-screen flex flex-col bg-darkBg text-white">
-        <nav className="fixed top-0 w-full z-50 py-4 px-6 flex justify-between items-center bg-darkBg/90 backdrop-blur-md border-b border-slate-900">
+      <div className="min-h-screen relative overflow-x-hidden w-full max-w-[100vw] flex flex-col bg-darkBg text-white">
+        <nav className="fixed top-0 inset-x-0 w-auto z-50 py-4 px-4 sm:px-6 flex justify-between items-center bg-darkBg/90 backdrop-blur-md border-b border-slate-900 max-w-[100vw]">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-bold text-white shadow-lg glow-pink">R</div>
             <span className="font-grotesk font-bold text-xl tracking-tight text-white">Rule7<span className="text-neonRed">Media</span></span>
@@ -1261,8 +1316,8 @@ export const Funnel = () => {
             
             <div className="text-center mb-8">
               <span className="text-xs font-bold uppercase tracking-wider text-neonRed px-3 py-1 bg-neonRed/10 rounded-full border border-neonRed/20">Free Education Series</span>
-              <h1 className="text-2xl font-grotesk font-extrabold text-white mt-4 leading-snug">Why Digital Ads May Be Burning More Budget Than Expected</h1>
-              <p className="text-sm text-slate-400 mt-2">Discover why 60-80% of local ad campaigns fail — and what the smartest local businesses are doing instead. Free 7-video series (Approx. 45 Mins).</p>
+              <h1 className="text-2xl font-grotesk font-extrabold text-white mt-4 leading-snug">Why Internet Ads Keep Burning Budget</h1>
+              <p className="text-sm text-slate-400 mt-2">Discover why 60-80% of local ad campaigns fail — and what the smartest local businesses are doing instead. Free 7-video series.</p>
             </div>
 
             <form onSubmit={submitLanding} className="space-y-4">
@@ -1335,7 +1390,7 @@ export const Funnel = () => {
   const highestStepCompleted = parseInt(localStorage.getItem('r7_highest_step_completed') || '0');
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen relative overflow-x-hidden w-full max-w-[100vw] flex flex-col">
       {/* Top Navbar with Progress bar */}
       <header className="glass-card border-x-0 border-t-0 fixed top-0 w-full z-50 bg-darkBg/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -1420,66 +1475,31 @@ export const Funnel = () => {
               <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-2 py-1 rounded border border-neonCyan/20">
                 Gated Module {currentStep}
               </span>
-              <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end z-20 pointer-events-none">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-slate-800 text-white">
-                  Module {currentStep} of 7
-                </span>
-                <span className="text-xs text-slate-500">Duration: {videoContent?.durationText || `~${videoContent?.duration * 10} seconds`}</span>
-              </div>
+              <span className="text-xs text-slate-500">Duration: {videoContent?.durationText || `~${videoContent?.duration * 10} seconds`}</span>
             </div>
             <h1 className="text-xl font-grotesk font-bold text-white mb-2">{videoContent?.title}</h1>
             <p className="text-sm text-slate-400 mb-6">{videoContent?.description}</p>
 
-            {/* VIDEO PLAYER */}
-            <div className="relative aspect-video rounded-xl bg-black border border-slate-800 flex flex-col justify-center items-center group overflow-hidden shadow-2xl w-full">
-              {CINEMA8_VIDEOS[currentStep] ? (
-                videoProgress < 100 ? (
-                  <>
-                    <iframe 
-                      key={`iframe-${currentStep}`}
-                      id="cinema8-iframe"
-                      src={`https://cinema8.com/video/${CINEMA8_VIDEOS[currentStep]}`}
-                      className="w-full h-full absolute inset-0 z-0"
-                      frameBorder="0" 
-                      allow="autoplay; fullscreen"
-                      allowFullScreen
-                      onLoad={handleIframeLoad}
-                    ></iframe>
-                    {quizUnlocked && (
-                      <div className="absolute bottom-6 right-6 z-10 pointer-events-auto animate-bounce">
-                         <button 
-                           onClick={skipVideo}
-                           className="text-sm font-black uppercase tracking-wider bg-neonGreen hover:bg-neonGreen/80 text-darkBg px-6 py-3 rounded-xl transition-all shadow-[0_0_30px_rgba(57,255,20,0.6)] border-2 border-neonGreen glow-cyan flex items-center gap-2"
-                         >
-                           Continue to Quiz 
-                           <ChevronRight className="w-5 h-5 text-darkBg font-black" />
-                         </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="absolute inset-0 bg-slate-950 flex flex-col items-center justify-center p-6 text-center animate-slide-in z-20">
-                    <div className="w-12 h-12 rounded-full bg-neonGreen/20 text-neonGreen flex items-center justify-center mb-3 border border-neonGreen/30">
-                      <Check className="w-6 h-6" />
-                    </div>
-                    <h3 className="font-bold text-white text-base">Module Completed</h3>
-                    <p className="text-xs text-slate-400 max-w-xs mt-1">Video lesson completed. Please complete the quiz on the right to proceed.</p>
-                  </div>
-                )
-              ) : videoProgress < 100 ? (
+            {/* MOCK VIDEO PLAYER */}
+            <div className="relative aspect-video rounded-xl bg-black border border-slate-800 flex flex-col justify-center items-center group overflow-hidden shadow-2xl">
+              {videoContent?.url ? (
+                <iframe src={videoContent.url} className="w-full h-full absolute inset-0 border-0" allowFullScreen></iframe>
+              ) : null}
+              {videoProgress < 100 ? (
                 <>
                   {/* Play Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-between p-4 z-10">
-                    <div className="flex justify-end">
+                  <div className={`absolute inset-0 flex flex-col justify-between p-4 z-10 ${videoContent?.url && isPlaying ? 'pointer-events-none' : 'bg-gradient-to-t from-black/80 to-transparent'}`}>
+                    <div className={`flex justify-end ${videoContent?.url && isPlaying ? 'pointer-events-auto opacity-0 hover:opacity-100 transition-opacity' : ''}`}>
                       <button 
                         onClick={skipVideo}
-                        className="text-xs bg-slate-900/80 hover:bg-slate-800 hover:text-white text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50 backdrop-blur-sm transition-all"
+                        className="text-xs bg-slate-900/80 hover:bg-slate-800 hover:text-white text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50 backdrop-blur-sm transition-all shadow-lg"
                       >
                         Skip Video (Test Mode)
                       </button>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center absolute inset-0">
+                    {!isPlaying && (
+                      <div className="flex flex-col items-center justify-center absolute inset-0">
                       <button 
                         onClick={handlePlay}
                         className="w-16 h-16 bg-neonRed hover:bg-neonRed/90 hover:scale-105 active:scale-95 text-white rounded-full flex items-center justify-center transition-all shadow-xl glow-pink z-20"
@@ -1497,9 +1517,10 @@ export const Funnel = () => {
                         {isPlaying ? 'Streaming Session Live...' : 'Click to Watch Lesson'}
                       </span>
                     </div>
+                    )}
 
                     {/* Bottom Progress Bar */}
-                    <div className="space-y-1">
+                    <div className="space-y-1 z-20">
                       <div className="flex justify-between text-[10px] text-slate-400">
                         <span>{Math.round((videoProgress / 100) * (videoContent?.duration * 10))}s</span>
                         <span>{videoContent?.duration * 10}s</span>
@@ -1776,7 +1797,7 @@ export const Funnel = () => {
               {currentStep === 4 && (
                 <div className="space-y-4 text-left">
                   <div className="text-[11px] text-slate-400 bg-slate-950/60 p-4 rounded-xl border border-slate-900 leading-relaxed space-y-2">
-                    <p className="font-semibold text-white">Understanding the scale of your operations allows us to share more precise examples of how efficient marketing strategies scale with businesses of your size. This insight is especially useful for the mobility-focused tactics covered in later videos.</p>
+                    <p className="font-semibold text-white">Understanding the scale of your operations allows us to share more precise examples of how efficient marketing strategies scale with businesses of your size. This insight is especially useful for the industry specific focused tactics covered in later videos.</p>
                   </div>
 
                   <div>
@@ -1846,17 +1867,16 @@ export const Funnel = () => {
                     </div>
                   </div>
 
-                  <div className="p-4 bg-neonCyan/5 border border-neonCyan/20 rounded-xl relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-neonCyan"></div>
-                    <label className="block text-[11px] font-black uppercase tracking-wider text-neonCyan mb-2">Primary Service Territories / Areas</label>
-                    <textarea 
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Primary Service Territories / Areas</label>
+                    <input 
+                      type="text" 
                       name="serviceTerritories" 
                       value={formData.serviceTerritories} 
                       onChange={handleInputChange} 
                       required
-                      rows="3"
                       placeholder="e.g. Western Suburbs, Chicago Metro Area"
-                      className="w-full p-3 bg-slate-900/80 border border-slate-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-neonCyan focus:border-transparent outline-none transition-all shadow-inner"
+                      className="w-full glass-input rounded-lg p-2.5 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs"
                     />
                   </div>
 

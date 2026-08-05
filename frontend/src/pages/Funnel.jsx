@@ -5,212 +5,229 @@ import { GlobalFooter } from '../components/GlobalFooter';
 
 // Quiz definitions for each step
 const QUIZZES = {
-  1: {
-    title: "Quiz 1: Why Digital Ads Keep Burning Budget",
-    questions: [
+  "1": {
+    "title": "Quiz 1: Why Digital Ads Keep Burning Budget",
+    "questions": [
       {
-        question: "What is the typical CPM range for most social media advertising platforms in 2026?",
-        options: ["$0.50 – $2.00", "$5 – $12+", "$0.10 – $0.50"],
-        correct: 1,
-        feedback: "Correct! Social media CPMs typically range from $5 to $12+."
+        "question": "What is the typical CPM range for most social media advertising platforms in 2026?",
+        "options": [
+          "$5 – $12+",
+          "$0.50 – $2.00",
+          "$0.10 – $0.50"
+        ],
+        "correct": 0,
+        "feedback": "Correct! Social media CPMs typically range from $5 to $12+."
       },
       {
-        question: "In rising interest rate environments, what is one of the biggest risks for small businesses relying heavily on paid digital ads?",
-        options: ["Lower interest rates on loans", "Rapidly increasing monthly ad costs with unpredictable ROI", "Free traffic surges"],
-        correct: 1,
-        feedback: "Correct! Rising competition and ad platform inflation lead to unpredictable monthly ROI."
+        "question": "In rising interest rate environments, what is one of the biggest risks for small businesses relying heavily on paid digital ads?",
+        "options": [
+          "Free traffic surges",
+          "Lower interest rates on loans",
+          "Rapidly increasing monthly ad costs with unpredictable ROI"
+        ],
+        "correct": 2,
+        "feedback": "Correct! Rising competition and ad platform inflation lead to unpredictable monthly ROI."
       },
       {
-        question: "What makes it harder for authentic business messages to cut through online today?",
-        options: ["Too few advertisers", "Flood of AI-generated content creating digital noise", "Perfect algorithm targeting"],
-        correct: 1,
-        feedback: "Correct! Flood of AI-generated content creates immense digital noise, diluting authentic messages."
+        "question": "What makes it harder for authentic business messages to cut through online today?",
+        "options": [
+          "Too few advertisers",
+          "Perfect algorithm targeting",
+          "Flood of AI-generated content creating digital noise"
+        ],
+        "correct": 2,
+        "feedback": "Correct! Flood of AI-generated content creates immense digital noise, diluting authentic messages."
       }
     ]
   },
-  2: {
-    title: "Quiz 2: Local Exposure & Economic Hardiness",
-    questions: [
+  "2": {
+    "title": "Quiz 2: Local Exposure & Economic Hardiness",
+    "questions": [
       {
-        question: "For local service businesses, what type of exposure often delivers the highest relevance to nearby customers?",
-        options: [
+        "question": "For local service businesses, what type of exposure often delivers the highest relevance to nearby customers?",
+        "options": [
           "International online campaigns",
           "Consistent, professional branding seen in everyday local traffic and commutes",
           "Seasonal social media boosts"
         ],
-        correct: 1,
-        feedback: "Correct! Local daily visibility builds top-of-mind community awareness."
+        "correct": 1,
+        "feedback": "Correct! Local daily visibility builds top-of-mind community awareness."
       },
       {
-        question: "During economic pressures like potential recessions, what marketing approach helps protect cash flow best?",
-        options: [
-          "Increasing monthly recurring ad spend",
+        "question": "During economic pressures like potential recessions, what marketing approach helps protect cash flow best?",
+        "options": [
+          "Cutting all visibility efforts",
           "One-time investments that generate impressions over multiple years",
-          "Cutting all visibility efforts"
+          "Increasing monthly recurring ad spend"
         ],
-        correct: 1,
-        feedback: "Correct! One-time physical investments (like wraps) produce long-term exposure without recurring monthly bills."
+        "correct": 1,
+        "feedback": "Correct! One-time physical investments (like wraps) produce long-term exposure without recurring monthly bills."
       },
       {
-        question: "What is a major hidden cost of relying solely on digital channels?",
-        options: [
-          "Too much free organic reach",
+        "question": "What is a major hidden cost of relying solely on digital channels?",
+        "options": [
           "Ad fatigue and being easily ignored or scrolled past",
+          "Too much free organic reach",
           "Guaranteed high conversion rates"
         ],
-        correct: 1,
-        feedback: "Correct! Digital fatigue means prospects scroll past standard social ads easily."
+        "correct": 0,
+        "feedback": "Correct! Digital fatigue means prospects scroll past standard social ads easily."
       }
     ]
   },
-  3: {
-    title: "Quiz 3: AI Noise & Real-World Trust",
-    questions: [
+  "3": {
+    "title": "Quiz 3: AI Noise & Real-World Trust",
+    "questions": [
       {
-        question: "Recent studies show many consumers feel what when encountering undisclosed AI-generated ads?",
-        options: [
+        "question": "Recent studies show many consumers feel what when encountering undisclosed AI-generated ads?",
+        "options": [
+          "No difference from human-created ads",
           "Increased trust and connection",
-          "Manipulated or less authentic",
-          "No difference from human-created ads"
+          "Manipulated or less authentic"
         ],
-        correct: 1,
-        feedback: "Correct! Undisclosed AI ads often make consumers feel manipulated or find the brand less authentic."
+        "correct": 2,
+        "feedback": "Correct! Undisclosed AI ads often make consumers feel manipulated or find the brand less authentic."
       },
       {
-        question: "What kind of branding tends to build faster customer confidence in competitive fields like professional services?",
-        options: [
+        "question": "What kind of branding tends to build faster customer confidence in competitive fields like professional services?",
+        "options": [
           "Anonymous online banners",
-          "High-quality, professional appearances encountered in real-world settings",
-          "Frequent pop-up digital retargeting"
+          "Frequent pop-up digital retargeting",
+          "High-quality, professional appearances encountered in real-world settings"
         ],
-        correct: 1,
-        feedback: "Correct! Real-world physical presence and professional wrapping build long-term local trust."
+        "correct": 2,
+        "feedback": "Correct! Real-world physical presence and professional wrapping build long-term local trust."
       },
       {
-        question: "How does AI saturation primarily hurt small-to-medium businesses?",
-        options: [
-          "Makes all ads more effective",
+        "question": "How does AI saturation primarily hurt small-to-medium businesses?",
+        "options": [
           "Increases competition and reduces standout ability on screens",
-          "Lowers overall ad costs"
+          "Lowers overall ad costs",
+          "Makes all ads more effective"
         ],
-        correct: 1,
-        feedback: "Correct! AI noise floods digital channels, making it harder for small businesses to stand out."
+        "correct": 0,
+        "feedback": "Correct! AI noise floods digital channels, making it harder for small businesses to stand out."
       }
     ]
   },
-  4: {
-    title: "Quiz 4: Recession Proofing & Cost Efficiency",
-    questions: [
+  "4": {
+    "title": "Quiz 4: Recession Proofing & Cost Efficiency",
+    "questions": [
       {
-        question: "Compared to traditional digital ads, what advantage do certain physical/mobile marketing methods offer in tough economies?",
-        options: [
-          "Higher ongoing monthly fees",
+        "question": "Compared to traditional digital ads, what advantage do certain physical/mobile marketing methods offer in tough economies?",
+        "options": [
+          "Less control over local targeting",
           "Much lower cost per thousand impressions (often under $1) with long-term results",
-          "Less control over local targeting"
+          "Higher ongoing monthly fees"
         ],
-        correct: 1,
-        feedback: "Correct! Mobile wraps offer extremely low CPM compared to online PPC channels."
+        "correct": 1,
+        "feedback": "Correct! Mobile wraps offer extremely low CPM compared to online PPC channels."
       },
       {
-        question: "With rising costs, what marketing trait becomes most valuable?",
-        options: [
-          "Short-term campaigns requiring constant renewal",
+        "question": "With rising costs, what marketing trait becomes most valuable?",
+        "options": [
           "Assets that work 24/7 in your service area without repeated payments",
-          "Highly complex targeting options"
+          "Highly complex targeting options",
+          "Short-term campaigns requiring constant renewal"
         ],
-        correct: 1,
-        feedback: "Correct! Local assets that promote your brand 24/7 without recurring fees protect B2B margins."
+        "correct": 0,
+        "feedback": "Correct! Local assets that promote your brand 24/7 without recurring fees protect B2B margins."
       },
       {
-        question: "What often happens when businesses cut marketing during downturns?",
-        options: [
-          "They gain massive market share",
+        "question": "What often happens when businesses cut marketing during downturns?",
+        "options": [
+          "Customers automatically return later",
           "Competitors who stay visible capture more customers",
-          "Customers automatically return later"
+          "They gain massive market share"
         ],
-        correct: 1,
-        feedback: "Correct! Maintaining local visibility allows you to capture market share from retreating competitors."
+        "correct": 1,
+        "feedback": "Correct! Maintaining local visibility allows you to capture market share from retreating competitors."
       }
     ]
   },
-  5: {
-    title: "Quiz 5: Local Dominance & Mobility Assets",
-    questions: [
+  "5": {
+    "title": "Quiz 5: Local Dominance & Mobility Assets",
+    "questions": [
       {
-        question: "For businesses serving local clients (e.g., trades, retail, services), where do many buying decisions start?",
-        options: [
+        "question": "For businesses serving local clients (e.g., trades, retail, services), where do many buying decisions start?",
+        "options": [
           "Distant online searches only",
-          "Everyday real-world encounters in the community",
-          "Global social media feeds"
+          "Global social media feeds",
+          "Everyday real-world encounters in the community"
         ],
-        correct: 1,
-        feedback: "Correct! Daily visibility in the neighborhood builds immediate trust and starts client decisions."
+        "correct": 2,
+        "feedback": "Correct! Daily visibility in the neighborhood builds immediate trust and starts client decisions."
       },
       {
-        question: "What mobility-related advantage helps maximize impressions efficiently?",
-        options: [
+        "question": "What mobility-related advantage helps maximize impressions efficiently?",
+        "options": [
           "Stationary online ads",
           "Branding that moves through high-traffic areas daily",
           "Expensive geo-fenced digital ads"
         ],
-        correct: 1,
-        feedback: "Correct! Mobile fleet branding daily exposes your logo to high-traffic areas."
+        "correct": 1,
+        "feedback": "Correct! Mobile fleet branding daily exposes your logo to high-traffic areas."
       },
       {
-        question: "A key benefit of turning operational assets into marketing tools is:",
-        options: [
-          "Adding significant monthly expenses",
+        "question": "A key benefit of turning operational assets into marketing tools is:",
+        "options": [
           "Generating thousands of impressions per day at very low effective cost",
-          "Reducing professionalism"
+          "Reducing professionalism",
+          "Adding significant monthly expenses"
         ],
-        correct: 1,
-        feedback: "Correct! Moving commercial vehicles get up to 70,000 views a day with no recurring ad fee."
+        "correct": 0,
+        "feedback": "Correct! Moving commercial vehicles get up to 70,000 views a day with no recurring ad fee."
       }
     ]
   },
-  6: {
-    title: "Quiz 6: Local Repetition & CAC Reduction",
-    questions: [
+  "6": {
+    "title": "Quiz 6: Local Repetition & CAC Reduction",
+    "questions": [
       {
-        question: "In industries like health, legal, and real estate, what often signals reliability to prospects?",
-        options: [
-          "Heavy reliance on flashy digital-only presence",
+        "question": "In industries like health, legal, and real estate, what often signals reliability to prospects?",
+        "options": [
           "Consistent, premium professional branding in visible real settings",
-          "Anonymous or budget-looking appearances"
+          "Anonymous or budget-looking appearances",
+          "Heavy reliance on flashy digital-only presence"
         ],
-        correct: 1,
-        feedback: "Correct! Premium physical visibility signals high-end reliability and local dominance."
+        "correct": 0,
+        "feedback": "Correct! Premium physical visibility signals high-end reliability and local dominance."
       },
       {
-        question: "How does real-world repetition typically affect brand recall?",
-        options: [
-          "It decreases trust",
+        "question": "How does real-world repetition typically affect brand recall?",
+        "options": [
+          "Has no impact compared to online",
           "It significantly increases recognition and preference",
-          "Has no impact compared to online"
+          "It decreases trust"
         ],
-        correct: 1,
-        feedback: "Correct! Repetitive physical encounters dramatically boost brand memory and preference."
+        "correct": 1,
+        "feedback": "Correct! Repetitive physical encounters dramatically boost brand memory and preference."
       },
       {
-        question: "What is one powerful way to reduce customer acquisition costs long-term?",
-        options: [
-          "Only using pay-per-click models",
+        "question": "What is one powerful way to reduce customer acquisition costs long-term?",
+        "options": [
           "Creating always-on local visibility that drives referrals and direct inquiries",
-          "Focusing exclusively on distant leads"
+          "Focusing exclusively on distant leads",
+          "Only using pay-per-click models"
         ],
-        correct: 1,
-        feedback: "Correct! Permanent local visibility creates an inbound conversion funnel that reduces CAC."
+        "correct": 0,
+        "feedback": "Correct! Permanent local visibility creates an inbound conversion funnel that reduces CAC."
       }
     ]
   },
-  7: {
-    title: "Quiz 7: Unlocking Local Monopoly",
-    questions: [
+  "7": {
+    "title": "Quiz 7: Unlocking Local Monopoly",
+    "questions": [
       {
-        question: "What is the main driver to build local wrap brand supremacy?",
-        options: ["Relying solely on SEO", "Consistency, frequency, familiarity, and trust-building where your customers, live work and play.", "Lowering prices", "Newspaper print ads"],
-        correct: 1,
-        feedback: "Correct! Consistent physical wrapped impressions in a target area establish local visual dominance."
+        "question": "What is the main driver to build local wrap brand supremacy?",
+        "options": [
+          "Lowering prices",
+          "Consistency, frequency, familiarity, and trust-building where your customers, live work and play.",
+          "Newspaper print ads",
+          "Relying solely on SEO"
+        ],
+        "correct": 1,
+        "feedback": "Correct! Consistent physical wrapped impressions in a target area establish local visual dominance."
       }
     ]
   }
@@ -512,15 +529,18 @@ export const Funnel = () => {
   useEffect(() => {
     if (isPlaying) {
       const videoLength = VIDEOS_CONTENT[currentStep]?.duration || 10;
+      const startTime = Date.now() - (videoProgress / 100) * videoLength * 1000;
       videoInterval.current = setInterval(() => {
         setVideoProgress(prev => {
-          if (prev >= 100) {
+          const elapsed = (Date.now() - startTime) / 1000;
+          const newProgress = (elapsed / videoLength) * 100;
+          if (newProgress >= 100) {
             clearInterval(videoInterval.current);
             setIsPlaying(false);
             setQuizUnlocked(true);
             return 100;
           }
-          return prev + (100 / videoLength);
+          return newProgress;
         });
       }, 1000);
     } else {
@@ -537,6 +557,7 @@ export const Funnel = () => {
 
   // Skip video helper for testing
   const skipVideo = () => {
+    clearInterval(videoInterval.current);
     setVideoProgress(100);
     setIsPlaying(false);
     setQuizUnlocked(true);
@@ -1232,6 +1253,17 @@ export const Funnel = () => {
                         <option value="Professional Services" className="bg-darkBg">Professional Services</option>
                         <option value="Retail / Hospitality" className="bg-darkBg">Retail / Hospitality</option>
                         <option value="Logistics / Delivery" className="bg-darkBg">Logistics / Delivery</option>
+                        <option value="Technology / IT" className="bg-darkBg">Technology / IT</option>
+                        <option value="Marketing / Advertising" className="bg-darkBg">Marketing / Advertising</option>
+                        <option value="E-commerce" className="bg-darkBg">E-commerce</option>
+                        <option value="Finance / Accounting" className="bg-darkBg">Finance / Accounting</option>
+                        <option value="Education / E-Learning" className="bg-darkBg">Education / E-Learning</option>
+                        <option value="Construction / Engineering" className="bg-darkBg">Construction / Engineering</option>
+                        <option value="Legal" className="bg-darkBg">Legal</option>
+                        <option value="Fitness / Wellness" className="bg-darkBg">Fitness / Wellness</option>
+                        <option value="Automotive" className="bg-darkBg">Automotive</option>
+                        <option value="Travel / Tourism" className="bg-darkBg">Travel / Tourism</option>
+                        <option value="Manufacturing" className="bg-darkBg">Manufacturing</option>
                         <option value="Other" className="bg-darkBg">Other</option>
                       </select>
                     </div>
@@ -1395,6 +1427,7 @@ export const Funnel = () => {
     <div className="min-h-screen relative overflow-x-hidden w-full max-w-[100vw] flex flex-col">
       {/* Top Navbar with Progress bar */}
       <header className="glass-card border-x-0 border-t-0 fixed top-0 w-full z-50 bg-darkBg/90 backdrop-blur-md">
+        <PriorityBanner />
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-bold text-white">R</div>
@@ -1490,22 +1523,26 @@ export const Funnel = () => {
                 <>
                   <iframe src={videoContent.url} className="w-full h-full absolute inset-0 border-0 z-0" allowFullScreen></iframe>
                   
-                  {/* Overlay for unlocking quiz manually if they finish early or want to skip */}
-                  <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {videoProgress < 100 ? (
+                  {/* Skip for Testing */}
+                  {videoProgress < 100 && (
+                    <div className="absolute top-4 right-4 z-20">
                       <button 
                         onClick={skipVideo}
-                        className="text-xs bg-slate-900/80 hover:bg-slate-800 hover:text-white text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50 backdrop-blur-sm transition-all shadow-lg flex items-center gap-2"
+                        className="text-xs bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-2"
                       >
-                        <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
-                        Unlock Quiz
+                        Skip Video (Test)
                       </button>
-                    ) : (
+                    </div>
+                  )}
+
+                  {/* Show when unlocked */}
+                  {videoProgress >= 100 && (
+                    <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="text-xs bg-neonGreen/90 text-black font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-2">
                         <Check className="w-4 h-4" /> Quiz Unlocked
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   
                   {/* We auto-start the background timer so quiz unlocks eventually */}
                   {!isPlaying && videoProgress < 100 && (
@@ -1528,12 +1565,13 @@ export const Funnel = () => {
                     <>
                       {/* Play Overlay */}
                       <div className="absolute inset-0 flex flex-col justify-between p-4 z-10 bg-gradient-to-t from-black/80 to-transparent">
-                        <div className="flex justify-end">
+                        <div className="flex justify-end relative z-50">
                           <button 
                             onClick={skipVideo}
-                            className="text-xs bg-slate-900/80 hover:bg-slate-800 hover:text-white text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50 backdrop-blur-sm transition-all shadow-lg"
+                            className="text-xs bg-neonCyan hover:bg-neonCyan/90 text-darkBg font-bold px-4 py-2 rounded-md shadow-[0_0_15px_rgba(0,255,255,0.4)] flex items-center gap-2 transition-all"
                           >
-                            Skip Video (Test Mode)
+                            Skip Demo Video
+                            <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
                           </button>
                         </div>
     

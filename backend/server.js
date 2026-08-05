@@ -133,6 +133,15 @@ app.get('/api/leads/:id', async (req, res) => {
       // Save or update data into PostgreSQL for all steps
       if (data.name && data.email) {
          let assigned_affiliate_id = data.refId || data.ref || null;
+         
+         // Validate assigned_affiliate_id exists
+         if (assigned_affiliate_id) {
+             const affiliateCheck = await db.query(`SELECT code FROM affiliates WHERE code = $1`, [assigned_affiliate_id]);
+             if (affiliateCheck.rows.length === 0) {
+                 assigned_affiliate_id = null; // Reset to null if affiliate does not exist
+             }
+         }
+
          let client_lat = null;
          let client_lon = null;
          let domain = data.email.split('@')[1];

@@ -76,6 +76,9 @@ export const Landing = () => {
           <span className="font-grotesk font-extrabold text-xl tracking-tight">Rule7<span className="text-neonRed">Media</span></span>
         </div>
         <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/partner')} className="text-xs font-semibold text-neonCyan hover:text-white px-3 py-2 transition-colors border border-neonCyan/20 rounded-lg hover:bg-neonCyan/10">
+            Partner Portal
+          </button>
           <button onClick={() => navigate('/funnel')} className="text-xs font-semibold text-slate-400 hover:text-white transition-colors">
             Advertiser Portal
           </button>

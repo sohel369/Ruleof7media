@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Play, Check, AlertCircle, ChevronRight, Flame, Zap, Shield, HelpCircle, MapPin, Phone, ChevronDown } from 'lucide-react';
+import { Play, Check, AlertCircle, ChevronRight, Flame, Zap, Shield, HelpCircle, MapPin, Phone, ChevronDown, Sparkles, Maximize2, X, BarChart3, Info } from 'lucide-react';
 import { GlobalFooter } from '../components/GlobalFooter';
 
 // Quiz definitions for each step
@@ -236,53 +236,57 @@ const QUIZZES = {
 const VIDEOS_CONTENT = {
   1: {
     url: "https://cinema8.com/video/5J7zYBVX",
-    title: "Video 1: Why Digital Ads May Increase Customer Acquisition Costs",
-    duration: 120,
-    durationText: "~120 seconds",
+    title: "Video 1: Why is my Internet advertising Burning Budget?",
+    duration: "7 minutes 42 seconds",
+    durationText: "7 minutes 42 seconds",
     description: "If your digital advertising budget keeps growing but results feel harder to predict, you're not alone. Many small businesses are watching money disappear into platforms that demand constant spend with no guarantee of return. In this video we break down exactly why internet advertising is burning budget right now — and what smarter options exist for businesses that need reliable visibility without the endless monthly drain.",
     points: ["Rising digital auction prices", "Ad blindness and banner fatigue", "The Rule of 7 in brand recall"]
   },
   2: {
     url: "https://cinema8.com/video/WD9Wb8VJ",
     title: "Video 2: The Hidden Costs of Staying Invisible in a Crowded Market",
-    duration: 150,
-    durationText: "~150 seconds",
+    duration: "2 minutes 30 seconds",
+    durationText: "7 Minutes 13 seconds ",
     description: "You can spend thousands online and still be invisible to the customers driving past your door every day. This video reveals the hidden cost of staying invisible in your own local market — and why even large media companies invest in real-world presence to stay top-of-mind.",
-    points: ["Bid bidding algorithms", "Why click quality is decreasing", "Controlling your acquisition channel"]
+    points: ["Stop Losing Local Leads", "Outshine Nearby Competitorsg", "Turn Visibility Into Profit"]
   },
   3: {
     url: "https://cinema8.com/video/AJE7vQgD",
       title: "Video 3: AI Noise vs. Real-World Trust – Why Digital Feels Broken",
-    duration: 180,
+    duration: "7 minutes 28 seconds ",
     description: "Customers are scrolling past more ads than ever — and trusting them less. When every feed is filled with AI-generated content, authentic businesses struggle to stand out. This video examines why digital advertising feels broken and how real-world presence builds the trust that screens can no longer deliver.",
-    points: ["Cost per thousand impressions comparison", "The visual density factor", "Fleet branding ROI"]
+    points: ["Digital noise erodes trust", "Authenticity builds credibility", "Real-world presence wins"]
   },
   4: {
     url: "https://cinema8.com/video/YDpY5j0X",
       title: "Video 4: Recession-Proof Your Marketing: Stop Bleeding Cash on Unreliable Ads",
-    duration: 200,
+    duration: "6 minutes 16 seconds",
     description: "With costs rising and uncertainty in the economy, every marketing dollar must work harder. This video shows why continuing to pour money into unreliable digital ads is a risk — and how durable, low ongoing-cost approaches can protect your budget while still delivering consistent local visibility.",
     points: ["Mapping local service areas", "Routing logic and response times", "Dominating regional search offline"]
   },
   5: {
+    url: "https://cinema8.com/video/6JM90ayJ",
     title: "Video 5: Local Domination: Reaching Customers Where They Actually Are",
-    duration: 330,
-    durationText: "5 minutes 30 seconds",
+    duration: "10 minutes",
+    durationText: "10 minutes",
     description: "Most of your best customers live and work within a short drive of your business. Yet digital campaigns often chase audiences far outside that zone. This video explores how to dominate your actual service area with high-frequency, relevant exposure — including groundbreaking practical options even if you don't own a fleet of vehicles.",
-    points: ["Scale dynamics of fleet wraps", "Standardizing brand identity", "Resale value protection"]
+    points: ["Dominate your own backyard", "Repetition builds trust", "Missed visibility costs business"]
   },
   6: {
-    title: "Video 6: The Trust Factor – Why Physical Presence Builds Loyalty Faster",
-    duration: 160,
+    url: "https://cinema8.com/video/vD52Z57X",
+    title: "Video 6: : Establishing trust in the face of ever-changing algorithms Duration",
+    duration: "9 minutes",
+    durationText: "9 Minutes",
     description: "Trust is the real currency in local business. This video reveals why professional physical presence builds credibility and loyalty faster than digital messages alone — and how the right real-world strategy creates daily recognition that turns into referrals and repeat business.",
-    points: ["Designing scanning call-to-actions", "Cookie-less attribution", "Simulating instant CRM syncing"]
+    points: ["Dramatic Changes in SEO", "Everything is built on Trust", "E.E.A & T is the new benchmark"]
   },
   7: {
+    url: "https://cinema8.com/video/AJE7PNmD",
     title: "Video 7: Future-Proof Marketing: Low CPM Strategies That Deliver Real ROI",
-    duration: 345,
-    durationText: "5 minutes 45 seconds",
+    duration: "13 minutes",
+    durationText: "13 Minutes",
     description: "After exploring the problems with digital advertising, this final video delivers the complete solution. You'll see how to achieve dramatically lower cost-per-thousand impressions, consistent local reach, and a marketing approach that continues working Year after year — without the ongoing budget bleed of social media.",
-    points: ["Selecting wrap designs that convert", "Activating your tracking dashboard", "Finalizing your Rule7 qualification score"]
+    points: ["Rising CPMs waste budget.", "Wraps unlock lower-cost reach.", "Awareness fuels customer action."]
   }
 };
 
@@ -293,8 +297,14 @@ const PriorityBanner = () => {
 
   useEffect(() => {
     const updateCountdown = () => {
-      const endStr = localStorage.getItem('r7_priorityEnd');
-      if (!endStr) return;
+      let endStr = localStorage.getItem('r7_priorityEnd');
+      // If not set, initialize a default 14‑day window
+      if (!endStr) {
+        const defaultEnd = new Date();
+        defaultEnd.setDate(defaultEnd.getDate() + 14);
+        endStr = defaultEnd.toISOString();
+        localStorage.setItem('r7_priorityEnd', endStr);
+      }
       const end = new Date(endStr);
       const now = new Date();
       const remainingMs = end - now;
@@ -323,7 +333,7 @@ const PriorityBanner = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (!timeLeft) return null;
+  if (timeLeft === null) return null; // Wait until countdown calculated
 
   return (
     <div className={`w-full py-2 px-4 text-center font-bold text-sm z-40 flex justify-center items-center gap-3 transition-colors duration-500 shadow-md ${isUrgent ? 'bg-gradient-to-r from-[#c53030] to-[#e53e3e] text-white' : 'bg-gradient-to-r from-[#1a365d] to-[#2b6cb0] text-white'}`}>
@@ -345,34 +355,48 @@ export const Funnel = () => {
   const isLandingPage = location.pathname === '/funnel' || location.pathname === '/funnel/';
 
   // State
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    state: '',
-    country: '',
-    role: '',
-    industry: '',
-    otherIndustry: '',
-    serviceArea: '',
-    locations: '',
-    employees: '',
-    budget: '',
-    fleetSize: '',
-    vehicleTypes: [],
-    serviceTerritories: '',
-    hasBranding: '',
-    allocDigital: '',
-    allocTraditional: '',
-    allocOther: '',
-    localVsOnlinePct: '',
-    goals: [],
-    customGoals: '',
-    phone: '',
-    reviewTimeline: '',
-    consultTime: '',
-    auditRequest: ''
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = localStorage.getItem('r7_form_data');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return {
+      name: '',
+      email: '',
+      company: '',
+      state: '',
+      country: '',
+      role: '',
+      industry: '',
+      otherIndustry: '',
+      serviceArea: '',
+      locations: '',
+      employees: '',
+      budget: '',
+      fleetSize: '',
+      vehicleTypes: [],
+      serviceTerritories: '',
+      hasBranding: '',
+      allocDigital: '',
+      allocTraditional: '',
+      allocOther: '',
+      marketAllocation: '',
+      localVsOnlinePct: '',
+      goals: [],
+      customGoals: '',
+      phone: '',
+      reviewTimeline: '',
+      consultTime: '',
+      auditRequest: ''
+    };
   });
+
+  // Sync formData to localStorage on changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('r7_form_data', JSON.stringify(formData));
+    } catch (e) {}
+  }, [formData]);
 
   const [activeFaq, setActiveFaq] = useState(null);
   const [refId, setRefId] = useState('');
@@ -389,6 +413,7 @@ export const Funnel = () => {
   const [scoreData, setScoreData] = useState({ score: 0, stage: 'Cold' });
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showImageModal, setShowImageModal] = useState(false);
   
   // Timer references for mock video player
   const videoInterval = useRef(null);
@@ -441,31 +466,43 @@ export const Funnel = () => {
               "Storage, Logistics and Removalists", "Trades & Home Services"
             ];
             const isStandard = data.industry ? standardIndustries.includes(data.industry) : true;
-            setFormData({
-              name: data.name || '',
-              email: data.email || '',
-              company: data.company || '',
-              state: data.state || '',
-              country: data.country ? (['United States', 'United Kingdom', 'Australia', 'Canada', 'Eurozone (EU)'].includes(data.country) ? data.country : 'Other') : '',
-              otherCountry: data.country && !['United States', 'United Kingdom', 'Australia', 'Canada', 'Eurozone (EU)'].includes(data.country) ? data.country : '',
-              role: data.role || '',
-              industry: data.industry ? (isStandard ? data.industry : 'Other') : '',
-              otherIndustry: data.industry && !isStandard ? data.industry : '',
-              serviceArea: data.serviceArea || '',
-              locations: data.locations || '',
-              employees: data.employees || '',
-              budget: data.budget || '',
-              fleetSize: data.fleetSize || '',
-              vehicleTypes: data.vehicleTypes || [],
-              serviceTerritories: data.serviceTerritories || '',
-              hasBranding: data.hasBranding || '',
-              allocDigital: data.allocDigital || '',
-              allocTraditional: data.allocTraditional || '',
-              allocOther: data.allocOther || '',
-              localVsOnlinePct: data.localVsOnlinePct || '',
-              goals: data.goals || [],
-              customGoals: ''
-            });
+            
+            let calculatedAllocation = data.marketAllocation || '';
+            if (!calculatedAllocation && (data.allocDigital || data.allocTraditional || data.allocOther)) {
+              const parts = [];
+              if (data.allocDigital) parts.push(`${data.allocDigital.toString().replace(/%/g, '')}% Digital`);
+              if (data.allocTraditional) parts.push(`${data.allocTraditional.toString().replace(/%/g, '')}% Traditional`);
+              if (data.allocOther) parts.push(`${data.allocOther.toString().replace(/%/g, '')}% Other`);
+              calculatedAllocation = parts.join(' / ');
+            }
+
+            setFormData(prev => ({
+              ...prev,
+              name: data.name || prev.name || '',
+              email: data.email || prev.email || '',
+              company: data.company || prev.company || '',
+              state: data.state || prev.state || '',
+              country: data.country ? (['United States', 'United Kingdom', 'Australia', 'Canada', 'Eurozone (EU)'].includes(data.country) ? data.country : 'Other') : (prev.country || ''),
+              otherCountry: data.country && !['United States', 'United Kingdom', 'Australia', 'Canada', 'Eurozone (EU)'].includes(data.country) ? data.country : (prev.otherCountry || ''),
+              role: data.role || prev.role || '',
+              industry: data.industry ? (isStandard ? data.industry : 'Other') : (prev.industry || ''),
+              otherIndustry: data.industry && !isStandard ? data.industry : (prev.otherIndustry || ''),
+              serviceArea: data.serviceArea || prev.serviceArea || '',
+              locations: data.locations || prev.locations || '',
+              employees: data.employees || prev.employees || '',
+              budget: data.budget || prev.budget || '',
+              fleetSize: data.fleetSize || prev.fleetSize || '',
+              vehicleTypes: data.vehicleTypes || prev.vehicleTypes || [],
+              serviceTerritories: data.serviceTerritories || prev.serviceTerritories || '',
+              hasBranding: data.hasBranding || prev.hasBranding || '',
+              allocDigital: data.allocDigital || prev.allocDigital || '',
+              allocTraditional: data.allocTraditional || prev.allocTraditional || '',
+              allocOther: data.allocOther || prev.allocOther || '',
+              marketAllocation: calculatedAllocation || prev.marketAllocation || '',
+              localVsOnlinePct: data.localVsOnlinePct || prev.localVsOnlinePct || '',
+              goals: data.goals || prev.goals || [],
+              customGoals: prev.customGoals || ''
+            }));
             if (data.quizAnswers) {
               setQuizAnswers(data.quizAnswers);
             }
@@ -999,12 +1036,22 @@ export const Funnel = () => {
             onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}`)}
             className="group relative bg-slate-950/60 rounded-3xl border border-slate-900 overflow-hidden cursor-pointer hover:border-neonRed/40 transition-all duration-300 p-8 shadow-2xl text-center space-y-6"
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10 pointer-events-none"></div>
             
             {/* Play Button Icon */}
             <div className="w-20 h-20 bg-neonRed/10 text-neonRed border border-neonRed/30 rounded-full flex items-center justify-center mx-auto relative z-20 group-hover:scale-115 transition-transform duration-300 shadow-lg shadow-neonRed/10">
               <Play className="w-8 h-8 fill-neonRed ml-1" />
             </div>
+
+            {/* Skip Video Button - Testing Only */}
+            <button
+              id="skipVideoBtn"
+              onClick={(e) => { e.stopPropagation(); e.preventDefault(); skipVideo(); }}
+              className="relative z-[100] mt-4 px-6 py-3 bg-neonCyan hover:bg-neonCyan/80 text-darkBg font-black text-sm uppercase rounded-lg transition-all shadow-[0_0_20px_rgba(0,255,255,0.5)] border-2 border-neonCyan"
+              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 100 }}
+            >
+              ⏩ Skip Video (Test)
+            </button>
 
             <div className="relative z-20 space-y-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-neonRed px-2.5 py-1 bg-neonRed/10 rounded-full border border-neonRed/20">Free Onboarding series</span>
@@ -1152,10 +1199,26 @@ export const Funnel = () => {
   if (isCompletePage) {
     return (
       <div className="min-h-screen relative overflow-x-hidden w-full max-w-[100vw] bg-black text-slate-300 font-sans flex flex-col pt-24">
-        <nav className="fixed top-0 inset-x-0 w-auto z-50 py-4 px-4 sm:px-6 flex justify-between items-center bg-darkBg/90 backdrop-blur-md border-b border-slate-900 max-w-[100vw]">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-bold text-white shadow-lg glow-pink">R</div>
-            <span className="font-grotesk font-bold text-xl tracking-tight text-white">Rule7<span className="text-neonRed">Media</span></span>
+        {/* Sleek Navigation Header */}
+        <nav className="fixed top-0 inset-x-0 z-50 py-4 px-4 sm:px-6 md:px-12 flex justify-between items-center bg-[#040409]/95 backdrop-blur-md border-b border-slate-900/80 max-w-[100vw]">
+          <div className="flex items-center gap-2 sm:gap-3 cursor-pointer" onClick={() => navigate('/funnel')}>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-neonRed to-neonPink flex items-center justify-center font-black text-white shadow-lg shadow-neonRed/35 text-sm sm:text-lg">R</div>
+            <span className="font-grotesk font-black text-lg sm:text-xl tracking-tight text-white">Rule7<span className="text-neonRed">Media</span></span>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            {refId && (
+              <div className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-bold uppercase bg-neonGreen/10 text-neonGreen px-3 py-1 rounded-full border border-neonGreen/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-neonGreen"></span>
+                Partner Verified
+              </div>
+            )}
+            <button
+              onClick={() => navigate(`/funnel${refId ? `?ref=${refId}` : ''}`)}
+              className="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-900/80 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider rounded-lg transition-all"
+            >
+              ← Back to Training
+            </button>
           </div>
         </nav>
 
@@ -1179,21 +1242,21 @@ export const Funnel = () => {
             <h2 className="text-xl font-grotesk font-bold text-white mb-2">Expected Impact of Emerging Online Safety Legislation Requiring Digital ID</h2>
             <p className="text-sm text-slate-400 mb-6">New online safety laws in the USA, Eurozone, Australia, the UK, Canada and other countries are introducing stricter age verification and Digital ID requirements. For small businesses that rely on social media and digital advertising, this could mean reduced reach, higher costs, and more fragmented audiences.<br/><br/>This video examines what these changes are likely to mean for your advertising results — and why many businesses are already looking at reliable, privacy-friendly alternatives that deliver consistent local impressions without digital verification barriers.</p>
             
-            <div className="relative aspect-video bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-xl group mb-6">
-               <img src="/assets/vehicle_wrap.png" alt="Bonus Video Thumbnail" className="w-full h-full object-cover opacity-30 group-hover:opacity-20 transition-opacity" />
-               <div className="absolute inset-0 flex items-center justify-center">
-                 <div className="w-16 h-16 rounded-full bg-neonCyan/20 flex items-center justify-center cursor-pointer hover:bg-neonCyan/40 transition-colors z-20 shadow-lg shadow-neonCyan/20">
-                    <Play className="w-8 h-8 fill-neonCyan ml-1" />
-                 </div>
-               </div>
+            <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 shadow-xl group mb-6">
+              <iframe 
+                src="https://cinema8.com/video/YDpY5n0X" 
+                className="w-full h-full absolute inset-0 border-0 z-0" 
+                allowFullScreen
+                title="Bonus Video: Expected Impact of Emerging Online Safety Legislation Requiring Digital ID"
+              ></iframe>
             </div>
 
             <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Lesson Takeaways</p>
               <ul className="space-y-2 text-xs text-slate-300 ml-1">
-                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Audience reach declines</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> CPM rises</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Real-world visibility gains value</li>
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Global opposition to Digital ID</li>
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Audience Reach Impacted</li>
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Overcome Digital Verification Gateways</li>
               </ul>
             </div>
           </div>
@@ -1270,11 +1333,33 @@ export const Funnel = () => {
                     
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Marketing Budget (Optional)</label>
-                      <input type="text" placeholder="e.g. $5000/mo" className="w-full glass-input rounded-lg p-3 text-white focus:ring-1 focus:ring-neonRed text-sm transition-all" />
+                      <input 
+                        type="text" 
+                        name="budget"
+                        value={formData.budget || ''} 
+                        onChange={handleInputChange}
+                        placeholder="e.g. $5000/mo" 
+                        className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all" 
+                      />
                     </div>
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Market Allocation (Optional)</label>
-                      <input type="text" placeholder="e.g. 80% Digital / 20% Traditional" className="w-full glass-input rounded-lg p-3 text-white focus:ring-1 focus:ring-neonRed text-sm transition-all" />
+                      <input 
+                        type="text" 
+                        name="marketAllocation"
+                        value={
+                          formData.marketAllocation !== undefined && formData.marketAllocation !== ''
+                            ? formData.marketAllocation
+                            : [
+                                formData.allocDigital ? `${formData.allocDigital.toString().replace(/%/g, '')}% Digital` : '',
+                                formData.allocTraditional ? `${formData.allocTraditional.toString().replace(/%/g, '')}% Traditional` : '',
+                                formData.allocOther ? `${formData.allocOther.toString().replace(/%/g, '')}% Other` : ''
+                              ].filter(Boolean).join(' / ')
+                        }
+                        onChange={handleInputChange}
+                        placeholder="e.g. 80% Digital / 20% Traditional" 
+                        className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all" 
+                      />
                     </div>
                   </div>
                   
@@ -1428,6 +1513,7 @@ export const Funnel = () => {
       {/* Top Navbar with Progress bar */}
       <header className="glass-card border-x-0 border-t-0 fixed top-0 w-full z-50 bg-darkBg/90 backdrop-blur-md">
         <PriorityBanner />
+
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-bold text-white">R</div>
@@ -1513,7 +1599,9 @@ export const Funnel = () => {
               <span className="text-xs text-slate-500">Duration: {videoContent?.durationText || `~${videoContent?.duration} seconds`}</span>
             </div>
             <h1 className="text-xl font-grotesk font-bold text-white mb-2">{videoContent?.title}</h1>
-            <p className="text-sm text-slate-400 mb-6">{videoContent?.description}</p>
+            <p className="text-sm text-slate-400 mb-4">{videoContent?.description}</p>
+
+
 
             {/* VIDEO PLAYER */}
             <div className="relative aspect-video rounded-xl bg-black border border-slate-800 flex flex-col justify-center items-center group overflow-hidden shadow-2xl">
@@ -1523,17 +1611,16 @@ export const Funnel = () => {
                 <>
                   <iframe src={videoContent.url} className="w-full h-full absolute inset-0 border-0 z-0" allowFullScreen></iframe>
                   
-                  {/* Skip for Testing */}
-                  {videoProgress < 100 && (
-                    <div className="absolute top-4 right-4 z-20">
-                      <button 
-                        onClick={skipVideo}
-                        className="text-xs bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-2"
-                      >
-                        Skip Video (Test)
-                      </button>
-                    </div>
-                  )}
+                  {/* Skip for Testing - top right corner, always visible above iframe */}
+                  <div className="absolute top-3 right-3" style={{ zIndex: 99999, position: 'absolute' }}>
+                    <button 
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); skipVideo(); }}
+                      className="text-xs bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-2 cursor-pointer"
+                      style={{ pointerEvents: 'auto', position: 'relative', zIndex: 99999 }}
+                    >
+                      ⏩ Skip Video (Test)
+                    </button>
+                  </div>
 
                   {/* Show when unlocked */}
                   {videoProgress >= 100 && (
@@ -1643,6 +1730,60 @@ export const Funnel = () => {
               </ul>
             </div>
           </div>
+
+          {/* STEP 7 OPTIONAL 2ND VIDEO PLACEHOLDER */}
+          {currentStep === 7 && (
+            <div className="glass-card rounded-2xl p-6 relative overflow-hidden border border-neonCyan/30 shadow-2xl bg-slate-950/60 transition-all hover:border-neonCyan/50">
+              <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-3 py-1 rounded-full border border-neonCyan/30 flex items-center gap-1.5 shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5 text-neonCyan" />
+                  Optional Deep Dive • Video 7 Part 2
+                </span>
+                <span className="text-[11px] text-neonGreen font-bold bg-neonGreen/10 px-2.5 py-1 rounded-full border border-neonGreen/30 flex items-center gap-1">
+                  <Check className="w-3 h-3 text-neonGreen" /> Un-gated (Optional Viewing)
+                </span>
+              </div>
+              
+              <h2 className="text-lg md:text-xl font-grotesk font-bold text-white mb-2">
+                Compare Your Industry Specific Digital CPM Rates and Potential Savings
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+                As social media advertising CPMs climb past $12.00, see how high-impact vehicle wrap impressions keep your marketing benchmark steady at a predictable $1.25.
+              </p>
+
+              {/* Supplemental Cinema8 Video Player Container */}
+              <div className="relative aspect-video rounded-xl bg-black border border-slate-800 flex flex-col justify-center items-center group overflow-hidden shadow-2xl">
+                <iframe 
+                  src="https://cinema8.com/video/KOW8LGjD" 
+                  className="w-full h-full absolute inset-0 border-0 z-0" 
+                  allowFullScreen
+                  title="Supplemental Video Below Video 7"
+                ></iframe>
+              </div>
+
+              {/* View Chart Breakdown Button */}
+              <div className="mt-3 flex flex-wrap justify-between items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowImageModal(true)}
+                  className="text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white px-3.5 py-1.5 rounded-lg border border-slate-700/80 flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <BarChart3 className="w-3.5 h-3.5 text-neonAmber" />
+                  <span>View CPM Comparison Chart Breakdown</span>
+                  <Maximize2 className="w-3 h-3 text-neonCyan ml-1" />
+                </button>
+                <span className="text-[11px] text-slate-400 font-medium">100% Optional</span>
+              </div>
+
+              {/* Informational reassurance banner */}
+              <div className="mt-4 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-start gap-3">
+                <Info className="w-4 h-4 text-neonCyan flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  <strong className="text-white font-semibold">Optional Viewing:</strong> This supplemental lesson is provided as a deep-dive resource. You do not need to watch it to submit your questionnaire and unlock your customized assessment on the right.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Side: Progressive Form Gating & Quizzes */}
@@ -1665,12 +1806,12 @@ export const Funnel = () => {
                     <div className="border-t border-slate-900 pt-2.5 mt-2 space-y-1">
                       <p className="font-bold uppercase tracking-wider text-[9px] text-neonCyan">What you'll gain access to:</p>
                       <ul className="list-disc list-inside space-y-0.5 text-[10px] text-slate-400">
-                        <li>Video 2: Hidden Costs of Staying Invisible</li>
-                        <li>Video 3: AI Noise vs. Real-World Trust</li>
-                        <li>Video 4: Recession-Proof Your Marketing</li>
-                        <li>Video 5: Local Domination</li>
-                        <li>Video 6: The Trust Factor</li>
-                        <li>Video 7: Future-Proof Marketing ROI</li>
+                        <li>Video 2: Hidden Costs of Staying Invisible in a Crowded Market</li>
+                        <li>Video 3: AI Noise vs. Real-World Trust – Why Digital Feels Broken</li>
+                        <li>Video 4:Recession-Proof Your Marketing : Stop Bleeding Cash on Unreliable Ads</li>
+                        <li>Video 5: Local Domination: Reaching Customers Where They Actually Are</li>
+                        <li>Video 6: Establishing trust in the face of ever-changing algorithms</li>
+                        <li>Video 7: Low CPM Strategies That Deliver Real ROI</li>
                       </ul>
                     </div>
 
@@ -2289,7 +2430,7 @@ export const Funnel = () => {
               <div className="pt-4 border-t border-slate-800/80 mt-6">
                 {!quizUnlocked ? (
                   <div className="p-3 bg-slate-950 text-slate-500 rounded-lg text-xs text-center border border-slate-900">
-                    🔒 Watch full video to unlock quiz
+                    🔒 Watch Full Video to unlock Bonus Videos 
                   </div>
                 ) : (
                   <>
@@ -2363,6 +2504,54 @@ export const Funnel = () => {
           </div>
         </div>
       </main>
+
+      {/* Step 7 Optional Chart Modal */}
+      {showImageModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-md animate-fade-in"
+          onClick={() => setShowImageModal(false)}
+        >
+          <div 
+            className="relative max-w-5xl w-full bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center pb-3 border-b border-slate-800 mb-4">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-neonCyan" />
+                <h3 className="text-sm md:text-base font-bold text-white font-grotesk">
+                  Compare Your Industry Specific Digital CPM Rates and Potential Savings
+                </h3>
+              </div>
+              <button 
+                onClick={() => setShowImageModal(false)}
+                className="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="rounded-xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center p-2">
+              <img 
+                src="/assets/video7_cpm_placeholder.png" 
+                alt="Compare Your Industry Specific Digital CPM Rates" 
+                className="w-full h-auto object-contain max-h-[75vh] rounded-lg"
+              />
+            </div>
+
+            <div className="mt-4 flex flex-wrap justify-between items-center gap-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
+              <span>Rule7Media ROI Benchmarking Data (2024 - 2026 Projections)</span>
+              <button 
+                onClick={() => setShowImageModal(false)}
+                className="bg-slate-800 hover:bg-slate-700 text-white font-medium px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
+              >
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <GlobalFooter />
     </div>
   );

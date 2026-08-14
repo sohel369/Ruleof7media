@@ -104,11 +104,30 @@ app.get('/api/leads', async (req, res) => {
 // 2. GET Lead by ID (includes breakdown details)
 app.get('/api/leads/:id', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM leads WHERE lead_id = $1', [req.params.id]);
-    const lead = result.rows[0];
-    if (!lead) {
+    const isNumeric = /^\d+$/.test(req.params.id);
+    const query = isNumeric 
+      ? 'SELECT * FROM leads WHERE lead_id = $1 OR legacy_lead_id = $2' 
+      : 'SELECT * FROM leads WHERE legacy_lead_id = $1';
+    const params = isNumeric ? [parseInt(req.params.id, 10), req.params.id] : [req.params.id];
+    
+    const result = await db.query(query, params);
+    const row = result.rows[0];
+    if (!row) {
       return res.status(404).json({ error: 'Lead not found' });
     }
+    
+    const extra = typeof row.extra_data === 'string' ? JSON.parse(row.extra_data) : (row.extra_data || {});
+    const lead = {
+      ...extra,
+      ...row,
+      name: row.client_name || extra.name || row.name,
+      email: row.client_email || extra.email || row.email,
+      company: row.client_business_name || extra.company || row.company,
+      phone: row.client_phone || extra.phone || row.phone,
+      assignedAffiliateId: row.assigned_affiliate_id,
+      refId: row.ref_id,
+      leadId: row.legacy_lead_id || row.lead_id
+    };
     
     // Add dynamic live breakdown just in case
     const scored = calculateScore(lead);

@@ -220,25 +220,110 @@ app.get('/api/leads/:id', async (req, res) => {
          );
       }
 
-      // Send Gmail Notification on completion (Step 7)
-      if (step === 7 && data.name && data.email) {
-         const leadRow = await db.query(`SELECT assigned_affiliate_id FROM leads WHERE legacy_lead_id = $1`, [leadId]);
-         const partnerCode = leadRow.rows[0]?.assigned_affiliate_id;
-         if (partnerCode) {
+      // Send Gmail Notification on completion (Step 7 or Step 8 / Strategy Session)
+      if ((step === 7 || step === 8 || data.sessionClaimed) && data.name && data.email) {
+        try {
+          const leadRow = await db.query(`SELECT assigned_affiliate_id FROM leads WHERE legacy_lead_id = $1`, [leadId]);
+          const partnerCode = leadRow.rows[0]?.assigned_affiliate_id || data.refId || data.ref || null;
+          let partnerEmail = null;
+          let partnerName = 'Local Partner';
+
+          if (partnerCode) {
             const partnerRow = await db.query(`SELECT email, name FROM affiliates WHERE code = $1`, [partnerCode]);
             if (partnerRow.rows.length > 0) {
-                const partnerEmail = partnerRow.rows[0].email;
-                const html = `
-                  <h2>New Qualified Lead</h2>
-                  <p><strong>Name:</strong> ${data.name}</p>
-                  <p><strong>Email:</strong> ${data.email}</p>
-                  <p><strong>Company:</strong> ${data.company}</p>
-                  <p><strong>Score:</strong> 100 / Hot</p>
-                  <p>Login to your Partner Portal to view full details.</p>
-                `;
-                await sendEmail(partnerEmail, 'New Lead Assigned: ' + data.name, html);
+              partnerEmail = partnerRow.rows[0].email;
+              partnerName = partnerRow.rows[0].name || partnerCode;
             }
-         }
+          }
+
+          const isSession = (step === 8 || data.sessionClaimed);
+          const subject = isSession
+            ? `🎯 Strategy Session Claimed: ${data.name} (${data.company || 'Business'})`
+            : `🔥 New Qualified Lead Completed Funnel: ${data.name}`;
+
+          const leadDetailsHtml = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #1e293b;">
+              <h2 style="color: #0f172a; margin-top: 0; border-bottom: 2px solid #00f0ff; padding-bottom: 10px;">
+                ${isSession ? '🎯 Strategy Session Request Claimed' : '🔥 New Qualified Lead'}
+              </h2>
+              <p style="color: #475569; font-size: 15px;">
+                ${isSession ? 'A prospect has submitted their final details to claim their Marketing Efficiency Audit Strategy Session:' : 'A prospect has completed the full training funnel and qualified as a hot lead:'}
+              </p>
+              
+              <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+                <tr style="background-color: #f8fafc;">
+                  <td style="padding: 10px 12px; font-weight: bold; width: 35%; border-bottom: 1px solid #e2e8f0;">Full Name:</td>
+                  <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${data.name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 12px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">Email:</td>
+                  <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;"><a href="mailto:${data.email}" style="color: #0284c7; text-decoration: none; font-weight: 600;">${data.email}</a></td>
+                </tr>
+                <tr style="background-color: #f8fafc;">
+                  <td style="padding: 10px 12px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">Company / Business:</td>
+                  <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${data.company || 'N/A'}</td>
+                </tr>
+                ${data.industry ? `
+                <tr>
+                  <td style="padding: 10px 12px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">Industry Sector:</td>
+                  <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${data.industry}</td>
+                </tr>` : ''}
+                <tr style="background-color: #f8fafc;">
+                  <td style="padding: 10px 12px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">Assigned Partner:</td>
+                  <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">${partnerName} (${partnerCode || 'Direct/Admin'})</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 12px; font-weight: bold; border-bottom: 1px solid #e2e8f0;">Lead Score:</td>
+                  <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; color: #16a34a; font-weight: bold;">100 / Hot Lead</td>
+                </tr>
+              </table>
+
+              <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; margin-top: 15px;">
+                <p style="margin: 0; color: #166534; font-size: 13px;">
+                  ✓ <strong>Action Required:</strong> Please reach out to this lead as soon as possible to schedule the consultation audit.
+                </p>
+              </div>
+            </div>
+          `;
+
+          // 1. Send notification to Partner if assigned
+          if (partnerEmail) {
+            await sendEmail(partnerEmail, subject, leadDetailsHtml);
+          }
+
+          // 2. Always send notification to Admin (GMAIL_USER) so the owner never misses a lead
+          const adminEmail = process.env.GMAIL_USER?.trim();
+          if (adminEmail && adminEmail.toLowerCase() !== partnerEmail?.toLowerCase()) {
+            await sendEmail(adminEmail, `[Admin Notification] ${subject}`, leadDetailsHtml);
+          }
+
+          // 3. Send friendly confirmation email to the lead / prospect
+          const clientConfirmationHtml = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #1e293b;">
+              <h2 style="color: #0f172a; margin-top: 0;">Thank you, ${data.name}!</h2>
+              <p style="color: #475569; font-size: 15px; line-height: 1.6;">
+                We have received your strategy session request for <strong>${data.company || 'your business'}</strong>.
+              </p>
+              
+              <div style="background-color: #f8fafc; border-left: 4px solid #00f0ff; border-radius: 4px; padding: 14px; margin: 20px 0;">
+                <h4 style="margin: 0 0 6px 0; color: #0f172a;">What happens next:</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #334155; font-size: 14px; line-height: 1.6;">
+                  <li>Our verified local marketing partner has been notified.</li>
+                  <li>A specialist will contact you shortly to begin your <strong>Marketing Efficiency Audit</strong>.</li>
+                  <li>You will receive updates and CRM integration notices directly here in your inbox.</li>
+                </ul>
+              </div>
+
+              <p style="color: #64748b; font-size: 13px; margin-top: 25px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                Best regards,<br>
+                <strong>Rule7Media Team</strong>
+              </p>
+            </div>
+          `;
+          await sendEmail(data.email, 'Your Rule7Media Marketing Audit Request Confirmed', clientConfirmationHtml);
+        } catch (emailErr) {
+          console.error('[MAILER] Error processing lead email triggers:', emailErr);
+        }
       }
 
     res.json({

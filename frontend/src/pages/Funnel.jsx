@@ -721,11 +721,6 @@ export const Funnel = () => {
         setErrorMsg('Please fill in all details to proceed.');
         return;
       }
-    } else if (currentStep === 7) {
-      if (!formData.reviewTimeline || !formData.auditRequest) {
-        setErrorMsg('Please select your Review Timeline and Audit preference above.');
-        return;
-      }
     }
 
     // Submit progressive data to Express backend
@@ -765,6 +760,10 @@ export const Funnel = () => {
     if (finalFormData.industry === 'Other' && finalFormData.otherIndustry) {
       finalFormData.industry = finalFormData.otherIndustry;
     }
+    if (currentStep === 7) {
+      if (!finalFormData.reviewTimeline) finalFormData.reviewTimeline = 'Currently';
+      if (!finalFormData.auditRequest) finalFormData.auditRequest = 'As soon as possible';
+    }
 
     const payload = {
       leadId: activeLeadId,
@@ -776,63 +775,36 @@ export const Funnel = () => {
       }
     };
 
+    // Show instant success state
+    setSavedSuccess(true);
+    localStorage.setItem('r7_highest_step_completed', String(currentStep));
+
+    // Send data in background
     try {
-      const res = await fetch('/api/leads/step', {
+      fetch('/api/leads/step', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      });
-      const resData = await res.json();
-      
-      if (resData.success) {
-        setScoreData({ score: resData.score, stage: resData.stage });
-        setSavedSuccess(true);
-        localStorage.setItem('r7_highest_step_completed', String(currentStep));
-        
-        // Go to next step
-        setTimeout(() => {
-          setSavedSuccess(false);
-          setVideoProgress(0);
-          setQuizUnlocked(false);
-          setQuizChecked(false);
-          setQuizPassed(false);
-          
-          const refQuery = refId ? `?ref=${refId}` : '';
-          if (currentStep === 7) {
-            navigate(`/funnel/complete${refQuery}`);
-          } else {
-            navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
-          }
-        }, 1200);
-      } else {
-        // Still allow fallback navigation for Step 7 so user is never stuck
-        setSavedSuccess(true);
-        localStorage.setItem('r7_highest_step_completed', String(currentStep));
-        setTimeout(() => {
-          setSavedSuccess(false);
-          const refQuery = refId ? `?ref=${refId}` : '';
-          if (currentStep === 7) {
-            navigate(`/funnel/complete${refQuery}`);
-          } else {
-            navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
-          }
-        }, 1200);
-      }
-    } catch (err) {
-      console.error('Error sending funnel progress:', err);
-      // Offline fallback: continue navigation smoothly
-      setSavedSuccess(true);
-      localStorage.setItem('r7_highest_step_completed', String(currentStep));
-      setTimeout(() => {
-        setSavedSuccess(false);
-        const refQuery = refId ? `?ref=${refId}` : '';
-        if (currentStep === 7) {
-          navigate(`/funnel/complete${refQuery}`);
-        } else {
-          navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
-        }
-      }, 1200);
+      }).catch(e => console.warn('Background save note:', e));
+    } catch (e) {
+      console.warn(e);
     }
+
+    // Navigate to next step
+    setTimeout(() => {
+      setSavedSuccess(false);
+      setVideoProgress(0);
+      setQuizUnlocked(false);
+      setQuizChecked(false);
+      setQuizPassed(false);
+      
+      const refQuery = refId ? `?ref=${refId}` : '';
+      if (currentStep === 7) {
+        navigate(`/funnel/complete${refQuery}`);
+      } else {
+        navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
+      }
+    }, 600);
   };
 
   // Submit Landing Page (leads to Video 1)
@@ -2257,15 +2229,14 @@ export const Funnel = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">When are you next reviewing marketing options? *</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">When are you next reviewing marketing options?</label>
                       <select 
                         name="reviewTimeline" 
                         value={formData.reviewTimeline} 
                         onChange={handleInputChange} 
-                        required
                         className="w-full glass-input rounded-lg p-2.5 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs"
                       >
-                        <option value="" disabled className="bg-darkBg">Select Timeline</option>
+                        <option value="" className="bg-darkBg">Select Timeline</option>
                         <option value="Currently" className="bg-darkBg">Currently</option>
                         <option value="Within 3 Months" className="bg-darkBg">Within 3 Months</option>
                         <option value="Within 6 Months" className="bg-darkBg">Within 6 Months</option>
@@ -2330,15 +2301,14 @@ export const Funnel = () => {
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Would you like a free “Marketing Efficiency Audit”? *</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Would you like a free “Marketing Efficiency Audit”?</label>
                       <select 
                         name="auditRequest" 
                         value={formData.auditRequest} 
                         onChange={handleInputChange} 
-                        required
                         className="w-full glass-input rounded-lg p-2.5 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs"
                       >
-                        <option value="" disabled className="bg-darkBg">Select Option</option>
+                        <option value="" className="bg-darkBg">Select Option</option>
                         <option value="As soon as possible" className="bg-darkBg">As soon as possible</option>
                         <option value="Within 3 months" className="bg-darkBg">Within 3 months</option>
                         <option value="Within Six Months" className="bg-darkBg">Within Six Months</option>
@@ -2459,13 +2429,9 @@ export const Funnel = () => {
                 </div>
               )}
 
-              {/* BUTTON SUBMIT GATES */}
-              <div className="pt-4 border-t border-slate-800/80 mt-6">
-                {!quizUnlocked ? (
-                  <div className="p-3 bg-slate-950 text-slate-500 rounded-lg text-xs text-center border border-slate-900">
-                    🔒 Watch Full Video to unlock Bonus Videos 
-                  </div>
-                ) : (
+              {/* SUBMIT BUTTON CONTAINER */}
+              <div className="mt-6 border-t border-slate-800/80 pt-4">
+                {quizUnlocked && (
                   <>
                     {errorMsg && (
                       <div className="text-xs text-neonRed flex gap-1.5 items-center mb-3">
@@ -2477,13 +2443,14 @@ export const Funnel = () => {
                     {savedSuccess ? (
                       <div className="w-full p-3.5 bg-neonGreen text-darkBg font-bold text-sm rounded-lg flex items-center justify-center gap-2">
                         <Check className="w-4 h-4" />
-                        <span>{currentStep === 7 ? 'Completing...' : `Unlocking Video ${currentStep + 1}...`}</span>
+                        <span>{currentStep === 7 ? 'Completing Training...' : `Unlocking Video ${currentStep + 1}...`}</span>
                       </div>
                     ) : !currentQuiz ? (
                       // No quiz for this step — show direct submit
                       <button
-                        type="submit"
-                        className="w-full p-3.5 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg glow-cyan"
+                        type="button"
+                        onClick={(e) => submitStep(e)}
+                        className="w-full p-3.5 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg glow-cyan cursor-pointer"
                       >
                         <span>Save & Continue</span>
                         <ChevronRight className="w-4 h-4" />
@@ -2493,7 +2460,7 @@ export const Funnel = () => {
                       <button
                         type="button"
                         onClick={checkQuizAnswers}
-                        className="w-full p-3.5 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg glow-cyan"
+                        className="w-full p-3.5 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg glow-cyan cursor-pointer"
                       >
                         <span>Check My Answers</span>
                         <ChevronRight className="w-4 h-4" />
@@ -2508,7 +2475,7 @@ export const Funnel = () => {
                         <button
                           type="button"
                           onClick={checkQuizAnswers}
-                          className="w-full p-3.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all border border-slate-700"
+                          className="w-full p-3.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all border border-slate-700 cursor-pointer"
                         >
                           <span>Check Again</span>
                           <ChevronRight className="w-4 h-4" />
@@ -2522,8 +2489,9 @@ export const Funnel = () => {
                           <span>All answers correct! You can now proceed.</span>
                         </div>
                         <button
-                          type="submit"
-                          className="w-full p-3.5 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg glow-cyan"
+                          type="button"
+                          onClick={(e) => submitStep(e)}
+                          className="w-full p-3.5 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg glow-cyan cursor-pointer active:scale-95"
                         >
                           <span>{currentStep === 7 ? 'Complete Training' : `Unlock Video ${currentStep + 1}`}</span>
                           <ChevronRight className="w-4 h-4" />

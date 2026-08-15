@@ -245,22 +245,24 @@ const VIDEOS_CONTENT = {
   2: {
     url: "https://cinema8.com/video/WD9Wb8VJ",
     title: "Video 2: The Hidden Costs of Staying Invisible in a Crowded Market",
-    duration: "2 minutes 30 seconds",
-    durationText: "7 Minutes 13 seconds ",
+    duration: "7 minutes 13 seconds",
+    durationText: "7 minutes 13 seconds",
     description: "You can spend thousands online and still be invisible to the customers driving past your door every day. This video reveals the hidden cost of staying invisible in your own local market — and why even large media companies invest in real-world presence to stay top-of-mind.",
-    points: ["Stop Losing Local Leads", "Outshine Nearby Competitorsg", "Turn Visibility Into Profit"]
+    points: ["Stop Losing Local Leads", "Outshine Nearby Competitors", "Turn Visibility Into Profit"]
   },
   3: {
     url: "https://cinema8.com/video/AJE7vQgD",
-      title: "Video 3: AI Noise vs. Real-World Trust – Why Digital Feels Broken",
-    duration: "7 minutes 28 seconds ",
+    title: "Video 3: AI Noise vs. Real-World Trust – Why Digital Feels Broken",
+    duration: "7 minutes 28 seconds",
+    durationText: "7 minutes 28 seconds",
     description: "Customers are scrolling past more ads than ever — and trusting them less. When every feed is filled with AI-generated content, authentic businesses struggle to stand out. This video examines why digital advertising feels broken and how real-world presence builds the trust that screens can no longer deliver.",
     points: ["Digital noise erodes trust", "Authenticity builds credibility", "Real-world presence wins"]
   },
   4: {
     url: "https://cinema8.com/video/YDpY5j0X",
-      title: "Video 4: Recession-Proof Your Marketing: Stop Bleeding Cash on Unreliable Ads",
+    title: "Video 4: Recession-Proof Your Marketing: Stop Bleeding Cash on Unreliable Ads",
     duration: "6 minutes 16 seconds",
+    durationText: "6 minutes 16 seconds",
     description: "With costs rising and uncertainty in the economy, every marketing dollar must work harder. This video shows why continuing to pour money into unreliable digital ads is a risk — and how durable, low ongoing-cost approaches can protect your budget while still delivering consistent local visibility.",
     points: ["Mapping local service areas", "Routing logic and response times", "Dominating regional search offline"]
   },
@@ -274,9 +276,9 @@ const VIDEOS_CONTENT = {
   },
   6: {
     url: "https://cinema8.com/video/vD52Z57X",
-    title: "Video 6: : Establishing trust in the face of ever-changing algorithms Duration",
+    title: "Video 6: Establishing Trust in the Face of Ever-Changing Algorithms",
     duration: "9 minutes",
-    durationText: "9 Minutes",
+    durationText: "9 minutes",
     description: "Trust is the real currency in local business. This video reveals why professional physical presence builds credibility and loyalty faster than digital messages alone — and how the right real-world strategy creates daily recognition that turns into referrals and repeat business.",
     points: ["Dramatic Changes in SEO", "Everything is built on Trust", "E.E.A & T is the new benchmark"]
   },
@@ -284,7 +286,7 @@ const VIDEOS_CONTENT = {
     url: "https://cinema8.com/video/AJE7PNmD",
     title: "Video 7: Future-Proof Marketing: Low CPM Strategies That Deliver Real ROI",
     duration: "13 minutes",
-    durationText: "13 Minutes",
+    durationText: "13 minutes",
     description: "After exploring the problems with digital advertising, this final video delivers the complete solution. You'll see how to achieve dramatically lower cost-per-thousand impressions, consistent local reach, and a marketing approach that continues working Year after year — without the ongoing budget bleed of social media.",
     points: ["Rising CPMs waste budget.", "Wraps unlock lower-cost reach.", "Awareness fuels customer action."]
   }
@@ -719,6 +721,11 @@ export const Funnel = () => {
         setErrorMsg('Please fill in all details to proceed.');
         return;
       }
+    } else if (currentStep === 7) {
+      if (!formData.reviewTimeline || !formData.auditRequest) {
+        setErrorMsg('Please select your Review Timeline and Audit preference above.');
+        return;
+      }
     }
 
     // Submit progressive data to Express backend
@@ -796,13 +803,35 @@ export const Funnel = () => {
           } else {
             navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
           }
-        }, 1500);
+        }, 1200);
       } else {
-        setErrorMsg(resData.error || 'Failed to submit data.');
+        // Still allow fallback navigation for Step 7 so user is never stuck
+        setSavedSuccess(true);
+        localStorage.setItem('r7_highest_step_completed', String(currentStep));
+        setTimeout(() => {
+          setSavedSuccess(false);
+          const refQuery = refId ? `?ref=${refId}` : '';
+          if (currentStep === 7) {
+            navigate(`/funnel/complete${refQuery}`);
+          } else {
+            navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
+          }
+        }, 1200);
       }
     } catch (err) {
       console.error('Error sending funnel progress:', err);
-      setErrorMsg('Network error. Failed to connect to backend.');
+      // Offline fallback: continue navigation smoothly
+      setSavedSuccess(true);
+      localStorage.setItem('r7_highest_step_completed', String(currentStep));
+      setTimeout(() => {
+        setSavedSuccess(false);
+        const refQuery = refId ? `?ref=${refId}` : '';
+        if (currentStep === 7) {
+          navigate(`/funnel/complete${refQuery}`);
+        } else {
+          navigate(`/funnel/video-${currentStep + 1}${refQuery}`);
+        }
+      }, 1200);
     }
   };
 
@@ -1233,14 +1262,16 @@ export const Funnel = () => {
 
           {/* Bonus Video */}
           <div className="glass-card rounded-2xl p-6 border border-neonCyan/30 shadow-[0_0_30px_rgba(0,255,255,0.1)]">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-2 py-1 rounded border border-neonCyan/20">
+            <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 mb-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-3 py-1.5 rounded-lg border border-neonCyan/20">
                 Bonus Video
               </span>
-              <span className="text-xs text-slate-500">Duration: 7 minutes 24 seconds</span>
+              <span className="text-xs text-slate-400 font-medium bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-800">
+                Duration: 7 minutes 24 seconds
+              </span>
             </div>
-            <h2 className="text-xl font-grotesk font-bold text-white mb-2">Expected Impact of Emerging Online Safety Legislation Requiring Digital ID</h2>
-            <p className="text-sm text-slate-400 mb-6">New online safety laws in the USA, Eurozone, Australia, the UK, Canada and other countries are introducing stricter age verification and Digital ID requirements. For small businesses that rely on social media and digital advertising, this could mean reduced reach, higher costs, and more fragmented audiences.<br/><br/>This video examines what these changes are likely to mean for your advertising results — and why many businesses are already looking at reliable, privacy-friendly alternatives that deliver consistent local impressions without digital verification barriers.</p>
+            <h2 className="text-xl sm:text-2xl font-grotesk font-bold text-white mb-3 mt-2 leading-snug">Expected Impact of Emerging Online Safety Legislation Requiring Digital ID</h2>
+            <p className="text-sm text-slate-400 mb-6 leading-relaxed">New online safety laws in the USA, Eurozone, Australia, the UK, Canada and other countries are introducing stricter age verification and Digital ID requirements. For small businesses that rely on social media and digital advertising, this could mean reduced reach, higher costs, and more fragmented audiences.<br/><br/>This video examines what these changes are likely to mean for your advertising results — and why many businesses are already looking at reliable, privacy-friendly alternatives that deliver consistent local impressions without digital verification barriers.</p>
             
             <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 shadow-xl group mb-6">
               <iframe 
@@ -1592,14 +1623,16 @@ export const Funnel = () => {
         {/* Left Side: Video Content & Player */}
         <div className="flex-1 space-y-6">
           <div className="glass-card rounded-2xl p-6 relative overflow-hidden">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-2 py-1 rounded border border-neonCyan/20">
+            <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 mb-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-3 py-1.5 rounded-lg border border-neonCyan/20">
                 Gated Module {currentStep}
               </span>
-              <span className="text-xs text-slate-500">Duration: {videoContent?.durationText || `~${videoContent?.duration} seconds`}</span>
+              <span className="text-xs text-slate-400 font-medium bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-800">
+                Duration: {videoContent?.durationText || videoContent?.duration}
+              </span>
             </div>
-            <h1 className="text-xl font-grotesk font-bold text-white mb-2">{videoContent?.title}</h1>
-            <p className="text-sm text-slate-400 mb-4">{videoContent?.description}</p>
+            <h1 className="text-xl sm:text-2xl font-grotesk font-bold text-white mb-3 mt-2 leading-snug">{videoContent?.title}</h1>
+            <p className="text-sm text-slate-400 mb-6 leading-relaxed">{videoContent?.description}</p>
 
 
 

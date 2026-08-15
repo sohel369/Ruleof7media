@@ -850,12 +850,16 @@ export const Funnel = () => {
 
   const [isSessionClaimed, setIsSessionClaimed] = useState(false);
 
-  const submitComplete = async (e) => {
-    e.preventDefault();
+  const submitComplete = (e) => {
+    if (e) e.preventDefault();
     
-    // Save final details
+    // Instantly transition UI to Profile Finalized confirmation box
+    setIsSessionClaimed(true);
+
+    // Save final details to backend in background
+    const activeLeadId = leadId || localStorage.getItem('r7_current_lead_id') || ('lead_' + Date.now());
     const payload = {
-      leadId: leadId || ('lead_' + Date.now()),
+      leadId: activeLeadId,
       step: 8,
       data: {
         ...formData,
@@ -864,15 +868,13 @@ export const Funnel = () => {
     };
 
     try {
-      await fetch('/api/leads/step', {
+      fetch('/api/leads/step', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      });
-      setIsSessionClaimed(true);
+      }).catch(err => console.warn('Strategy session save note:', err));
     } catch (err) {
-      console.error(err);
-      setIsSessionClaimed(true); // Still show success for UX, even if offline
+      console.warn('Lead save error:', err);
     }
   };
 
@@ -1366,7 +1368,11 @@ export const Funnel = () => {
                     </div>
                   </div>
                   
-                  <button type="submit" className="w-full p-4 bg-neonRed hover:bg-neonRed/90 rounded-lg font-bold text-white text-sm transition-all duration-300 shadow-[0_0_20px_rgba(255,42,85,0.4)] flex items-center justify-center gap-2 mt-4 hover:scale-[1.02]">
+                  <button 
+                    type="button" 
+                    onClick={(e) => submitComplete(e)} 
+                    className="w-full p-4 bg-neonRed hover:bg-neonRed/90 rounded-lg font-bold text-white text-sm transition-all duration-300 shadow-[0_0_20px_rgba(255,42,85,0.4)] flex items-center justify-center gap-2 mt-4 hover:scale-[1.02] cursor-pointer active:scale-95"
+                  >
                     <span>Submit Profile & Claim Session</span>
                   </button>
                 </form>

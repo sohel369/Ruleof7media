@@ -9,7 +9,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_place
 
 const db = require('./db');
 const { calculateScore } = require('./scoring');
-const { sendEmail } = require('./mailer');
+const { sendEmail, getCredentials } = require('./mailer');
 const { geocodeAddress } = require('./utils');
 
 const app = express();
@@ -288,13 +288,13 @@ app.get('/api/leads/:id', async (req, res) => {
 
           // 1. Send notification to Partner if assigned
           if (partnerEmail) {
-            await sendEmail(partnerEmail, subject, leadDetailsHtml);
+            sendEmail(partnerEmail, subject, leadDetailsHtml).catch(e => console.error('[MAILER] Partner send error:', e));
           }
 
           // 2. Always send notification to Admin (GMAIL_USER) so the owner never misses a lead
           const adminEmail = process.env.GMAIL_USER?.trim();
           if (adminEmail && adminEmail.toLowerCase() !== partnerEmail?.toLowerCase()) {
-            await sendEmail(adminEmail, `[Admin Notification] ${subject}`, leadDetailsHtml);
+            sendEmail(adminEmail, `[Admin Notification] ${subject}`, leadDetailsHtml).catch(e => console.error('[MAILER] Admin send error:', e));
           }
 
           // 3. Send friendly confirmation email to the lead / prospect
@@ -320,7 +320,7 @@ app.get('/api/leads/:id', async (req, res) => {
               </p>
             </div>
           `;
-          await sendEmail(data.email, 'Your Rule7Media Marketing Audit Request Confirmed', clientConfirmationHtml);
+          sendEmail(data.email, 'Your Rule7Media Marketing Audit Request Confirmed', clientConfirmationHtml).catch(e => console.error('[MAILER] Client send error:', e));
         } catch (emailErr) {
           console.error('[MAILER] Error processing lead email triggers:', emailErr);
         }
@@ -699,6 +699,55 @@ app.post('/api/create-payment-intent', async (req, res) => {
 // Get Database Info Status
 app.get('/api/db-status', (req, res) => {
   res.json(db.getDbState());
+});
+
+// Test Email Diagnostics endpoint
+app.get('/api/test-email', async (req, res) => {
+  try {
+    const creds = getCredentials();
+    const recipient = (req.query.to || creds.user || '').trim();
+
+    if (!creds.user || !creds.pass) {
+      return res.status(400).json({
+        success: false,
+        error: 'Gmail credentials not configured or found on server.',
+        detectedUser: creds.user ? `${creds.user.slice(0, 3)}***` : '(empty)',
+        hasPassword: Boolean(creds.pass),
+        tip: 'Ensure GMAIL_USER and GMAIL_APP_PASSWORD are added in Railway -> Variables and service redeployed.'
+      });
+    }
+
+    const testSubject = '⚡ Rule7Media Email Test: ' + new Date().toLocaleTimeString();
+    const testHtml = `
+      <div style="font-family: Arial, sans-serif; padding: 24px; border: 2px solid #00f0ff; border-radius: 12px; max-width: 550px; background-color: #ffffff; color: #0f172a;">
+        <h2 style="color: #0f172a; margin-top: 0;">Rule7Media Email System Active!</h2>
+        <p style="color: #475569;">This test confirms that your Gmail SMTP configuration on Railway is communicating and dispatching emails successfully.</p>
+        <p style="background-color: #f1f5f9; padding: 10px 14px; border-radius: 6px; font-size: 13px; color: #334155;">
+          <strong>Sender:</strong> ${creds.user}<br/>
+          <strong>Timestamp:</strong> ${new Date().toLocaleString()}
+        </p>
+        <p style="color: #10b981; font-weight: bold; margin-bottom: 0;">✓ All systems operational.</p>
+      </div>
+    `;
+
+    const result = await sendEmail(recipient, testSubject, testHtml);
+
+    if (result.success) {
+      return res.json({
+        success: true,
+        message: `Test email successfully sent to ${recipient}! Please check your inbox (and spam folder).`,
+        details: result
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        error: result.error,
+        tip: 'Check if Google 2-Step Verification is ON and you generated a 16-character App Password (not your regular Gmail password).'
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // Short URL Redirection for Print/Offline publishers (Magazines, Newspapers, QR Codes)

@@ -717,6 +717,20 @@ export const Partner = () => {
                     </div>
                   ))}
 
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Do you offer Overnight or Weekend Fitting?</label>
+                    <select
+                      name="overnightFitting"
+                      value={form.overnightFitting || 'Yes'}
+                      onChange={handleChange}
+                      className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900 border border-slate-800 focus:ring-1 focus:ring-neonCyan text-sm"
+                    >
+                      <option value="Yes">Yes — Overnight & Weekend Available</option>
+                      <option value="No">No — Standard Business Hours Only</option>
+                      <option value="On Request">On Request / Fleet Contracts Only</option>
+                    </select>
+                  </div>
+
                   {error && (
                     <div className="flex items-center gap-2 text-xs bg-neonRed/10 text-neonRed p-3 rounded-lg border border-neonRed/20">
                       <AlertCircle className="w-4 h-4 flex-shrink-0" />

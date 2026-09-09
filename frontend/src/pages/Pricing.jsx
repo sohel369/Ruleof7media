@@ -67,17 +67,16 @@ const PLANS = [
     id: 'dfy',
     name: 'Plan 4: Done-For-You',
     tagline: 'Full Setup & Lead Management Service',
-    price: 149,
-    period: ' setup + $499/mo',
-    color: 'neonPurple',
+    price: '1,499',
+    period: '/wrap setup + $99/mo',
+    color: 'neonCyan',
     popular: false,
     stripePriceLabel: 'dfy_plan',
     features: [
-      'Custom Gated Video Landing Pages & Funnels',
-      'Geographical Funnel & Custom Domain Setup',
-      'Custom QuickBooks / Xero Job Costing Integration',
-      'Dedicated Campaign Manager (Optional Add-on)',
-      '24/7 Phone & Email Priority Support'
+      'Custom High-Converting Vinyl Wrap Designs',
+      'Geographical Funnel & Domain Setup',
+      'Full CRM & Software Integration',
+      'Dedicated Campaign Manager & Monthly Reports'
     ]
   }
 ];
@@ -101,6 +100,10 @@ export const Pricing = () => {
 
   // Step 1 → Step 2: Show subscription details
   const handleSelectPlan = (plan) => {
+    if (plan.id === 'dfy') {
+      navigate('/done-for-you');
+      return;
+    }
     setSelectedPlan(plan);
     setStep('details');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -413,6 +416,21 @@ export const Pricing = () => {
                       className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs"
                     />
                     <span className="text-[10px] text-slate-500 mt-1 block">This will be your exclusive protected territory.</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
+                      Do you offer Overnight or Weekend Fitting?
+                    </label>
+                    <select
+                      value={billing.overnightFitting || 'Yes'}
+                      onChange={e => setBilling(p => ({ ...p, overnightFitting: e.target.value }))}
+                      className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900 border border-slate-800 focus:ring-1 focus:ring-neonCyan text-xs"
+                    >
+                      <option value="Yes">Yes — Overnight & Weekend Available</option>
+                      <option value="No">No — Standard Business Hours Only</option>
+                      <option value="On Request">On Request / Fleet Contracts Only</option>
+                    </select>
                   </div>
 
                   {error && (

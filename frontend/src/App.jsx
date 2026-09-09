@@ -5,6 +5,7 @@ import { SocketProvider } from './context/SocketContext';
 // Owner-facing pages
 import { Landing } from './pages/Landing';
 import { Pricing } from './pages/Pricing';
+import { DoneForYou } from './pages/DoneForYou';
 import { Partner } from './pages/Partner';
 import { Admin } from './pages/Admin';
 import { Register } from './pages/Register';
@@ -48,6 +49,9 @@ function AppContent() {
 
       {/* Subscription / Pricing page */}
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/done-for-you" element={<DoneForYou />} />
+      <Route path="/pricing/dfy" element={<DoneForYou />} />
+      <Route path="/done-for-you.html" element={<Navigate to="/done-for-you" replace />} />
 
       {/* ReferrQ Affiliate Registration */}
       <Route path="/register" element={<Register />} />

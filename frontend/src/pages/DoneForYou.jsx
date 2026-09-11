@@ -69,14 +69,14 @@ export const DoneForYou = () => {
               </h1>
               
               <div className="flex flex-wrap items-baseline gap-2 mb-5">
-                <span className="text-3xl md:text-4xl font-black text-white font-grotesk">$1,499</span>
-                <span className="text-slate-400 text-sm font-medium">/ wrap setup +</span>
-                <span className="text-3xl md:text-4xl font-black text-white font-grotesk">$99</span>
+                <span className="text-3xl md:text-4xl font-black text-white font-grotesk">$1,997</span>
+                <span className="text-slate-400 text-sm font-medium">setup +</span>
+                <span className="text-3xl md:text-4xl font-black text-white font-grotesk">$149</span>
                 <span className="text-slate-400 text-sm font-medium">/ month</span>
               </div>
 
               <p className="text-slate-400 text-sm md:text-[15px] leading-relaxed">
-                Get a completely built local wrap marketing machine. Our professional team designs your custom wrap concepts, structures your territory-protected landing funnel, configures the automated lead scoring dashboard, and integrates everything with your existing software stack.
+                We design, integrate and manage the full education → auction → scoring ecosystem for your Signwriting or Vehicle Wrapping Business. Get a completely turnkey client generation machine with full CRM and accounting sync.
               </p>
             </div>
 
@@ -85,9 +85,9 @@ export const DoneForYou = () => {
               <div className="flex items-start gap-3.5">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-bold text-white">Custom High-Converting Vinyl Wrap Designs</h4>
+                  <h4 className="text-sm font-bold text-white">Full Turnkey Ecosystem Management</h4>
                   <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                    Our premium vehicle wrap concepts are optimized visually to maximize offline scans and lead conversions.
+                    We manage your complete custom education, auction, and automated lead qualification pipeline end-to-end.
                   </p>
                 </div>
               </div>
@@ -95,9 +95,9 @@ export const DoneForYou = () => {
               <div className="flex items-start gap-3.5">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-bold text-white">Geographical Funnel & Domain Setup</h4>
+                  <h4 className="text-sm font-bold text-white">Geographical Funnel & 30-Mile Exclusive Radius</h4>
                   <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                    We host and customize your complete gated video training series targeted specifically to your local region.
+                    We host and customize your localized video education series and lock in your 30-mile territory protection.
                   </p>
                 </div>
               </div>
@@ -105,9 +105,9 @@ export const DoneForYou = () => {
               <div className="flex items-start gap-3.5">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-bold text-white">Full CRM & Software Integration</h4>
+                  <h4 className="text-sm font-bold text-white">Full CRM & 2-Way Accounting Integration</h4>
                   <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                    Leads are automatically pushed and categorized (Cold/Warm/Hot) directly to your Salesforce, HubSpot, or custom CRM.
+                    Leads are automatically scored and synchronized directly with your QuickBooks / Xero accounting and CRM workflows.
                   </p>
                 </div>
               </div>
@@ -115,9 +115,9 @@ export const DoneForYou = () => {
               <div className="flex items-start gap-3.5">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-bold text-white">Dedicated Campaign Manager & Monthly Reports</h4>
-                  <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
-                    Get a marketing expert reviewing your data monthly and sending detailed reports on CPC savings and ROI metrics.
+                  <h4 className="text-sm font-bold text-emerald-400">Includes 22% Affiliate Commission</h4>
+                  <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                    Recruit vehicle owners and advertisers to the Reverse Auction platform and earn 22% ongoing commission.
                   </p>
                 </div>
               </div>

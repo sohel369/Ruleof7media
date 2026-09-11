@@ -44,15 +44,84 @@ export const Landing = () => {
   ];
 
   const plans = [
-    { name: 'Starter', price: '$197', period: '/month', tag: 'Perfect to start', features: ['1 protected territory', 'Up to 50 leads/month', 'Full CRM dashboard', 'QR scan attribution', 'Email support'], cta: 'Get Started', highlight: false },
-    { name: 'Growth', price: '$397', period: '/month', tag: 'Most popular', features: ['3 protected territories', 'Unlimited leads', 'Full CRM dashboard', 'Real-time webhook sync', 'Priority support', 'Co-branded funnels'], cta: 'Choose Growth', highlight: true },
-    { name: 'Pro', price: '$697', period: '/month', tag: 'For fleets', features: ['Unlimited territories', 'Unlimited leads', 'White-label dashboard', 'Custom webhook integrations', 'Dedicated account manager', 'Trade magazine placements'], cta: 'Go Pro', highlight: false }
+    { 
+      name: 'Plan 1: Starter', 
+      price: '$297', 
+      period: '/month', 
+      tag: 'Local Priority', 
+      commitment: '3-mo commitment · $891 total',
+      features: ['Priority listing + 30-mile radius', 'Manual QuickBooks / Xero export', 'Email alerts & Prize Draw entries', 'Access to educated advertiser network'], 
+      cta: 'Select Starter →', 
+      highlight: false,
+      onClick: () => navigate('/pricing')
+    },
+    { 
+      name: 'Plan 2: Professional', 
+      price: '$247', 
+      period: '/month', 
+      tag: '★ Most Popular', 
+      commitment: '6-mo commitment · Save 17%',
+      features: ['Everything in Starter', '30-mile exclusive radius', '2-way QuickBooks & Xero sync', 'Automated invoicing & material costs', '22% Affiliate Commission'], 
+      cta: 'Select Professional →', 
+      highlight: true,
+      onClick: () => navigate('/pricing')
+    },
+    { 
+      name: 'Plan 3: Growth', 
+      price: '$197', 
+      period: '/month', 
+      tag: '★ Recommended', 
+      commitment: '12-mo commitment · Save 34%',
+      features: ['Everything in Professional', 'Real-time P&L Job Costing & Alerts', 'Multiple auction bidding rights', 'Priority advertiser feed placement', '22% Affiliate Commission'], 
+      cta: 'Select Growth →', 
+      highlight: false,
+      recommended: true,
+      onClick: () => navigate('/pricing')
+    },
+    { 
+      name: 'Plan 4: Done-For-You', 
+      price: '$1,997', 
+      period: 'setup + $149/mo', 
+      tag: 'Full Turnkey Setup', 
+      commitment: 'Turnkey Client Machine',
+      features: ['Full ecosystem management', 'Geographical funnel & 30-mile lock', 'Turnkey CRM & 2-Way sync', 'Includes 22% Affiliate Commission'], 
+      cta: 'Book Done-For-You →', 
+      highlight: false,
+      onClick: () => navigate('/done-for-you')
+    }
   ];
 
-  const videoOffers = [
-    { id: 'A', icon: <Video className="w-7 h-7" />, color: 'neonCyan', badge: 'Free', badgeBg: 'bg-neonCyan/10 text-neonCyan border-neonCyan/20', title: 'Free Video Series', subtitle: 'With Rule7 Watermark', price: 'Free', priceNote: 'Always free', description: 'Access all 7 training videos branded with the Rule7Media watermark. Perfect for getting started and understanding our system.', features: ['All 7 educational videos', 'Rule7Media branding included', 'Lead capture form included', 'Basic quiz & progress tracking', 'Thank you page on completion'], cta: 'Start Watching Free', ctaAction: () => navigate('/funnel'), highlight: false },
-    { id: 'B', icon: <Award className="w-7 h-7" />, color: 'neonRed', badge: 'Popular', badgeBg: 'bg-neonRed/10 text-neonRed border-neonRed/20', title: 'Unbranded Video Series', subtitle: 'Your Brand, Our System', price: '$97', priceNote: '/month', description: 'The same powerful 7-video funnel, completely stripped of Rule7 branding. Your logo, your colours, your lead capture.', features: ['All 7 videos — no watermark', 'Your brand logo & colours', 'Custom domain support', 'White-label lead dashboard', 'Priority email support'], cta: 'Get Unbranded', ctaAction: () => navigate('/pricing'), highlight: true },
-    { id: 'C', icon: <Crown className="w-7 h-7" />, color: 'neonGreen', badge: 'Premium', badgeBg: 'bg-neonGreen/10 text-neonGreen border-neonGreen/20', title: 'Custom Video Series', subtitle: 'Tailored to Your Market', price: '$297', priceNote: '/month', description: 'We produce custom video scripts and overlays tailored to your city, industry, and customer base. The ultimate competitive weapon.', features: ['Custom scripted video content', 'Your city / market featured', 'Branded intro & outro', 'Territory exclusivity lock', 'Dedicated account manager', 'Trade publication placements'], cta: 'Go Custom', ctaAction: () => navigate('/pricing'), highlight: false }
+  const videoAddons = [
+    {
+      id: 'branded',
+      icon: <Video className="w-6 h-6" />,
+      color: 'neonCyan',
+      title: 'Rule7 Branded',
+      price: '$347',
+      period: 'one-time (or $59/mo)',
+      description: 'Full 7-video series with Rule7 branding + your business listed as the local fulfillment partner.',
+      features: ['All 7 educational videos', 'Rule7 branding + local credit', 'Cloud hosting & streaming', 'Commercial usage rights']
+    },
+    {
+      id: 'unbranded',
+      icon: <Award className="w-6 h-6" />,
+      color: 'neonRed',
+      title: 'Unbranded (White-Label)',
+      price: '$597',
+      period: 'one-time (or $89/mo)',
+      description: 'Clean version with no external logos — completely ready for your own website and sales team.',
+      features: ['100% white-label (no watermark)', 'Your brand logo & colors', 'Custom domain ready', 'Commercial usage rights']
+    },
+    {
+      id: 'bespoke',
+      icon: <Crown className="w-6 h-6" />,
+      color: 'neonGreen',
+      title: 'Fully Bespoke',
+      price: '$1,797',
+      period: 'one-time (or $179/mo)',
+      description: 'Custom video scripts, your logo, brand colors, tailored intro/outro, and local city featured.',
+      features: ['Custom scripted & branded videos', 'Your shop name & logo on all videos', 'Custom filmed intro/outro', 'Dedicated manager']
+    }
   ];
 
   // Full system flow steps
@@ -212,51 +281,62 @@ export const Landing = () => {
         </div>
       </section>
 
-      {/* ── VIDEO SERIES OFFERS A/B/C ── */}
-      <section className="py-20 px-6 border-t border-slate-900">
+      {/* ── OPTIONAL VIDEO EDUCATION ADD-ONS PREVIEW ── */}
+      <section className="py-20 px-6 border-t border-slate-900 bg-slate-950/40">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-neonCyan px-3 py-1 bg-neonCyan/10 rounded-full border border-neonCyan/20">Video Series Options</span>
-            <h2 className="text-3xl font-grotesk font-black text-white mt-4">Choose Your Video Package</h2>
-            <p className="text-sm text-slate-400 mt-3 max-w-xl mx-auto">
-              Whether you're testing the waters or ready to dominate your market — pick the funnel that fits your goals.
+            <span className="text-xs font-bold uppercase tracking-widest text-neonCyan px-3 py-1 bg-neonCyan/10 rounded-full border border-neonCyan/20">
+              Optional Add-On
+            </span>
+            <h2 className="text-3xl font-grotesk font-black text-white mt-4">
+              Want to own the education that converts digital advertisers?
+            </h2>
+            <p className="text-sm text-slate-400 mt-3 max-w-2xl mx-auto">
+              The proprietary 7-video series is available as an optional add-on so your Signwriting or Vehicle Wrapping Business can educate local businesses and own the conversation.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-            {videoOffers.map((offer) => (
-              <div key={offer.id} className={`glass-card rounded-2xl p-7 relative flex flex-col transition-all duration-300 hover:translate-y-[-4px] ${offer.highlight ? 'border-neonRed/40 bg-neonRed/5 shadow-2xl scale-105 z-10' : 'hover:border-slate-700'}`}>
-                {offer.highlight && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest bg-neonRed text-white px-4 py-1.5 rounded-full shadow-xl">
-                    <Star className="w-3 h-3 fill-white" /><span>Most Popular</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {videoAddons.map((addon) => (
+              <div 
+                key={addon.id} 
+                className="glass-card rounded-2xl p-7 relative flex flex-col justify-between transition-all duration-300 hover:translate-y-[-4px] hover:border-slate-700"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className={`text-[11px] font-black uppercase tracking-widest text-${addon.color}`}>
+                      {addon.title}
+                    </span>
+                    <div className={`w-9 h-9 rounded-xl bg-${addon.color}/15 text-${addon.color} flex items-center justify-center border border-${addon.color}/20`}>
+                      {addon.icon}
+                    </div>
                   </div>
-                )}
-                <div className="flex items-center justify-between mb-5">
-                  <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${offer.badgeBg}`}>Option {offer.id} — {offer.badge}</span>
-                  <div className={`w-10 h-10 rounded-xl bg-${offer.color}/15 text-${offer.color} flex items-center justify-center border border-${offer.color}/20`}>{offer.icon}</div>
+
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-3xl font-black font-grotesk text-white">{addon.price}</span>
+                    <span className="text-slate-400 text-xs font-semibold">{addon.period}</span>
+                  </div>
+
+                  <p className="text-xs text-slate-300 mb-5 leading-relaxed">
+                    {addon.description}
+                  </p>
+
+                  <ul className="space-y-2 mb-6">
+                    {addon.features.map((f, fi) => (
+                      <li key={fi} className="flex items-start gap-2 text-xs text-slate-400">
+                        <CheckCircle2 className={`w-3.5 h-3.5 text-${addon.color} flex-shrink-0 mt-0.5`} />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-lg font-grotesk font-black text-white mb-1">{offer.title}</h3>
-                <p className={`text-xs font-semibold text-${offer.color} mb-3`}>{offer.subtitle}</p>
-                <div className="flex items-end gap-1 mb-4">
-                  <span className="text-3xl font-black font-grotesk text-white">{offer.price}</span>
-                  {offer.priceNote === 'Always free' ? (
-                    <span className="text-neonGreen text-xs mb-1 font-semibold">{offer.priceNote}</span>
-                  ) : (
-                    <span className="text-slate-500 text-sm mb-1">{offer.priceNote}</span>
-                  )}
-                </div>
-                <p className="text-xs text-slate-400 mb-5 leading-relaxed">{offer.description}</p>
-                <ul className="space-y-2.5 mb-7 flex-1">
-                  {offer.features.map((f, fi) => (
-                    <li key={fi} className="flex items-start gap-2 text-xs text-slate-300">
-                      <CheckCircle2 className={`w-3.5 h-3.5 text-${offer.color} flex-shrink-0 mt-0.5`} />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={offer.ctaAction} className={`w-full py-3.5 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 ${offer.highlight ? 'bg-neonRed hover:bg-neonRed/90 text-white shadow-lg glow-pink' : offer.id === 'A' ? 'bg-neonCyan/10 hover:bg-neonCyan/20 text-neonCyan border border-neonCyan/30' : 'bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200'}`}>
-                  <span>{offer.cta}</span>
-                  <ChevronRight className="w-4 h-4" />
+
+                <button 
+                  onClick={() => navigate('/pricing')} 
+                  className="w-full py-3 font-bold text-xs rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-neonCyan/50 text-slate-200 hover:text-white transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span>View in Pricing Page</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-neonCyan" />
                 </button>
               </div>
             ))}
@@ -315,33 +395,81 @@ export const Landing = () => {
         </div>
       </section>
 
-      {/* ── PRICING PREVIEW ── */}
-      <section className="py-20 px-6 border-t border-slate-900 bg-slate-950/30">
-        <div className="max-w-5xl mx-auto">
+      {/* ── 4-TIER SUBSCRIPTION PLANS PREVIEW ── */}
+      <section className="py-20 px-6 border-t border-slate-900 bg-slate-950/50">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-neonRed px-3 py-1 bg-neonRed/10 rounded-full border border-neonRed/20">Subscription Plans</span>
-            <h2 className="text-3xl font-grotesk font-black text-white mt-4">Simple, Transparent Pricing</h2>
-            <p className="text-sm text-slate-400 mt-3">Choose the plan that matches your territory ambitions.</p>
+            <span className="text-xs font-bold uppercase tracking-widest text-neonRed px-3 py-1 bg-neonRed/10 rounded-full border border-neonRed/20">
+              Subscription Plans
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-grotesk font-black text-white mt-4">
+              Rule7 Dashboard Pricing
+            </h2>
+            <p className="text-sm text-slate-400 mt-3 max-w-xl mx-auto">
+              Built exclusively for Signwriters and Vehicle Wrapping Businesses. All plans include 30-mile territory protection.
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {plans.map((plan, idx) => (
-              <div key={idx} className={`glass-card p-7 rounded-2xl relative ${plan.highlight ? 'border-neonRed/40 bg-neonRed/5 shadow-xl' : ''}`}>
-                {plan.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest bg-neonRed text-white px-3 py-1 rounded-full shadow-lg">{plan.tag}</div>
+              <div 
+                key={idx} 
+                className={`glass-card p-6 rounded-2xl relative flex flex-col justify-between transition-all duration-300 hover:translate-y-[-4px] ${
+                  plan.highlight 
+                    ? 'border-neonRed/60 bg-gradient-to-b from-neonRed/10 to-slate-900/60 shadow-xl ring-1 ring-neonRed/40 z-10' 
+                    : plan.recommended
+                    ? 'border-neonGreen/60 bg-gradient-to-b from-neonGreen/10 to-slate-900/60 shadow-xl ring-1 ring-neonGreen/40 z-10'
+                    : 'border-slate-800 hover:border-slate-700'
+                }`}
+              >
+                {plan.tag && (
+                  <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg ${
+                    plan.highlight 
+                      ? 'bg-neonRed text-white' 
+                      : plan.recommended 
+                      ? 'bg-neonGreen text-black font-black' 
+                      : 'bg-slate-800 text-slate-300 border border-slate-700'
+                  }`}>
+                    {plan.tag}
+                  </div>
                 )}
-                <div className="mb-6">
-                  <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">{plan.name}</div>
-                  <div className="flex items-end gap-1"><span className="text-4xl font-black font-grotesk text-white">{plan.price}</span><span className="text-slate-500 text-sm mb-1">{plan.period}</span></div>
+
+                <div>
+                  <div className="mb-4 pt-1">
+                    <div className="text-xs font-black uppercase tracking-widest text-slate-300 mb-1">
+                      {plan.name}
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl sm:text-4xl font-black font-grotesk text-white">{plan.price}</span>
+                      <span className="text-slate-400 text-xs font-semibold">{plan.period}</span>
+                    </div>
+                    <div className="text-[11px] text-slate-400 mt-1.5 font-medium">
+                      {plan.commitment}
+                    </div>
+                  </div>
+
+                  <ul className="space-y-2 mb-6 border-t border-slate-800/80 pt-3">
+                    {plan.features.map((f, fi) => (
+                      <li key={fi} className="flex items-start gap-2 text-xs text-slate-300">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-neonGreen flex-shrink-0 mt-0.5" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-2.5 mb-7">
-                  {plan.features.map((f, fi) => (
-                    <li key={fi} className="flex items-start gap-2 text-xs text-slate-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-neonGreen flex-shrink-0 mt-0.5" /><span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={() => navigate('/pricing')} className={`w-full py-3 font-bold text-xs rounded-lg transition-all ${plan.highlight ? 'bg-neonRed hover:bg-neonRed/90 text-white glow-pink shadow-lg' : 'bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800'}`}>
-                  {plan.cta}
+
+                <button 
+                  onClick={plan.onClick} 
+                  className={`w-full py-3.5 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                    plan.highlight 
+                      ? 'bg-neonRed hover:bg-neonRed/90 text-white glow-pink shadow-lg' 
+                      : plan.recommended
+                      ? 'bg-neonGreen hover:bg-neonGreen/90 text-black shadow-lg glow-green font-black'
+                      : 'bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800'
+                  }`}
+                >
+                  <span>{plan.cta}</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             ))}

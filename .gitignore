@@ -9,3 +9,9 @@ dist-ssr/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Private Work Plans & Local Notes (Never push to GitHub)
+WORK_PLAN.md
+work_plan.md
+*.plan.md
+TODO.md

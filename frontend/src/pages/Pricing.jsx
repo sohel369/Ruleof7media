@@ -405,7 +405,7 @@ export const Pricing = () => {
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-grotesk font-black text-white tracking-tight leading-[1.15] mb-6">
-                The complete ecosystem that educates the customer, scores the lead, and <span className="text-transparent bg-clip-text bg-gradient-to-r from-neonRed via-rose-400 to-neonCyan">opens an entirely new market</span> of advertisers.
+                The complete ecosystem that educates the customer, scores the lead, and <span className="text-neonCyan drop-shadow-[0_0_25px_rgba(0,242,254,0.35)]">opens an entirely new market</span> of advertisers.
               </h1>
 
               <div className="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto mb-8">

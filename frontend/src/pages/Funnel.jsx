@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Play, Check, AlertCircle, ChevronRight, Flame, Zap, Shield, HelpCircle, MapPin, Phone, ChevronDown, Sparkles, Maximize2, X, BarChart3, Info } from 'lucide-react';
+import { Play, Check, AlertCircle, ChevronRight, Flame, Zap, Shield, HelpCircle, MapPin, Phone, ChevronDown, Sparkles, Maximize2, X, BarChart3, Info, ExternalLink, ArrowRight, CheckCircle2, Award, Crown, DollarSign } from 'lucide-react';
 import { GlobalFooter } from '../components/GlobalFooter';
 
 // Quiz definitions for each step
@@ -405,6 +405,8 @@ export const Funnel = () => {
   const [leadId, setLeadId] = useState('');
   const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false);
   const industryDropdownRef = useRef(null);
+  const [isCompleteIndustryOpen, setIsCompleteIndustryOpen] = useState(false);
+  const completeIndustryRef = useRef(null);
   const [videoProgress, setVideoProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoUnlocked, setVideoUnlocked] = useState(false);
@@ -529,11 +531,14 @@ export const Funnel = () => {
     setErrorMsg('');
   }, [currentStep, location.pathname]);
 
-  // Click outside listener for custom industry dropdown
+  // Click outside listener for custom industry dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (industryDropdownRef.current && !industryDropdownRef.current.contains(event.target)) {
         setIsIndustryDropdownOpen(false);
+      }
+      if (completeIndustryRef.current && !completeIndustryRef.current.contains(event.target)) {
+        setIsCompleteIndustryOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -1254,6 +1259,18 @@ export const Funnel = () => {
                 allowFullScreen
                 title="Bonus Video: Expected Impact of Emerging Online Safety Legislation Requiring Digital ID"
               ></iframe>
+              <div className="absolute top-3 right-3 z-30">
+                <a 
+                  href="https://cinema8.com/video/YDpY5n0X"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold px-3 py-1.5 rounded-md border border-slate-700 shadow-lg flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all"
+                  title="Watch bonus video in separate tab"
+                >
+                  <span>Open in New Tab</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-neonCyan" />
+                </a>
+              </div>
             </div>
 
             <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
@@ -1263,6 +1280,106 @@ export const Funnel = () => {
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Audience Reach Impacted</li>
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-neonCyan" /> Overcome Digital Verification Gateways</li>
               </ul>
+            </div>
+          </div>
+
+          {/* Section 6.2 Streamlined Pathways - Choose Your Route */}
+          <div className="space-y-4">
+            <div className="text-center space-y-1">
+              <span className="text-[10px] font-black uppercase tracking-widest text-neonCyan bg-neonCyan/10 px-3 py-1 rounded-full border border-neonCyan/20">
+                Streamlined Registration Pathways
+              </span>
+              <h2 className="text-2xl md:text-3xl font-black text-white font-grotesk tracking-tight">
+                How Would You Like to Proceed?
+              </h2>
+              <p className="text-xs text-slate-400 max-w-xl mx-auto">
+                Select the pathway that matches your business model to activate your account or connect with local partners.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
+              {/* Card 1: Signwriters & Wrap Shops */}
+              <div className="glass-card rounded-2xl p-6 border border-neonRed/30 shadow-xl bg-gradient-to-b from-slate-900/80 to-slate-950 flex flex-col justify-between relative overflow-hidden group hover:border-neonRed/60 transition-all">
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-neonRed/10 border border-neonRed/30 flex items-center justify-center text-neonRed font-bold text-lg">
+                    👑
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neonRed bg-neonRed/10 px-2 py-0.5 rounded border border-neonRed/20">
+                    For Signwriters & Wrap Shops
+                  </span>
+                  <h3 className="text-lg font-bold text-white font-grotesk">Claim 30-Mile Territory Lock</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Protect your exclusive territory radius, activate 2-way QuickBooks/Xero sync, and unlock 22% affiliate commissions.
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                    <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-neonGreen" /> 30-mile protected radius</li>
+                    <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-neonGreen" /> 22% ongoing affiliate commission</li>
+                    <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-neonGreen" /> Pre-qualified advertiser lead feed</li>
+                  </ul>
+                </div>
+
+                <div className="pt-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const q = new URLSearchParams();
+                      if (formData.name) q.set('name', formData.name);
+                      if (formData.email) q.set('email', formData.email);
+                      if (formData.company) q.set('company', formData.company);
+                      if (formData.state) q.set('state', formData.state);
+                      if (formData.country) q.set('country', formData.country);
+                      if (refId) q.set('ref', refId);
+                      window.open(`/pricing?${q.toString()}`, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="w-full py-3 px-4 bg-neonRed hover:bg-neonRed/90 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg glow-pink flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>Select Subscription Plan</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Card 2: Instant Affiliate Partner */}
+              <div className="glass-card rounded-2xl p-6 border border-neonCyan/30 shadow-xl bg-gradient-to-b from-slate-900/80 to-slate-950 flex flex-col justify-between relative overflow-hidden group hover:border-neonCyan/60 transition-all">
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-neonCyan/10 border border-neonCyan/30 flex items-center justify-center text-neonCyan font-bold text-lg">
+                    ⚡
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-2 py-0.5 rounded border border-neonCyan/20">
+                    60-Second Fast Signup
+                  </span>
+                  <h3 className="text-lg font-bold text-white font-grotesk">Instant Affiliate / Partner Account</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Generate your tracked referral links immediately and start sharing the 7-video series with local fleet owners and advertisers.
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                    <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-neonGreen" /> Instant referral link generation</li>
+                    <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-neonGreen" /> Zero setup friction (name & email only)</li>
+                    <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-neonGreen" /> Real-time click & lead analytics</li>
+                  </ul>
+                </div>
+
+                <div className="pt-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const q = new URLSearchParams();
+                      if (formData.name) q.set('name', formData.name);
+                      if (formData.email) q.set('email', formData.email);
+                      if (formData.company) q.set('company', formData.company);
+                      if (formData.state) q.set('state', formData.state);
+                      if (formData.country) q.set('country', formData.country);
+                      if (refId) q.set('ref', refId);
+                      q.set('tier', 'quick');
+                      window.open(`/register?${q.toString()}`, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-neonCyan hover:text-white font-bold text-xs uppercase tracking-wider rounded-xl border border-neonCyan/30 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>Instant Free Signup (30s)</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1294,7 +1411,7 @@ export const Funnel = () => {
               </div>
             ) : (
               <>
-                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">Claim Your Strategy Session</h3>
+                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">Option 3: Claim Your Free Local Strategy Session</h3>
                 <p className="text-sm text-slate-400 mb-8 relative z-10">Fill out the form below to connect with our verified local partner and implement these strategies.</p>
                 
                 <form onSubmit={submitComplete} className="space-y-6 relative z-10">
@@ -1311,30 +1428,63 @@ export const Funnel = () => {
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Company</label>
                       <input type="text" name="company" value={formData.company || ''} onChange={handleInputChange} className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all" />
                     </div>
-                    <div>
+                    <div className="relative text-left w-full" ref={completeIndustryRef}>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Industry Sector</label>
-                      <select name="industry" value={formData.industry || ''} onChange={handleInputChange} className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all">
-                        <option value="" disabled className="bg-darkBg text-slate-400">Select Industry</option>
-                        <option value="Home Services / Trades" className="bg-darkBg">Home Services / Trades</option>
-                        <option value="Real Estate" className="bg-darkBg">Real Estate</option>
-                        <option value="Healthcare / Dental" className="bg-darkBg">Healthcare / Dental</option>
-                        <option value="Professional Services" className="bg-darkBg">Professional Services</option>
-                        <option value="Retail / Hospitality" className="bg-darkBg">Retail / Hospitality</option>
-                        <option value="Logistics / Delivery" className="bg-darkBg">Logistics / Delivery</option>
-                        <option value="Technology / IT" className="bg-darkBg">Technology / IT</option>
-                        <option value="Marketing / Advertising" className="bg-darkBg">Marketing / Advertising</option>
-                        <option value="E-commerce" className="bg-darkBg">E-commerce</option>
-                        <option value="Finance / Accounting" className="bg-darkBg">Finance / Accounting</option>
-                        <option value="Education / E-Learning" className="bg-darkBg">Education / E-Learning</option>
-                        <option value="Construction / Engineering" className="bg-darkBg">Construction / Engineering</option>
-                        <option value="Legal" className="bg-darkBg">Legal</option>
-                        <option value="Fitness / Wellness" className="bg-darkBg">Fitness / Wellness</option>
-                        <option value="Automotive" className="bg-darkBg">Automotive</option>
-                        <option value="Travel / Tourism" className="bg-darkBg">Travel / Tourism</option>
-                        <option value="Manufacturing" className="bg-darkBg">Manufacturing</option>
-                        <option value="Other" className="bg-darkBg">Other</option>
-                      </select>
+                      <button
+                        type="button"
+                        onClick={() => setIsCompleteIndustryOpen(!isCompleteIndustryOpen)}
+                        className="w-full glass-input rounded-lg p-3 text-slate-100 text-left bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all flex justify-between items-center cursor-pointer border border-slate-800 hover:border-slate-700"
+                      >
+                        <span className={`truncate mr-2 ${formData.industry ? 'text-slate-100 font-medium' : 'text-slate-500'}`}>
+                          {formData.industry || "Select Industry Sector"}
+                        </span>
+                        <span className="text-slate-500 text-[10px] flex-shrink-0">▼</span>
+                      </button>
+
+                      {isCompleteIndustryOpen && (
+                        <div className="absolute left-0 right-0 z-50 mt-1 max-h-56 w-full max-w-full overflow-y-auto rounded-xl border border-slate-700/80 bg-[#0B0F19]/95 backdrop-blur-xl shadow-2xl animate-slide-in p-1">
+                          {[
+                            "Accounting & Tax Services", "Automotive Services", "Baby Clothes, Accessories & Toys", 
+                            "Beauty and Cosmetic Surgery", "Childcare & Aged Care Providers", "Construction / Engineering",
+                            "Department Stores and Electronics", "Education & Tutoring", "Event & Wedding Services", 
+                            "Financial and Insurance Services", "Fitness & Personal Training", "Funeral and Bereavement Counselling", 
+                            "Health, Wellness & Medical", "Home Services / Trades", "IT & Tech Support Services", 
+                            "Legal Services, Lawyers and Mediation", "Lifestyle, Boutique, Apparel & Accessories", 
+                            "Logistics / Delivery / Removalists", "Marketing / Advertising", "Mobile Phone and Internet Services", 
+                            "Pets & Animals", "Professional Services / Training", "Radio and TV Stations", 
+                            "Real Estate & Property Agents", "Restaurants, Food & Beverage", "Travel & Tourism", "Other"
+                          ].map((ind) => (
+                            <button
+                              key={ind}
+                              type="button"
+                              onClick={() => {
+                                setFormData(prev => ({ ...prev, industry: ind }));
+                                setIsCompleteIndustryOpen(false);
+                              }}
+                              className={`w-full text-left p-2.5 px-3 rounded-lg text-xs transition-colors hover:bg-neonCyan/10 hover:text-white truncate block ${
+                                formData.industry === ind ? 'bg-neonCyan/15 text-neonCyan font-bold' : 'text-slate-300'
+                              }`}
+                            >
+                              {ind}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
+
+                    {formData.industry === 'Other' && (
+                      <div className="animate-slide-in col-span-1 md:col-span-2">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Please Specify Industry</label>
+                        <input 
+                          type="text" 
+                          name="otherIndustry" 
+                          value={formData.otherIndustry || ''} 
+                          onChange={handleInputChange} 
+                          placeholder="e.g. Clean Energy, Marine Services, etc."
+                          className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900/80 text-sm focus:ring-1 focus:ring-neonCyan transition-all"
+                        />
+                      </div>
+                    )}
                     
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Marketing Budget (Optional)</label>
@@ -1622,11 +1772,24 @@ export const Funnel = () => {
                 <>
                   <iframe src={videoContent.url} className="w-full h-full absolute inset-0 border-0 z-0" allowFullScreen></iframe>
                   
-                  {/* Skip for Testing - top right corner, always visible above iframe */}
-                  <div className="absolute top-3 right-3" style={{ zIndex: 99999, position: 'absolute' }}>
+                  {/* Player Top Right Controls: Open in New Tab & Skip for Testing */}
+                  <div className="absolute top-3 right-3 flex items-center gap-2" style={{ zIndex: 99999, position: 'absolute' }}>
+                    {videoContent?.url && (
+                      <a 
+                        href={videoContent.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold px-3 py-1.5 rounded-md border border-slate-700 shadow-lg flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all"
+                        title="Watch video in a separate dedicated tab"
+                        style={{ pointerEvents: 'auto' }}
+                      >
+                        <span>Open in New Tab</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-neonCyan" />
+                      </a>
+                    )}
                     <button 
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); skipVideo(); }}
-                      className="text-xs bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-2 cursor-pointer"
+                      className="text-xs bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-1.5 cursor-pointer transition-all"
                       style={{ pointerEvents: 'auto', position: 'relative', zIndex: 99999 }}
                     >
                       ⏩ Skip Video (Test)
@@ -1770,6 +1933,18 @@ export const Funnel = () => {
                   allowFullScreen
                   title="Supplemental Video Below Video 7"
                 ></iframe>
+                <div className="absolute top-3 right-3 z-30">
+                  <a 
+                    href="https://cinema8.com/video/KOW8LGjD"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold px-3 py-1.5 rounded-md border border-slate-700 shadow-lg flex items-center gap-1.5 cursor-pointer backdrop-blur-md transition-all"
+                    title="Watch supplemental video in separate tab"
+                  >
+                    <span>Open in New Tab</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-neonCyan" />
+                  </a>
+                </div>
               </div>
 
               {/* View Chart Breakdown Button */}
@@ -1799,6 +1974,63 @@ export const Funnel = () => {
 
         {/* Right Side: Progressive Form Gating & Quizzes */}
         <div className="w-full lg:w-96 space-y-6">
+          {/* Fast-Track Registration Banner (Section 6.2 Streamlined Pathway) */}
+          <div className="glass-card rounded-2xl p-5 border border-neonCyan/30 shadow-lg bg-gradient-to-br from-slate-900/90 via-slate-950/90 to-[#0c1427]/90 text-left relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-neonCyan/5 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[10px] font-black uppercase tracking-wider text-neonCyan flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-neonCyan animate-pulse" /> Fast-Track Registration
+              </span>
+              <span className="text-[9px] font-bold text-neonGreen bg-neonGreen/10 px-2 py-0.5 rounded border border-neonGreen/20">
+                ⚡ Skip Quizzes
+              </span>
+            </div>
+
+            <p className="text-xs text-slate-300 mb-3 leading-snug">
+              Already convinced? You don't have to complete all 7 quizzes to partner with us. Register your shop or claim your advertiser audit directly in 30 seconds.
+            </p>
+
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => {
+                  const q = new URLSearchParams();
+                  if (formData.name) q.set('name', formData.name);
+                  if (formData.email) q.set('email', formData.email);
+                  if (formData.company) q.set('company', formData.company);
+                  if (formData.state) q.set('state', formData.state);
+                  if (formData.country) q.set('country', formData.country);
+                  if (refId) q.set('ref', refId);
+                  window.open(`/pricing?${q.toString()}`, '_blank', 'noopener,noreferrer');
+                }}
+                className="w-full py-2.5 px-3 bg-neonRed hover:bg-neonRed/90 text-white font-bold text-xs rounded-xl transition-all shadow-md shadow-neonRed/20 flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.01] active:scale-95"
+              >
+                <span>Select Subscription Plan (Signwriters)</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  const q = new URLSearchParams();
+                  if (formData.name) q.set('name', formData.name);
+                  if (formData.email) q.set('email', formData.email);
+                  if (formData.company) q.set('company', formData.company);
+                  if (formData.state) q.set('state', formData.state);
+                  if (formData.country) q.set('country', formData.country);
+                  if (refId) q.set('ref', refId);
+                  q.set('tier', 'elite');
+                  window.open(`/register?${q.toString()}`, '_blank', 'noopener,noreferrer');
+                }}
+                className="w-full py-2 px-3 bg-slate-900/90 hover:bg-slate-800 text-neonCyan hover:text-white font-bold text-[11px] rounded-xl border border-neonCyan/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Free Partner Signup (30s)</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
           <div className="glass-card rounded-2xl p-6 relative">
             <h2 className="text-lg font-grotesk font-bold text-white mb-4 border-b border-slate-800 pb-3 flex items-center gap-2">
               <Zap className="w-5 h-5 text-neonRed" />
@@ -1911,31 +2143,31 @@ export const Funnel = () => {
                     />
                   </div>
 
-                  <div className="relative text-left" ref={industryDropdownRef}>
+                  <div className="relative text-left w-full" ref={industryDropdownRef}>
                     <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Industry / Sector</label>
                     <button
                       type="button"
                       onClick={() => setIsIndustryDropdownOpen(!isIndustryDropdownOpen)}
-                      className="w-full glass-input rounded-lg p-2.5 text-slate-100 text-left focus:ring-1 focus:ring-neonCyan text-xs flex justify-between items-center"
+                      className="w-full glass-input rounded-lg p-2.5 text-slate-100 text-left focus:ring-1 focus:ring-neonCyan text-xs flex justify-between items-center cursor-pointer border border-slate-800 hover:border-slate-700"
                     >
-                      <span className={formData.industry ? 'text-slate-100' : 'text-slate-500'}>
+                      <span className={`truncate mr-2 ${formData.industry ? 'text-slate-100 font-medium' : 'text-slate-500'}`}>
                         {formData.industry || "Select your industry"}
                       </span>
-                      <span className="text-slate-500 text-[9px]">▼</span>
+                      <span className="text-slate-500 text-[9px] flex-shrink-0">▼</span>
                     </button>
 
                     {isIndustryDropdownOpen && (
-                      <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-lg border border-slate-850 bg-[#0B0F19] shadow-2xl animate-slide-in">
+                      <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 w-full max-w-full overflow-y-auto rounded-xl border border-slate-750 bg-[#0B0F19]/95 backdrop-blur-xl shadow-2xl animate-slide-in p-1">
                         {[
                           "Accounting & Tax Services", "Automotive Services", "Baby Clothes, Accessories & Toys", 
-                          "Beauty and Cosmetic Surgery", "Childcare & Aged Care Providers", "Department Stores and Electronics", 
-                          "Education & Tutoring", "Event & Wedding Services", "Financial and Insurance Services", 
-                          "Fitness & Personal Training", "Funeral and Bereavement Counselling", "Home & Garden", 
-                          "Health, Wellness & Medical", "IT & Tech Support Services", "Legal Services, Lawyers and Mediation", 
-                          "Lifestyle, Boutique, Apparel & Accessories", "Mobile Phone and Internet Services", 
-                          "Travel & Tourism", "Pets & Animals", "Professional Training & Certification", 
-                          "Radio and TV Stations", "Real Estate & Property Agents", "Restaurants, Food & Beverage", 
-                          "Storage, Logistics and Removalists", "Trades & Home Services", "Other"
+                          "Beauty and Cosmetic Surgery", "Childcare & Aged Care Providers", "Construction / Engineering",
+                          "Department Stores and Electronics", "Education & Tutoring", "Event & Wedding Services", 
+                          "Financial and Insurance Services", "Fitness & Personal Training", "Funeral and Bereavement Counselling", 
+                          "Health, Wellness & Medical", "Home Services / Trades", "IT & Tech Support Services", 
+                          "Legal Services, Lawyers and Mediation", "Lifestyle, Boutique, Apparel & Accessories", 
+                          "Logistics / Delivery / Removalists", "Marketing / Advertising", "Mobile Phone and Internet Services", 
+                          "Pets & Animals", "Professional Services / Training", "Radio and TV Stations", 
+                          "Real Estate & Property Agents", "Restaurants, Food & Beverage", "Travel & Tourism", "Other"
                         ].map((ind) => (
                           <button
                             key={ind}
@@ -1944,8 +2176,8 @@ export const Funnel = () => {
                               setFormData(prev => ({ ...prev, industry: ind }));
                               setIsIndustryDropdownOpen(false);
                             }}
-                            className={`w-full text-left p-2 px-3 text-xs transition-colors hover:bg-neonCyan/10 hover:text-white ${
-                              formData.industry === ind ? 'bg-neonCyan/10 text-neonCyan font-semibold' : 'text-slate-300'
+                            className={`w-full text-left p-2 px-3 rounded-lg text-xs transition-colors hover:bg-neonCyan/10 hover:text-white truncate block ${
+                              formData.industry === ind ? 'bg-neonCyan/15 text-neonCyan font-bold' : 'text-slate-300'
                             }`}
                           >
                             {ind}

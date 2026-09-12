@@ -55,13 +55,13 @@ export const Register = () => {
   const [selectedTier, setSelectedTier] = useState(initialTier);
 
   const [form, setForm] = useState({
-    name: '',
-    business: '',
-    website: '',
-    territory: '',
-    email: '',
-    referralCode: '',
-    country: '',
+    name: params.get('name') || '',
+    business: params.get('company') || params.get('business') || '',
+    website: params.get('website') || '',
+    territory: params.get('territory') || params.get('state') || '',
+    email: params.get('email') || '',
+    referralCode: params.get('ref') || params.get('partner') || localStorage.getItem('r7_referrer_id') || '',
+    country: params.get('country') || '',
     audienceSize: ''
   });
 

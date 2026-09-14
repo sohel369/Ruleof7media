@@ -399,30 +399,47 @@ app.post('/api/affiliates/apply', async (req, res) => {
   try {
     const { name, company, email, website, territory, country, audienceSize, tier } = req.body;
     
-    // Generate a simple unique referral code based on company name
-    const code = company.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        const existingResult = await db.query('SELECT * FROM affiliates WHERE code = $1', [code]);
-      if (existingResult.rows.length > 0) {
-        return res.status(400).json({ error: 'A partner with this company name already exists.' });
-      }
-      
-      let lat = null;
-      let lon = null;
-      if (territory && territory !== 'Global') {
-        const searchQuery = country !== 'Global' ? `${territory}, ${country}` : territory;
-        const coords = await geocodeAddress(searchQuery);
-        if (coords) {
-          lat = coords.lat;
-          lon = coords.lon;
-        }
-      }
-
-      const insertResult = await db.query(
-        `INSERT INTO affiliates (code, name, company, email, website, territory, country, audience_size, tier, lat, lon)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
-        [code, name, company, email, website || '', territory || 'Global', country || 'Global', audienceSize || '< 1,000', tier || 'Starter', lat, lon]
+    // Check if affiliate with this email already exists -> Auto-login / update
+    const existingByEmail = await db.query('SELECT * FROM affiliates WHERE email = $1', [email]);
+    if (existingByEmail.rows.length > 0) {
+      const existingAffiliate = existingByEmail.rows[0];
+      const updateResult = await db.query(
+        `UPDATE affiliates SET name = COALESCE($1, name), company = COALESCE($2, company), website = COALESCE($3, website), territory = COALESCE($4, territory), country = COALESCE($5, country) WHERE code = $6 RETURNING *`,
+        [name, company, website || '', territory || 'Global', country || 'Global', existingAffiliate.code]
       );
-      const newAffiliate = insertResult.rows[0];
+      return res.json({ success: true, affiliate: updateResult.rows[0] || existingAffiliate, isExisting: true });
+    }
+
+    // Generate a unique referral code based on company name
+    const baseCode = (company || 'shop').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'partner';
+    let code = baseCode;
+    let counter = 1;
+    while (true) {
+      const existingResult = await db.query('SELECT * FROM affiliates WHERE code = $1', [code]);
+      if (existingResult.rows.length === 0) {
+        break;
+      }
+      counter++;
+      code = `${baseCode}-${counter}`;
+    }
+      
+    let lat = null;
+    let lon = null;
+    if (territory && territory !== 'Global') {
+      const searchQuery = country !== 'Global' ? `${territory}, ${country}` : territory;
+      const coords = await geocodeAddress(searchQuery);
+      if (coords) {
+        lat = coords.lat;
+        lon = coords.lon;
+      }
+    }
+
+    const insertResult = await db.query(
+      `INSERT INTO affiliates (code, name, company, email, website, territory, country, audience_size, tier, lat, lon)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+      [code, name, company, email, website || '', territory || 'Global', country || 'Global', audienceSize || '< 1,000', tier || 'Starter', lat, lon]
+    );
+    const newAffiliate = insertResult.rows[0];
 
     // Notify CRM Admin of new affiliate application
     io.emit('new_lead', {

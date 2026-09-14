@@ -47,7 +47,7 @@ export const Partner = () => {
   const [partnerDetails, setPartnerDetails] = useState(null);
 
   // Accounting & Invoicing States (Non-Tech 1-Click Interface)
-  const [qbConnected, setQbConnected] = useState(true);
+  const [qbConnected, setQbConnected] = useState(false);
   const [xeroConnected, setXeroConnected] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');

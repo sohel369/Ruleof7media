@@ -22,7 +22,8 @@ import {
   Award, 
   DollarSign,
   Layers,
-  ArrowUpRight
+  ArrowUpRight,
+  Globe
 } from 'lucide-react';
 import { GlobalFooter } from '../components/GlobalFooter';
 
@@ -203,10 +204,27 @@ const FAQS = [
   }
 ];
 
+const CURRENCIES = {
+  usd: { symbol: '$', rate: 1.0, label: 'USD ($)', code: 'usd', name: 'US Dollar' },
+  aud: { symbol: 'A$', rate: 1.55, label: 'AUD (A$)', code: 'aud', name: 'Australian Dollar' },
+  gbp: { symbol: '£', rate: 0.80, label: 'GBP (£)', code: 'gbp', name: 'British Pound' },
+  cad: { symbol: 'C$', rate: 1.38, label: 'CAD (C$)', code: 'cad', name: 'Canadian Dollar' },
+  eur: { symbol: '€', rate: 0.92, label: 'EUR (€)', code: 'eur', name: 'Euro' }
+};
+
 export const Pricing = () => {
   const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [error, setError] = useState('');
+
+  // Multi-Currency Selection State
+  const [currency, setCurrency] = useState('usd');
+
+  const formatPrice = (usdVal) => {
+    if (!usdVal && usdVal !== 0) return `${CURRENCIES[currency].symbol}0`;
+    const converted = Math.round(usdVal * CURRENCIES[currency].rate);
+    return `${CURRENCIES[currency].symbol}${converted.toLocaleString()}`;
+  };
 
   // Step: 'plans' | 'details' | 'checkout'
   const [step, setStep] = useState('plans');
@@ -291,16 +309,17 @@ export const Pricing = () => {
     setLoadingPlan(planId);
 
     // Calculate final price with optional add-on
-    let addonTotal = 0;
+    let addonTotalUsd = 0;
     if (selectedAddon) {
       const addonObj = VIDEO_ADDONS.find(a => a.id === selectedAddon);
       if (addonObj) {
-        addonTotal = addonBillingType === 'oneTime' ? addonObj.oneTimePrice : addonObj.monthlyPrice;
+        addonTotalUsd = addonBillingType === 'oneTime' ? addonObj.oneTimePrice : addonObj.monthlyPrice;
       }
     }
 
-    const basePlanPrice = selectedPlan ? selectedPlan.price : 0;
-    const totalToPay = basePlanPrice + addonTotal;
+    const basePlanPriceUsd = selectedPlan ? selectedPlan.price : 0;
+    const totalToPayUsd = basePlanPriceUsd + addonTotalUsd;
+    const convertedTotal = Math.round(totalToPayUsd * CURRENCIES[currency].rate);
 
     localStorage.setItem('r7_selected_plan', selectedPlan ? selectedPlan.name : 'Standalone Addon');
     localStorage.setItem('r7_selected_addon', selectedAddon || 'none');
@@ -308,14 +327,15 @@ export const Pricing = () => {
     localStorage.setItem('r7_billing_email', billing.email);
     localStorage.setItem('r7_billing_business', billing.businessName);
     localStorage.setItem('r7_billing_territory', billing.territory);
+    localStorage.setItem('r7_selected_currency', currency);
 
     try {
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: totalToPay,
-          currency: 'usd',
+          amount: convertedTotal,
+          currency: currency,
           planName: selectedPlan ? selectedPlan.name : 'Video Education Series',
           addonName: selectedAddon,
           email: billing.email,
@@ -560,7 +580,7 @@ export const Pricing = () => {
           {/* Section: Pricing Plans */}
           <section id="pricing-plans-grid" className="py-20 px-6 relative">
             <div className="max-w-7xl mx-auto">
-              <div className="text-center max-w-3xl mx-auto mb-14">
+              <div className="text-center max-w-3xl mx-auto mb-8">
                 <span className="text-xs font-bold uppercase tracking-widest text-neonRed px-3 py-1 bg-neonRed/10 rounded-full border border-neonRed/20">
                   Transparent Pricing
                 </span>
@@ -572,11 +592,43 @@ export const Pricing = () => {
                 </p>
               </div>
 
+              {/* Multi-Currency Selector Pill */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
+                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Globe className="w-3.5 h-3.5 text-neonCyan" />
+                  Select Your Currency:
+                </span>
+                <div className="inline-flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl">
+                  {Object.entries(CURRENCIES).map(([k, c]) => (
+                    <button
+                      key={k}
+                      type="button"
+                      onClick={() => setCurrency(k)}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                        currency === k
+                          ? 'bg-neonCyan text-darkBg shadow-md font-black'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {c.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Plans Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
                 {PLANS.map((plan) => {
                   const isPop = plan.popular;
                   const isRec = plan.recommended;
+                  const dynamicCommitment = plan.id === 'starter'
+                    ? `3-month commitment · Total ${formatPrice(891)}`
+                    : plan.id === 'professional'
+                    ? `6-month commitment · Total ${formatPrice(1482)} · Save 17%`
+                    : plan.id === 'growth'
+                    ? `12-month commitment · Total ${formatPrice(2364)} · Save 34%`
+                    : `${formatPrice(1997)} setup + ${formatPrice(149)} / month`;
+
                   return (
                     <div
                       key={plan.id}
@@ -608,18 +660,18 @@ export const Pricing = () => {
                           <div className="flex items-baseline gap-1">
                             {plan.id === 'dfy' ? (
                               <div className="flex flex-col">
-                                <div className="text-2xl font-black font-grotesk text-white">${plan.setupFee} <span className="text-xs text-slate-400 font-normal">setup</span></div>
-                                <div className="text-sm font-bold text-neonAmber">+ ${plan.price} / month</div>
+                                <div className="text-2xl font-black font-grotesk text-white">{formatPrice(plan.setupFee)} <span className="text-xs text-slate-400 font-normal">setup</span></div>
+                                <div className="text-sm font-bold text-neonAmber">+ {formatPrice(plan.price)} / month</div>
                               </div>
                             ) : (
                               <>
-                                <span className="text-4xl font-black font-grotesk text-white">${plan.price}</span>
+                                <span className="text-4xl font-black font-grotesk text-white">{formatPrice(plan.price)}</span>
                                 <span className="text-slate-400 text-xs">{plan.period}</span>
                               </>
                             )}
                           </div>
                           <p className="text-[11px] font-semibold text-slate-400 mt-2 bg-slate-900/80 px-2.5 py-1.5 rounded-lg border border-slate-800">
-                            {plan.commitmentText}
+                            {dynamicCommitment}
                           </p>
                           <p className="text-xs text-slate-400 mt-3 leading-snug min-h-[36px]">
                             {plan.tagline}
@@ -739,7 +791,7 @@ export const Pricing = () => {
                           )}
                         </div>
                         <div className="flex items-baseline gap-1 mb-3">
-                          <span className="text-3xl font-black font-grotesk text-white">${price}</span>
+                          <span className="text-3xl font-black font-grotesk text-white">{formatPrice(price)}</span>
                           <span className="text-slate-400 text-xs">{period}</span>
                         </div>
                         <p className="text-xs text-slate-300 leading-relaxed mb-6">
@@ -1001,10 +1053,18 @@ export const Pricing = () => {
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <div>
                     <span className="text-sm font-bold text-white block">{selectedPlan.name}</span>
-                    <span className="text-[10px] text-slate-400">{selectedPlan.commitmentText}</span>
+                    <span className="text-[10px] text-slate-400">
+                      {selectedPlan.id === 'starter'
+                        ? `3-month commitment · Total ${formatPrice(891)}`
+                        : selectedPlan.id === 'professional'
+                        ? `6-month commitment · Total ${formatPrice(1482)} · Save 17%`
+                        : selectedPlan.id === 'growth'
+                        ? `12-month commitment · Total ${formatPrice(2364)} · Save 34%`
+                        : `${formatPrice(1997)} setup + ${formatPrice(149)} / month`}
+                    </span>
                   </div>
                   <span className={`text-xs font-bold text-${selectedPlan.color} px-2 py-0.5 rounded bg-${selectedPlan.color}/10 whitespace-nowrap`}>
-                    ${selectedPlan.price}/mo
+                    {formatPrice(selectedPlan.price)}/mo
                   </span>
                 </div>
 
@@ -1018,7 +1078,7 @@ export const Pricing = () => {
                       </span>
                     </div>
                     <span className="text-xs font-bold text-neonCyan">
-                      +${activeAddonPrice}{addonBillingType === 'monthly' ? '/mo' : ''}
+                      +{formatPrice(activeAddonPrice)}{addonBillingType === 'monthly' ? '/mo' : ''}
                     </span>
                   </div>
                 )}
@@ -1039,21 +1099,21 @@ export const Pricing = () => {
                 {/* Total */}
                 <div className="border-t border-slate-800 pt-4">
                   <div className="flex justify-between text-xs text-slate-400 mb-1">
-                    <span>Base monthly</span>
-                    <span>${selectedPlan.price}.00</span>
+                    <span>Base monthly ({CURRENCIES[currency].code.toUpperCase()})</span>
+                    <span>{formatPrice(selectedPlan.price)}</span>
                   </div>
                   {activeAddonObj && (
                     <div className="flex justify-between text-xs text-neonCyan mb-1">
                       <span>Video Add-on</span>
-                      <span>+${activeAddonPrice}.00</span>
+                      <span>+{formatPrice(activeAddonPrice)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-base font-bold text-white mt-3 pt-2 border-t border-slate-800">
                     <span>Total First Payment</span>
-                    <span>${selectedPlan.price + activeAddonPrice}.00</span>
+                    <span className="text-neonGreen">{formatPrice(selectedPlan.price + activeAddonPrice)}</span>
                   </div>
                   <p className="text-[10px] text-slate-500 mt-2 leading-relaxed">
-                    🔒 Includes 30-mile protected territory. Cancel anytime after the initial commitment period.
+                    🔒 Includes 30-mile protected territory. Charged in {CURRENCIES[currency].label}.
                   </p>
                 </div>
               </div>

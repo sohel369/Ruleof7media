@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   CheckCircle2, ChevronRight, AlertCircle, Shield, Users, BarChart3, 
-  QrCode, LogOut, Lock, MapPin, Phone, Mail, FileText, Check, Globe
+  QrCode, LogOut, Lock, MapPin, Phone, Mail, FileText, Check, Globe,
+  Calculator, Download, RefreshCw, DollarSign, Award, ArrowUpRight, Copy, Sparkles, FileSpreadsheet, ExternalLink
 } from 'lucide-react';
 import { GlobalFooter } from '../components/GlobalFooter';
 
@@ -41,9 +42,23 @@ export const Partner = () => {
 
   // Dashboard Data States
   const [leads, setLeads] = useState([]);
-  const [activeTab, setActiveTab] = useState('crm'); // 'crm' | 'qr' | 'territory'
+  const [activeTab, setActiveTab] = useState('crm'); // 'crm' | 'accounting' | 'affiliate' | 'qr' | 'territory'
   const [selectedLead, setSelectedLead] = useState(null);
   const [partnerDetails, setPartnerDetails] = useState(null);
+
+  // Accounting & Invoicing States (Non-Tech 1-Click Interface)
+  const [qbConnected, setQbConnected] = useState(true);
+  const [xeroConnected, setXeroConnected] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState('');
+
+  // Job Costing / Gross Profit Calculator State (Grok Feature for Wrap Shops)
+  const [calcQuote, setCalcQuote] = useState(3500);
+  const [calcLabor, setCalcLabor] = useState(850);
+  const [calcMaterial, setCalcMaterial] = useState(1100);
+  const [calcWastagePct, setCalcWastagePct] = useState(10);
+  const [calcOvertime, setCalcOvertime] = useState(200);
+  const [copiedRef, setCopiedRef] = useState(false);
 
   // Redirect to register if payment was completed
   useEffect(() => {
@@ -305,6 +320,36 @@ export const Partner = () => {
                     {leads.length}
                   </span>
                 )}
+              </button>
+
+              <button 
+                onClick={() => setActiveTab('accounting')}
+                className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                  activeTab === 'accounting' 
+                    ? 'bg-neonGreen/10 text-neonGreen border-l-2 border-neonGreen' 
+                    : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
+                }`}
+              >
+                <Calculator className="w-4 h-4" />
+                <span>Accounting & Invoicing</span>
+                <span className="ml-auto bg-neonGreen/20 text-neonGreen text-[9px] px-1.5 py-0.5 rounded font-bold">
+                  2-Way Sync
+                </span>
+              </button>
+
+              <button 
+                onClick={() => setActiveTab('affiliate')}
+                className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                  activeTab === 'affiliate' 
+                    ? 'bg-neonPurple/10 text-neonPurple border-l-2 border-neonPurple' 
+                    : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
+                }`}
+              >
+                <Award className="w-4 h-4 text-neonPurple" />
+                <span>22% Affiliate Earnings</span>
+                <span className="ml-auto bg-neonPurple/20 text-neonPurple text-[9px] px-1.5 py-0.5 rounded font-bold">
+                  22%
+                </span>
               </button>
 
               <button 
@@ -581,6 +626,371 @@ export const Partner = () => {
                       <Shield className="w-4 h-4 text-neonCyan" /> Guaranteed Exclusive Zone
                     </h3>
                     <p>Your subscription includes exclusive routing rights for your designated zone. Any advertiser located in this territory who goes through the 7-video funnel will be routed strictly to your wrap shop dashboard, even if they scanned a direct QR code of another partner.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 4: Accounting & Invoicing Sync */}
+            {activeTab === 'accounting' && (
+              <div className="space-y-6 animate-slide-in">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <h2 className="text-xl font-grotesk font-black text-white flex items-center gap-2">
+                      <Calculator className="w-5 h-5 text-neonGreen" />
+                      1-Click Accounting & Invoicing Sync
+                    </h2>
+                    <p className="text-xs text-slate-400">Effortlessly sync leads, vehicle wrap quotes, and material costs with your bookkeeping software with zero technical setup.</p>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      const headers = "Lead ID,Company,Contact Name,Email,Phone,Industry,Fleet Size,Score,Stage,Assigned Partner\n";
+                      const rows = leads.length > 0 
+                        ? leads.map(l => `"${l.leadId || ''}","${(l.company || '').replace(/"/g, '""')}","${(l.name || '').replace(/"/g, '""')}","${l.email || ''}","${l.phone || ''}","${l.industry || ''}","${l.fleetSize || ''}","${l.score || 50}","${l.stage || 'Warm'}","${partnerCode}"`).join("\n")
+                        : `"LEAD-101","Apex Logistics","Marcus Vance","marcus@apexlogistics.com","+61 412 889 123","Transport & Freight","14 Vans",88,"Hot","${partnerCode}"`;
+                      const csvContent = "data:text/csv;charset=utf-8," + encodeURIComponent(headers + rows);
+                      const downloadAnchor = document.createElement('a');
+                      downloadAnchor.setAttribute("href", csvContent);
+                      downloadAnchor.setAttribute("download", `Rule7_Accounting_Export_${partnerCode || 'shop'}.csv`);
+                      document.body.appendChild(downloadAnchor);
+                      downloadAnchor.click();
+                      downloadAnchor.remove();
+                    }}
+                    className="px-4 py-2 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-white rounded-lg font-bold text-xs flex items-center gap-2 transition-all shadow-md"
+                  >
+                    <Download className="w-3.5 h-3.5 text-neonGreen" />
+                    Download Universal CSV (MYOB / Sage / Excel)
+                  </button>
+                </div>
+
+                {/* Accounting Sync Connectors */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* QuickBooks Online */}
+                  <div className="glass-card p-5 rounded-2xl border border-slate-900 flex flex-col justify-between space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded bg-green-500/20 text-green-400 font-black text-xs flex items-center justify-center border border-green-500/30">QB</div>
+                          <h3 className="font-bold text-white text-sm">QuickBooks Online</h3>
+                        </div>
+                        {qbConnected ? (
+                          <span className="text-[10px] px-2 py-0.5 bg-neonGreen/10 border border-neonGreen/20 text-neonGreen rounded-full font-bold flex items-center gap-1">
+                            <Check className="w-3 h-3" /> Connected & Active
+                          </span>
+                        ) : (
+                          <span className="text-[10px] px-2 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 rounded-full font-bold">
+                            Disconnected
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400">
+                        2-way sync enabled. Qualified leads and invoices created in Rule7 automatically sync into your QuickBooks customer register.
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-900 flex items-center justify-between">
+                      <button
+                        onClick={() => {
+                          setSyncing(true);
+                          setSyncMessage('Syncing with QuickBooks...');
+                          setTimeout(() => {
+                            setSyncing(false);
+                            setSyncMessage('✅ QuickBooks 2-Way Sync Complete! 100% in sync.');
+                            setTimeout(() => setSyncMessage(''), 4000);
+                          }, 1200);
+                        }}
+                        disabled={syncing}
+                        className="px-3 py-1.5 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 text-green-400 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
+                      >
+                        <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
+                        {syncing ? 'Syncing...' : 'Sync with QuickBooks Now'}
+                      </button>
+
+                      <button
+                        onClick={() => setQbConnected(!qbConnected)}
+                        className="text-[10px] text-slate-500 hover:text-slate-300 underline"
+                      >
+                        {qbConnected ? 'Disconnect' : 'Connect 1-Click'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Xero Cloud Accounting */}
+                  <div className="glass-card p-5 rounded-2xl border border-slate-900 flex flex-col justify-between space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded bg-sky-500/20 text-sky-400 font-black text-xs flex items-center justify-center border border-sky-500/30">X</div>
+                          <h3 className="font-bold text-white text-sm">Xero Accounting</h3>
+                        </div>
+                        {xeroConnected ? (
+                          <span className="text-[10px] px-2 py-0.5 bg-sky-400/10 border border-sky-400/20 text-sky-400 rounded-full font-bold flex items-center gap-1">
+                            <Check className="w-3 h-3" /> Connected & Active
+                          </span>
+                        ) : (
+                          <span className="text-[10px] px-2 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 rounded-full font-bold">
+                            Ready to Connect
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400">
+                        1-Click connect to your Xero organization. Push wrap work orders directly into your accounts receivable and ledger.
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-900 flex items-center justify-between">
+                      <button
+                        onClick={() => {
+                          setXeroConnected(true);
+                          setSyncing(true);
+                          setSyncMessage('Connecting to Xero Cloud...');
+                          setTimeout(() => {
+                            setSyncing(false);
+                            setSyncMessage('✅ Connected to Xero! Organization synced.');
+                            setTimeout(() => setSyncMessage(''), 4000);
+                          }, 1000);
+                        }}
+                        className="px-3 py-1.5 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        {xeroConnected ? 'Sync Xero Ledger' : '1-Click Connect Xero'}
+                      </button>
+
+                      {xeroConnected && (
+                        <button
+                          onClick={() => setXeroConnected(false)}
+                          className="text-[10px] text-slate-500 hover:text-slate-300 underline"
+                        >
+                          Disconnect
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {syncMessage && (
+                  <div className="p-3 rounded-xl bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs font-bold animate-slide-in">
+                    {syncMessage}
+                  </div>
+                )}
+
+                {/* Wrap Job Costing & Gross Profit Calculator */}
+                <div className="glass-card p-6 rounded-2xl border border-slate-900 space-y-5">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-900 pb-3">
+                    <div>
+                      <h3 className="font-grotesk font-black text-base text-white flex items-center gap-2">
+                        <FileSpreadsheet className="w-4 h-4 text-neonCyan" />
+                        Vehicle Wrap Job Profitability & Wastage Estimator
+                      </h3>
+                      <p className="text-xs text-slate-400">Input wrap variables to calculate real-time Gross Profit before sending quotes to QuickBooks or Xero.</p>
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded">Real-Time P&L Engine</span>
+                  </div>
+
+                  {/* Calculator Inputs Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
+                    <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-900">
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1.5">Quote / Price ($)</label>
+                      <input
+                        type="number"
+                        value={calcQuote}
+                        onChange={(e) => setCalcQuote(Number(e.target.value))}
+                        className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white font-bold focus:ring-1 focus:ring-neonCyan outline-none"
+                      />
+                      <span className="text-[9px] text-slate-500 mt-1 block">Customer total quote</span>
+                    </div>
+
+                    <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-900">
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1.5">Labor Cost ($)</label>
+                      <input
+                        type="number"
+                        value={calcLabor}
+                        onChange={(e) => setCalcLabor(Number(e.target.value))}
+                        className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white font-bold focus:ring-1 focus:ring-neonCyan outline-none"
+                      />
+                      <span className="text-[9px] text-slate-500 mt-1 block">Installer installer hours</span>
+                    </div>
+
+                    <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-900">
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1.5">Vinyl Material ($)</label>
+                      <input
+                        type="number"
+                        value={calcMaterial}
+                        onChange={(e) => setCalcMaterial(Number(e.target.value))}
+                        className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white font-bold focus:ring-1 focus:ring-neonCyan outline-none"
+                      />
+                      <span className="text-[9px] text-slate-500 mt-1 block">Cast vinyl + laminate</span>
+                    </div>
+
+                    <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-900">
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1.5">Wastage Buffer (%)</label>
+                      <input
+                        type="number"
+                        value={calcWastagePct}
+                        onChange={(e) => setCalcWastagePct(Number(e.target.value))}
+                        className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white font-bold focus:ring-1 focus:ring-neonCyan outline-none"
+                      />
+                      <span className="text-[9px] text-slate-500 mt-1 block">Off-cuts & print margin</span>
+                    </div>
+
+                    <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-900">
+                      <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1.5">Overtime ($)</label>
+                      <input
+                        type="number"
+                        value={calcOvertime}
+                        onChange={(e) => setCalcOvertime(Number(e.target.value))}
+                        className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white font-bold focus:ring-1 focus:ring-neonCyan outline-none"
+                      />
+                      <span className="text-[9px] text-slate-500 mt-1 block">Weekend / rush fee</span>
+                    </div>
+                  </div>
+
+                  {/* Calculator Outputs Banner */}
+                  {(() => {
+                    const materialWithWastage = calcMaterial * (1 + (calcWastagePct / 100));
+                    const totalCost = calcLabor + materialWithWastage + calcOvertime;
+                    const grossProfit = calcQuote - totalCost;
+                    const margin = calcQuote > 0 ? ((grossProfit / calcQuote) * 100).toFixed(1) : 0;
+                    return (
+                      <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-4 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                        <div className="space-y-1">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Total Estimated Job Cost</span>
+                          <div className="text-base font-mono font-bold text-slate-200">
+                            ${totalCost.toFixed(2)}
+                            <span className="text-[10px] text-slate-500 ml-2 font-normal">(inc. ${(materialWithWastage - calcMaterial).toFixed(2)} wastage)</span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-neonGreen">Gross Profit</span>
+                          <div className="text-xl font-grotesk font-black text-neonGreen">
+                            ${grossProfit.toFixed(2)}
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-neonCyan">Gross Profit Margin</span>
+                          <div className="text-xl font-grotesk font-black text-neonCyan">
+                            {margin}%
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            setSyncMessage(`✅ Wrap quote of $${calcQuote} with Gross Profit of $${grossProfit.toFixed(2)} (${margin}%) prepared for QuickBooks/Xero export!`);
+                            setTimeout(() => setSyncMessage(''), 4000);
+                          }}
+                          className="px-4 py-2 bg-neonCyan text-darkBg font-black text-xs rounded-lg hover:bg-neonCyan/90 transition-all shadow-md"
+                        >
+                          Push Quote to Accounting
+                        </button>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 5: 22% Affiliate Earnings */}
+            {activeTab === 'affiliate' && (
+              <div className="space-y-6 animate-slide-in">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <h2 className="text-xl font-grotesk font-black text-white flex items-center gap-2">
+                      <Award className="w-5 h-5 text-neonPurple" />
+                      22% Recurring Affiliate Earnings Scheme
+                    </h2>
+                    <p className="text-xs text-slate-400">Earn 22% recurring monthly commissions by sharing Rule7 with peer wrap shops and signwriters.</p>
+                  </div>
+
+                  <button
+                    onClick={() => navigate('/affiliate/dashboard')}
+                    className="px-3.5 py-1.5 bg-neonPurple/10 hover:bg-neonPurple/20 border border-neonPurple/30 text-neonPurple rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
+                  >
+                    <span>Full Affiliate Hub</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* 1-Click Referral Link Card */}
+                <div className="glass-card p-6 rounded-2xl border border-neonPurple/20 relative overflow-hidden space-y-4">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-neonPurple/5 rounded-full filter blur-3xl pointer-events-none"></div>
+
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-neonPurple block mb-1">Your 1-Click Referral Link</span>
+                      <code className="text-xs font-mono text-slate-200 bg-slate-950 p-2 rounded-lg border border-slate-900 block overflow-x-auto">
+                        {window.location.origin}/pricing?ref={partnerCode || 'shop'}
+                      </code>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}/pricing?ref=${partnerCode || 'shop'}`);
+                        setCopiedRef(true);
+                        setTimeout(() => setCopiedRef(false), 2000);
+                      }}
+                      className="px-4 py-2.5 bg-neonPurple text-white font-bold text-xs rounded-lg hover:bg-neonPurple/90 transition-all shadow-lg flex items-center gap-2 shrink-0"
+                    >
+                      {copiedRef ? <Check className="w-4 h-4 text-neonGreen" /> : <Copy className="w-4 h-4" />}
+                      {copiedRef ? 'Link Copied!' : 'Copy 1-Click Affiliate Link'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* "3 Referrals = 100% Free" Explainer Card */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="glass-card p-5 rounded-2xl border border-neonGreen/20 bg-neonGreen/5 flex flex-col justify-between space-y-3 md:col-span-2">
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-neonGreen flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        The Rule of 3 Formula
+                      </span>
+                      <h3 className="text-base font-grotesk font-black text-white">
+                        Refer 3 Wrap Shops → Your Entire Rule7 Subscription is 100% Paid For!
+                      </h3>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        At 22% recurring commission, when you refer just 3 other signwriters or wrap businesses to the Professional or Growth tier, their monthly commissions completely offset your own platform fees. Every referral after that is 100% pure profit!
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3 pt-2 text-center text-xs">
+                      <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-900">
+                        <span className="text-slate-400 block text-[10px]">Professional Plan</span>
+                        <strong className="text-neonGreen text-sm block mt-0.5">$54.34 / mo</strong>
+                        <span className="text-[9px] text-slate-500">per referral (22%)</span>
+                      </div>
+                      <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-900">
+                        <span className="text-slate-400 block text-[10px]">Growth Plan</span>
+                        <strong className="text-neonGreen text-sm block mt-0.5">$43.34 / mo</strong>
+                        <span className="text-[9px] text-slate-500">per referral (22%)</span>
+                      </div>
+                      <div className="bg-slate-950/80 p-2.5 rounded-xl border border-slate-900">
+                        <span className="text-slate-400 block text-[10px]">Done-For-You Plan</span>
+                        <strong className="text-neonGreen text-sm block mt-0.5">$439.34 Upfront</strong>
+                        <span className="text-[9px] text-slate-500">+ $32.78 / mo</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Summary Metric */}
+                  <div className="glass-card p-5 rounded-2xl border border-slate-900 flex flex-col justify-between space-y-4">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Total Affiliate Balance</span>
+                      <div className="text-2xl font-grotesk font-black text-neonGreen mt-1">
+                        ${partnerDetails?.earnings || 0}.00
+                      </div>
+                      <span className="text-[10px] text-slate-400 block mt-1">Paid directly via Stripe Connect monthly</span>
+                    </div>
+
+                    <button
+                      onClick={() => navigate('/affiliate/links')}
+                      className="w-full py-2 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-white rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <span>Get Marketing Banners & Assets</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               </div>

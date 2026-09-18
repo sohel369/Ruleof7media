@@ -11,6 +11,7 @@ const db = require('./db');
 const { calculateScore } = require('./scoring');
 const { sendEmail, getCredentials } = require('./mailer');
 const { geocodeAddress } = require('./utils');
+const quickbooks = require('./quickbooks');
 
 const app = express();
 const server = http.createServer(app);
@@ -709,6 +710,33 @@ app.post('/api/create-payment-intent', async (req, res) => {
     });
   } catch (err) {
     console.error('Error creating payment intent:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 12. QuickBooks Accounting OAuth & Sync Endpoints
+app.get('/api/accounting/quickbooks/auth-url', (req, res) => {
+  const url = quickbooks.getAuthorizationUrl(req.query.state || 'rule7_partner');
+  res.json({ success: true, url });
+});
+
+app.get('/api/accounting/quickbooks/callback', async (req, res) => {
+  const { code, realmId } = req.query;
+  if (code) {
+    await quickbooks.exchangeAuthCode(code, realmId);
+  }
+  res.redirect('/partner/dashboard?qb_connected=true');
+});
+
+app.get('/api/accounting/quickbooks/status', (req, res) => {
+  res.json(quickbooks.getStatus());
+});
+
+app.post('/api/accounting/quickbooks/push-quote', async (req, res) => {
+  try {
+    const result = await quickbooks.pushQuoteToQuickBooks(req.body);
+    res.json(result);
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });

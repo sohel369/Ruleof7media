@@ -13,10 +13,11 @@ export const Partner = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isRegisterPage = location.pathname === '/partner/register';
-  const isApplyPage = location.pathname === '/partner/apply';
-  const isLoginPage = location.pathname === '/partner/login';
-  const isDashboardPage = location.pathname === '/partner/dashboard';
+  const path = location.pathname;
+  const isRegisterPage = path === '/partner/register';
+  const isApplyPage = path === '/partner/apply';
+  const isDashboardPage = path === '/partner/dashboard' || (isLoggedIn && (path === '/partner' || path === '/partner/'));
+  const isLoginPage = path === '/partner/login' || (!isLoggedIn && (path === '/partner' || path === '/partner/' || (!isRegisterPage && !isApplyPage && !isDashboardPage)));
 
   const selectedPlan = localStorage.getItem('r7_selected_plan') || 'Growth';
   const paymentComplete = localStorage.getItem('r7_payment_complete') === 'true';
@@ -66,19 +67,25 @@ export const Partner = () => {
   const [calcOvertime, setCalcOvertime] = useState(200);
   const [copiedRef, setCopiedRef] = useState(false);
 
-  // Redirect to register if payment was completed
+  // Automatic Route Redirection Guard
   useEffect(() => {
-    if (location.pathname === '/partner' && paymentComplete) {
-      navigate('/partner/register');
+    if (paymentComplete && (path === '/partner' || path === '/partner/')) {
+      navigate('/partner/register', { replace: true });
+      return;
     }
-  }, [location.pathname]);
 
-  // Auth Route Guard
-  useEffect(() => {
-    if (isDashboardPage && !isLoggedIn) {
-      navigate('/partner/login');
+    if (path === '/partner' || path === '/partner/') {
+      if (isLoggedIn) {
+        navigate('/partner/dashboard', { replace: true });
+      } else {
+        navigate('/partner/login', { replace: true });
+      }
+    } else if (path === '/partner/login' && isLoggedIn) {
+      navigate('/partner/dashboard', { replace: true });
+    } else if (path === '/partner/dashboard' && !isLoggedIn) {
+      navigate('/partner/login', { replace: true });
     }
-  }, [isDashboardPage, isLoggedIn]);
+  }, [path, isLoggedIn, paymentComplete, navigate]);
 
   // Fetch Dashboard Leads & Partner details
   useEffect(() => {

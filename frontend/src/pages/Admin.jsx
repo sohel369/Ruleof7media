@@ -123,12 +123,19 @@ export const Admin = () => {
   });
 
   const path = location.pathname;
-  const isDashboard = path === '/admin/dashboard';
   const isLeadsList = path === '/admin/leads';
   const isLeadDetail = path.startsWith('/admin/leads/');
   const isRoutingView = path === '/admin/routing';
   const isReportsView = path === '/admin/reports';
   const isSettingsView = path === '/admin/settings';
+  const isDashboard = path === '/admin/dashboard' || path === '/admin' || path === '/admin/' || path === '/admin/login' || (!isLeadsList && !isLeadDetail && !isRoutingView && !isReportsView && !isSettingsView);
+
+  // Auto-redirect to dashboard if logged in and on /admin or /admin/login
+  useEffect(() => {
+    if (isLoggedIn && (path === '/admin' || path === '/admin/' || path === '/admin/login')) {
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [isLoggedIn, path, navigate]);
 
   // Fetch Data
   const fetchData = async () => {

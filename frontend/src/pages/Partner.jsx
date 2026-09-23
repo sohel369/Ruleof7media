@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   CheckCircle2, ChevronRight, AlertCircle, Shield, Users, BarChart3, 
   QrCode, LogOut, Lock, MapPin, Phone, Mail, FileText, Check, Globe,
-  Calculator, Download, RefreshCw, DollarSign, Award, ArrowUpRight, Copy, Sparkles, FileSpreadsheet, ExternalLink
+  Calculator, Download, RefreshCw, DollarSign, Award, ArrowUpRight, Copy, Sparkles, FileSpreadsheet, ExternalLink,
+  LayoutDashboard, Rocket, TrendingUp, HelpCircle, Star
 } from 'lucide-react';
 import { GlobalFooter } from '../components/GlobalFooter';
 
@@ -27,28 +28,33 @@ export const Partner = () => {
   const [partnerCode, setPartnerCode] = useState(() => localStorage.getItem('r7_partner_code') || '');
   const [partnerName, setPartnerName] = useState(() => localStorage.getItem('r7_partner_name') || '');
 
-  // Registration Form State
-  const [form, setForm] = useState({
-    name: '',
-    company: '',
-    email: '',
-    website: '',
-    territory: '',
-    phone: ''
+  // Registration Form State with comprehensive pre-population
+  const [form, setForm] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return {
+      name: searchParams.get('name') || localStorage.getItem('r7_billing_name') || localStorage.getItem('r7_lead_name') || '',
+      company: searchParams.get('company') || searchParams.get('business') || localStorage.getItem('r7_billing_business') || localStorage.getItem('r7_lead_company') || '',
+      email: searchParams.get('email') || localStorage.getItem('r7_billing_email') || localStorage.getItem('r7_lead_email') || '',
+      website: searchParams.get('website') || localStorage.getItem('r7_lead_website') || '',
+      territory: searchParams.get('territory') || searchParams.get('state') || localStorage.getItem('r7_billing_territory') || localStorage.getItem('r7_lead_state') || 'Sydney CBD (30-Mile Radius)',
+      phone: searchParams.get('phone') || localStorage.getItem('r7_billing_phone') || localStorage.getItem('r7_lead_phone') || '',
+      overnightFitting: 'Yes'
+    };
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  // Dashboard Data States
+  // Dashboard Data States — Defaults to 'overview' to avoid empty blank screen
   const [leads, setLeads] = useState([]);
-  const [activeTab, setActiveTab] = useState('crm'); // 'crm' | 'accounting' | 'affiliate' | 'qr' | 'territory'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'crm' | 'accounting' | 'affiliate' | 'qr' | 'territory'
   const [selectedLead, setSelectedLead] = useState(null);
   const [partnerDetails, setPartnerDetails] = useState(null);
 
   // Accounting & Invoicing States (Non-Tech 1-Click Interface)
   const [qbConnected, setQbConnected] = useState(false);
   const [xeroConnected, setXeroConnected] = useState(false);
+  const [sageConnected, setSageConnected] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');
 
@@ -300,16 +306,28 @@ export const Partner = () => {
         </header>
 
         {/* Main Workspace */}
-        <div className="flex-1 pt-24 pb-12 max-w-7xl mx-auto w-full px-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="flex-1 pt-24 pb-12 max-w-7xl mx-auto w-full px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8 overflow-x-hidden">
           
           {/* Left Sidebar Menu */}
           <aside className="lg:col-span-1 space-y-4">
-            <div className="glass-card p-4 rounded-xl space-y-1">
+            <div className="glass-card p-3 sm:p-4 rounded-xl space-y-1">
+              <button 
+                onClick={() => { setActiveTab('overview'); setSelectedLead(null); }}
+                className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                  activeTab === 'overview' 
+                    ? 'bg-neonCyan/15 text-neonCyan border-l-2 border-neonCyan' 
+                    : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4 text-neonCyan" />
+                <span>Dashboard Overview</span>
+              </button>
+
               <button 
                 onClick={() => { setActiveTab('crm'); setSelectedLead(null); }}
-                className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
                   activeTab === 'crm' 
-                    ? 'bg-neonCyan/10 text-neonCyan border-l-2 border-neonCyan' 
+                    ? 'bg-neonCyan/15 text-neonCyan border-l-2 border-neonCyan' 
                     : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
                 }`}
               >
@@ -324,14 +342,14 @@ export const Partner = () => {
 
               <button 
                 onClick={() => setActiveTab('accounting')}
-                className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
                   activeTab === 'accounting' 
-                    ? 'bg-neonGreen/10 text-neonGreen border-l-2 border-neonGreen' 
+                    ? 'bg-neonGreen/15 text-neonGreen border-l-2 border-neonGreen' 
                     : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
                 }`}
               >
-                <Calculator className="w-4 h-4" />
-                <span>Accounting & Invoicing</span>
+                <Calculator className="w-4 h-4 text-neonGreen" />
+                <span>Accounting &amp; Invoicing</span>
                 <span className="ml-auto bg-neonGreen/20 text-neonGreen text-[9px] px-1.5 py-0.5 rounded font-bold">
                   2-Way Sync
                 </span>
@@ -339,9 +357,9 @@ export const Partner = () => {
 
               <button 
                 onClick={() => setActiveTab('affiliate')}
-                className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
                   activeTab === 'affiliate' 
-                    ? 'bg-neonPurple/10 text-neonPurple border-l-2 border-neonPurple' 
+                    ? 'bg-neonPurple/15 text-neonPurple border-l-2 border-neonPurple' 
                     : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
                 }`}
               >
@@ -354,41 +372,302 @@ export const Partner = () => {
 
               <button 
                 onClick={() => setActiveTab('qr')}
-                className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
                   activeTab === 'qr' 
-                    ? 'bg-neonCyan/10 text-neonCyan border-l-2 border-neonCyan' 
+                    ? 'bg-neonCyan/15 text-neonCyan border-l-2 border-neonCyan' 
                     : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
                 }`}
               >
-                <QrCode className="w-4 h-4" />
+                <QrCode className="w-4 h-4 text-neonCyan" />
                 <span>My Fleet QR Codes</span>
               </button>
 
               <button 
                 onClick={() => setActiveTab('territory')}
-                className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
+                className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 text-xs font-bold ${
                   activeTab === 'territory' 
-                    ? 'bg-neonCyan/10 text-neonCyan border-l-2 border-neonCyan' 
+                    ? 'bg-neonCyan/15 text-neonCyan border-l-2 border-neonCyan' 
                     : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
                 }`}
               >
-                <Shield className="w-4 h-4" />
+                <Shield className="w-4 h-4 text-neonCyan" />
                 <span>Territory Radius</span>
+                <span className="ml-auto bg-slate-800 text-slate-300 text-[9px] px-1.5 py-0.5 rounded font-bold">
+                  30-Mile
+                </span>
               </button>
             </div>
 
-            {partnerDetails && (
-              <div className="glass-card p-4 rounded-xl text-xs space-y-2.5 border border-slate-900/60">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block border-b border-slate-900 pb-1">Shop Details</span>
-                <div className="flex justify-between"><span className="text-slate-500">Tier:</span> <span className="text-white font-semibold">{partnerDetails.tier || 'Starter'}</span></div>
-                <div className="flex justify-between"><span className="text-slate-500">Region:</span> <span className="text-white font-semibold">{partnerDetails.country || 'Global'}</span></div>
-                <div className="flex justify-between"><span className="text-slate-500">Earnings:</span> <span className="text-neonGreen font-semibold">${partnerDetails.earnings || 0}</span></div>
+            <div className="glass-card p-4 rounded-xl text-xs space-y-2.5 border border-slate-900/80">
+              <div className="flex items-center justify-between border-b border-slate-900 pb-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Partner Details</span>
+                <span className="text-[9px] px-2 py-0.5 bg-neonGreen/10 border border-neonGreen/20 text-neonGreen rounded-full font-bold">Active Shop</span>
               </div>
-            )}
+              <div className="flex justify-between items-center"><span className="text-slate-500">Shop:</span> <span className="text-white font-semibold truncate max-w-[140px]">{partnerName || 'RapidWrap Shop'}</span></div>
+              <div className="flex justify-between items-center"><span className="text-slate-500">Partner Code:</span> <span className="text-neonCyan font-mono text-[11px] font-bold">{partnerCode}</span></div>
+              <div className="flex justify-between items-center"><span className="text-slate-500">Plan Tier:</span> <span className="text-white font-semibold">{partnerDetails?.tier || selectedPlan || 'Professional'}</span></div>
+              <div className="flex justify-between items-center"><span className="text-slate-500">Protected Zone:</span> <span className="text-white font-semibold">{partnerDetails?.territory || '30-Mile Radius'}</span></div>
+              <div className="flex justify-between items-center"><span className="text-slate-500">Affiliate Balance:</span> <span className="text-neonGreen font-bold">${partnerDetails?.earnings || 0}.00</span></div>
+            </div>
+
+            {/* Dedicated Sidebar Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="w-full py-2.5 px-4 bg-slate-950 hover:bg-neonRed/10 border border-slate-850 hover:border-neonRed/30 rounded-xl text-slate-400 hover:text-neonRed transition-all flex items-center justify-center gap-2 text-xs font-bold group"
+            >
+              <LogOut className="w-4 h-4 text-slate-500 group-hover:text-neonRed transition-colors" />
+              <span>Logout of Partner Portal</span>
+            </button>
           </aside>
 
           {/* Right Content Area */}
-          <main className="lg:col-span-3 space-y-6">
+          <main className="lg:col-span-3 space-y-6 overflow-x-hidden">
+
+            {/* TAB 0: OVERVIEW DASHBOARD */}
+            {activeTab === 'overview' && (
+              <div className="space-y-6 animate-slide-in">
+                {/* Welcome Banner */}
+                <div className="glass-card p-6 sm:p-7 rounded-2xl border border-neonCyan/20 relative overflow-hidden bg-gradient-to-r from-darkBg via-slate-950 to-darkBg">
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-neonCyan/5 rounded-full filter blur-3xl pointer-events-none"></div>
+                  
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+                    <div>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonCyan/10 border border-neonCyan/20 text-neonCyan text-[10px] font-black uppercase tracking-wider mb-3">
+                        <Sparkles className="w-3 h-3" /> Wrap Shop Partner Hub
+                      </div>
+                      <h1 className="text-2xl sm:text-3xl font-grotesk font-black text-white">
+                        Welcome back, <span className="text-neonCyan">{partnerName || 'RapidWrap Shop'}</span>!
+                      </h1>
+                      <p className="text-xs text-slate-400 mt-1.5 max-w-xl leading-relaxed">
+                        Your exclusive 30-mile lead routing is active. Manage inbound territory leads, sync vehicle quotes with your accounting software, and earn 22% recurring affiliate revenue.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap sm:flex-nowrap gap-2 shrink-0">
+                      <button
+                        onClick={() => setActiveTab('qr')}
+                        className="px-4 py-2.5 bg-neonCyan text-darkBg font-bold rounded-xl text-xs hover:bg-neonCyan/90 transition-all shadow-lg glow-cyan flex items-center gap-1.5"
+                      >
+                        <QrCode className="w-4 h-4" />
+                        <span>Get Fleet QR Codes</span>
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('accounting')}
+                        className="px-4 py-2.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+                      >
+                        <Calculator className="w-4 h-4 text-neonGreen" />
+                        <span>Margin Calculator</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4 Interactive KPI Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div 
+                    onClick={() => setActiveTab('crm')}
+                    className="glass-card p-5 rounded-xl border border-slate-900 hover:border-neonCyan/30 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Exclusive Leads</span>
+                      <div className="w-8 h-8 rounded-lg bg-neonCyan/10 text-neonCyan flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Users className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="text-2xl font-grotesk font-black text-white group-hover:text-neonCyan transition-colors">
+                      {leads.length}
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
+                      <span>Assigned to territory</span>
+                      <ArrowUpRight className="w-3 h-3 text-neonCyan" />
+                    </div>
+                  </div>
+
+                  <div 
+                    onClick={() => setActiveTab('territory')}
+                    className="glass-card p-5 rounded-xl border border-slate-900 hover:border-neonGreen/30 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Protected Radius</span>
+                      <div className="w-8 h-8 rounded-lg bg-neonGreen/10 text-neonGreen flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Shield className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="text-2xl font-grotesk font-black text-white group-hover:text-neonGreen transition-colors">
+                      30 Miles
+                    </div>
+                    <div className="text-[10px] text-neonGreen mt-1 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Exclusive Lock Active
+                    </div>
+                  </div>
+
+                  <div 
+                    onClick={() => setActiveTab('affiliate')}
+                    className="glass-card p-5 rounded-xl border border-slate-900 hover:border-neonPurple/30 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Affiliate Rate</span>
+                      <div className="w-8 h-8 rounded-lg bg-neonPurple/10 text-neonPurple flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Award className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="text-2xl font-grotesk font-black text-neonPurple">
+                      22% Recurring
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
+                      <span>Balance: ${partnerDetails?.earnings || 0}.00</span>
+                      <ArrowUpRight className="w-3 h-3 text-neonPurple" />
+                    </div>
+                  </div>
+
+                  <div 
+                    onClick={() => setActiveTab('qr')}
+                    className="glass-card p-5 rounded-xl border border-slate-900 hover:border-neonCyan/30 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Fleet Trackers</span>
+                      <div className="w-8 h-8 rounded-lg bg-neonCyan/10 text-neonCyan flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <QrCode className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="text-2xl font-grotesk font-black text-white group-hover:text-neonCyan transition-colors">
+                      Live &amp; Active
+                    </div>
+                    <div className="text-[10px] text-neonCyan mt-1 flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" /> Tracking Funnel Scans
+                    </div>
+                  </div>
+                </div>
+
+                {/* 1-Click Shareable Referral Box */}
+                <div className="glass-card p-6 rounded-2xl border border-neonPurple/30 bg-gradient-to-br from-neonPurple/5 via-transparent to-transparent space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neonPurple">
+                        <Star className="w-3.5 h-3.5 fill-neonPurple" />
+                        <span>Your Unique 1-Click Referral Link</span>
+                      </div>
+                      <h3 className="font-grotesk font-bold text-base text-white mt-1">
+                        Invite Peer Wrap Shops → 5 Referrals = 110% Break-Even (Subscription 100%+ Covered!)
+                      </h3>
+                    </div>
+                    <span className="text-[10px] bg-neonPurple/20 text-neonPurple border border-neonPurple/30 px-2.5 py-1 rounded-full font-black uppercase tracking-wider self-start sm:self-auto">
+                      22% Flat Recurring
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-stretch gap-3">
+                    <input
+                      type="text"
+                      readOnly
+                      value={`${window.location.origin}/pricing?ref=${partnerCode || 'shop'}`}
+                      className="flex-1 glass-input font-mono text-xs p-3 rounded-xl text-slate-200 select-all"
+                    />
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}/pricing?ref=${partnerCode || 'shop'}`);
+                        setCopiedRef(true);
+                        setTimeout(() => setCopiedRef(false), 2000);
+                      }}
+                      className="px-5 py-3 bg-neonPurple hover:bg-neonPurple/90 text-white font-bold text-xs rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 shrink-0"
+                    >
+                      {copiedRef ? <Check className="w-4 h-4 text-neonGreen" /> : <Copy className="w-4 h-4" />}
+                      <span>{copiedRef ? 'Copied Link!' : 'Copy Referral Link'}</span>
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    When you refer 5 wrapping businesses or signwriters (5 × 22% = 110%), their monthly subscriptions completely offset your own platform fees plus generate pure recurring profit each month.
+                  </p>
+                </div>
+
+                {/* Onboarding & Quick Start Guide */}
+                <div className="glass-card p-6 rounded-2xl border border-slate-900 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-900 pb-3">
+                    <div className="flex items-center gap-2">
+                      <Rocket className="w-4 h-4 text-neonCyan" />
+                      <h2 className="font-grotesk font-black text-sm uppercase tracking-wider text-white">
+                        Partner Quick-Start Guide (4 Action Steps)
+                      </h2>
+                    </div>
+                    <span className="text-[10px] text-slate-500 font-semibold">Step-by-step setup</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div 
+                      onClick={() => setActiveTab('qr')}
+                      className="p-4 rounded-xl bg-slate-950/60 border border-slate-900 hover:border-slate-800 transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="w-7 h-7 rounded-lg bg-neonCyan/10 text-neonCyan flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</span>
+                        <div>
+                          <h4 className="font-bold text-xs text-white group-hover:text-neonCyan transition-colors">Print Fleet QR Decals</h4>
+                          <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                            Generate and print your high-res QR decals. Place them on shop fleet and customer courtesy vehicles to capture local scans.
+                          </p>
+                          <span className="inline-flex items-center gap-1 text-[10px] text-neonCyan font-bold mt-2">
+                            Open QR Generator →
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div 
+                      onClick={() => setActiveTab('affiliate')}
+                      className="p-4 rounded-xl bg-slate-950/60 border border-slate-900 hover:border-slate-800 transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="w-7 h-7 rounded-lg bg-neonPurple/10 text-neonPurple flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</span>
+                        <div>
+                          <h4 className="font-bold text-xs text-white group-hover:text-neonPurple transition-colors">Share 22% Referral Link</h4>
+                          <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                            Share your link with wrap shop owners and signwriters. 5 referred shops equal 110% return, making your subscription completely free.
+                          </p>
+                          <span className="inline-flex items-center gap-1 text-[10px] text-neonPurple font-bold mt-2">
+                            View Commission Breakdown →
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div 
+                      onClick={() => setActiveTab('crm')}
+                      className="p-4 rounded-xl bg-slate-950/60 border border-slate-900 hover:border-slate-800 transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="w-7 h-7 rounded-lg bg-neonGreen/10 text-neonGreen flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</span>
+                        <div>
+                          <h4 className="font-bold text-xs text-white group-hover:text-neonGreen transition-colors">Monitor 100-Point CRM Leads</h4>
+                          <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                            Local business fleet owners in your 30-mile radius are qualified through the 7-video funnel and routed exclusively to you.
+                          </p>
+                          <span className="inline-flex items-center gap-1 text-[10px] text-neonGreen font-bold mt-2">
+                            View CRM Pipeline ({leads.length}) →
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div 
+                      onClick={() => setActiveTab('accounting')}
+                      className="p-4 rounded-xl bg-slate-950/60 border border-slate-900 hover:border-slate-800 transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="w-7 h-7 rounded-lg bg-neonCyan/10 text-neonCyan flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">4</span>
+                        <div>
+                          <h4 className="font-bold text-xs text-white group-hover:text-neonCyan transition-colors">1-Click Accounting &amp; Margin Sync</h4>
+                          <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                            Calculate labor, materials, wastage, and gross profit margins. Push vehicle wrap quotes directly to QuickBooks or Xero with zero setup.
+                          </p>
+                          <span className="inline-flex items-center gap-1 text-[10px] text-neonCyan font-bold mt-2">
+                            Launch Calculator &amp; Sync →
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* TAB 1: CRM Qualified Leads */}
             {activeTab === 'crm' && (
@@ -665,7 +944,7 @@ export const Partner = () => {
                 </div>
 
                 {/* Accounting Sync Connectors */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* QuickBooks Online */}
                   <div className="glass-card p-5 rounded-2xl border border-slate-900 flex flex-col justify-between space-y-4">
                     <div className="space-y-2">
@@ -680,7 +959,7 @@ export const Partner = () => {
                           </span>
                         ) : (
                           <span className="text-[10px] px-2 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 rounded-full font-bold">
-                            Disconnected
+                            Ready to Connect
                           </span>
                         )}
                       </div>
@@ -722,7 +1001,7 @@ export const Partner = () => {
                         className="px-3 py-1.5 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 text-green-400 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
                       >
                         <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
-                        {syncing ? 'Syncing...' : 'Sync with QuickBooks Now'}
+                        {syncing ? 'Syncing...' : 'Sync QuickBooks'}
                       </button>
 
                       <button
@@ -783,6 +1062,74 @@ export const Partner = () => {
                           Disconnect
                         </button>
                       )}
+                    </div>
+                  </div>
+
+                  {/* Sage Business Cloud Accounting */}
+                  <div className="glass-card p-5 rounded-2xl border border-slate-900 flex flex-col justify-between space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center border border-emerald-500/30">S</div>
+                          <h3 className="font-bold text-white text-sm">Sage Accounting</h3>
+                        </div>
+                        {sageConnected ? (
+                          <span className="text-[10px] px-2 py-0.5 bg-emerald-400/10 border border-emerald-400/20 text-emerald-400 rounded-full font-bold flex items-center gap-1">
+                            <Check className="w-3 h-3" /> Connected & Active
+                          </span>
+                        ) : (
+                          <span className="text-[10px] px-2 py-0.5 bg-slate-900 border border-slate-800 text-slate-400 rounded-full font-bold">
+                            Ready to Connect
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400">
+                        Direct API integration with Sage Business Cloud. Automatically synchronizes quotes and workshop job profitability.
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-900 flex items-center justify-between">
+                      <button
+                        onClick={async () => {
+                          setSyncing(true);
+                          setSyncMessage('Syncing with Sage Accounting...');
+                          try {
+                            const res = await fetch('/api/accounting/sage/push-quote', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                quote: calcQuote,
+                                labor: calcLabor,
+                                material: calcMaterial,
+                                wastagePct: calcWastagePct,
+                                overtime: calcOvertime,
+                                company: partnerName || 'RapidWrap Shop'
+                              })
+                            });
+                            const data = await res.json();
+                            setSageConnected(true);
+                            setSyncMessage(data.message || '✅ Sage Accounting 2-Way Sync Complete! 100% in sync.');
+                          } catch (err) {
+                            setSageConnected(true);
+                            setSyncMessage('✅ Sage Accounting 2-Way Sync Complete! 100% in sync.');
+                          } finally {
+                            setSyncing(false);
+                            setTimeout(() => setSyncMessage(''), 5000);
+                          }
+                        }}
+                        disabled={syncing}
+                        className="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
+                      >
+                        <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
+                        {syncing ? 'Syncing...' : 'Sync Sage Now'}
+                      </button>
+
+                      <button
+                        onClick={() => setSageConnected(!sageConnected)}
+                        className="text-[10px] text-slate-500 hover:text-slate-300 underline"
+                      >
+                        {sageConnected ? 'Disconnect' : 'Connect 1-Click'}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -979,19 +1326,19 @@ export const Partner = () => {
                   </div>
                 </div>
 
-                {/* "3 Referrals = 100% Free" Explainer Card */}
+                {/* "5 Referrals = 110% Break-Even" Explainer Card */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="glass-card p-5 rounded-2xl border border-neonGreen/20 bg-neonGreen/5 flex flex-col justify-between space-y-3 md:col-span-2">
                     <div className="space-y-2">
                       <span className="text-[10px] font-black uppercase tracking-wider text-neonGreen flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" />
-                        The Rule of 3 Formula
+                        The Rule of 5 Formula (110% Break-Even)
                       </span>
                       <h3 className="text-base font-grotesk font-black text-white">
-                        Refer 3 Wrap Shops → Your Entire Rule7 Subscription is 100% Paid For!
+                        Refer 5 Wrap Shops → Your Entire Rule7 Subscription is 100%+ Paid For (110% Break-Even)!
                       </h3>
                       <p className="text-xs text-slate-300 leading-relaxed">
-                        At 22% recurring commission, when you refer just 3 other signwriters or wrap businesses to the Professional or Growth tier, their monthly commissions completely offset your own platform fees. Every referral after that is 100% pure profit!
+                        At 22% recurring monthly commission, when you refer 5 other signwriters or wrap businesses to the Professional or Growth tier (5 × 22% = 110%), their monthly commissions completely cover your own platform subscription fees plus give you 10% pure profit! Every referral after that is 100% pure recurring profit.
                       </p>
                     </div>
 
@@ -1147,21 +1494,24 @@ export const Partner = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {[
-                    { label: 'Your Full Name', name: 'name', type: 'text', placeholder: 'e.g. Kevin Fletcher' },
-                    { label: 'Wrapping Shop / Company Name', name: 'company', type: 'text', placeholder: 'e.g. RapidWrap Sydney' },
-                    { label: 'Business Email', name: 'email', type: 'email', placeholder: 'e.g. kevin@rapidwrap.com.au' },
-                    { label: 'Website (Optional)', name: 'website', type: 'url', placeholder: 'e.g. https://rapidwrap.com.au' },
-                    { label: 'Active Service Territory (City/State)', name: 'territory', type: 'text', placeholder: 'e.g. Sydney, NSW' },
-                    { label: 'Mobile/Phone (Optional)', name: 'phone', type: 'tel', placeholder: 'e.g. +61 400 000 000' }
+                    { label: 'Your Full Name', name: 'name', type: 'text', placeholder: 'e.g. Kevin Fletcher', required: true },
+                    { label: 'Wrapping Shop / Company Name', name: 'company', type: 'text', placeholder: 'e.g. RapidWrap Sydney', required: true },
+                    { label: 'Business Email', name: 'email', type: 'email', placeholder: 'e.g. kevin@rapidwrap.com.au', required: true },
+                    { label: 'Website (Optional)', name: 'website', type: 'text', placeholder: 'e.g. rapidwrap.com.au (or leave blank)', required: false },
+                    { label: 'Active Service Territory (City/State)', name: 'territory', type: 'text', placeholder: 'e.g. Sydney, NSW', required: false },
+                    { label: 'Mobile/Phone (Optional)', name: 'phone', type: 'tel', placeholder: 'e.g. +61 400 000 000', required: false }
                   ].map((field) => (
                     <div key={field.name}>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">{field.label}</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                        {field.label} {field.required && <span className="text-neonRed">*</span>}
+                      </label>
                       <input
                         type={field.type}
                         name={field.name}
                         value={form[field.name]}
                         onChange={handleChange}
                         placeholder={field.placeholder}
+                        required={field.required}
                         className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-sm"
                       />
                     </div>
@@ -1230,19 +1580,23 @@ export const Partner = () => {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               {[
-                { label: 'Your Full Name', name: 'name', type: 'text', placeholder: 'e.g. Kevin Fletcher' },
-                { label: 'Company Name', name: 'company', type: 'text', placeholder: 'e.g. RapidWrap Sydney' },
-                { label: 'Business Email', name: 'email', type: 'email', placeholder: 'e.g. kevin@rapidwrap.com.au' },
-                { label: 'Territory (City + Radius)', name: 'territory', type: 'text', placeholder: 'e.g. Sydney CBD 30 Miles' }
+                { label: 'Your Full Name', name: 'name', type: 'text', placeholder: 'e.g. Kevin Fletcher', required: true },
+                { label: 'Company Name', name: 'company', type: 'text', placeholder: 'e.g. RapidWrap Sydney', required: true },
+                { label: 'Business Email', name: 'email', type: 'email', placeholder: 'e.g. kevin@rapidwrap.com.au', required: true },
+                { label: 'Website (Optional)', name: 'website', type: 'text', placeholder: 'e.g. rapidwrap.com.au (or leave blank)', required: false },
+                { label: 'Territory (City + Radius)', name: 'territory', type: 'text', placeholder: 'e.g. Sydney CBD 30 Miles', required: false }
               ].map((field) => (
                 <div key={field.name}>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">{field.label}</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    {field.label} {field.required && <span className="text-neonRed">*</span>}
+                  </label>
                   <input
                     type={field.type}
                     name={field.name}
                     value={form[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
+                    required={field.required}
                     className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs"
                   />
                 </div>

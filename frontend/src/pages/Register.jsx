@@ -54,15 +54,19 @@ export const Register = () => {
 
   const [selectedTier, setSelectedTier] = useState(initialTier);
 
-  const [form, setForm] = useState({
-    name: params.get('name') || '',
-    business: params.get('company') || params.get('business') || '',
-    website: params.get('website') || '',
-    territory: params.get('territory') || params.get('state') || '',
-    email: params.get('email') || '',
-    referralCode: params.get('ref') || params.get('partner') || localStorage.getItem('r7_referrer_id') || '',
-    country: params.get('country') || '',
-    audienceSize: ''
+  // Comprehensive pre-population from URL params and localStorage
+  const [form, setForm] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return {
+      name: searchParams.get('name') || localStorage.getItem('r7_lead_name') || '',
+      business: searchParams.get('company') || searchParams.get('business') || localStorage.getItem('r7_billing_business') || localStorage.getItem('r7_lead_company') || '',
+      website: searchParams.get('website') || localStorage.getItem('r7_lead_website') || '',
+      territory: searchParams.get('territory') || searchParams.get('state') || localStorage.getItem('r7_billing_territory') || localStorage.getItem('r7_lead_state') || '',
+      email: searchParams.get('email') || localStorage.getItem('r7_billing_email') || localStorage.getItem('r7_lead_email') || '',
+      referralCode: searchParams.get('ref') || searchParams.get('partner') || searchParams.get('referrer') || localStorage.getItem('r7_referrer_id') || localStorage.getItem('affiliate_ref') || '',
+      country: searchParams.get('country') || localStorage.getItem('r7_lead_country') || 'Australia',
+      audienceSize: searchParams.get('audienceSize') || '1,000 - 10,000'
+    };
   });
 
   const [loading, setLoading] = useState(false);
@@ -76,6 +80,21 @@ export const Register = () => {
   const [copiedBanner, setCopiedBanner] = useState(false);
   const [copiedGif, setCopiedGif] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+
+  // Sync form when URL or localStorage changes
+  React.useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    setForm(prev => ({
+      name: prev.name || searchParams.get('name') || localStorage.getItem('r7_lead_name') || '',
+      business: prev.business || searchParams.get('company') || searchParams.get('business') || localStorage.getItem('r7_billing_business') || localStorage.getItem('r7_lead_company') || '',
+      website: prev.website || searchParams.get('website') || localStorage.getItem('r7_lead_website') || '',
+      territory: prev.territory || searchParams.get('territory') || searchParams.get('state') || localStorage.getItem('r7_billing_territory') || localStorage.getItem('r7_lead_state') || '',
+      email: prev.email || searchParams.get('email') || localStorage.getItem('r7_billing_email') || localStorage.getItem('r7_lead_email') || '',
+      referralCode: prev.referralCode || searchParams.get('ref') || searchParams.get('partner') || localStorage.getItem('r7_referrer_id') || '',
+      country: prev.country || searchParams.get('country') || localStorage.getItem('r7_lead_country') || 'Australia',
+      audienceSize: prev.audienceSize || '1,000 - 10,000'
+    }));
+  }, [location.search]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -108,7 +127,7 @@ export const Register = () => {
           name: form.name,
           company: form.business || form.name,
           email: form.email,
-          website: form.website || '',
+          website: form.website ? form.website.trim() : '',
           territory: form.territory || 'Global',
           tier: selectedTier === 'elite' ? 'Elite' : 'Starter',
           referredBy: form.referralCode || null,
@@ -117,7 +136,7 @@ export const Register = () => {
         })
       });
       const data = await res.json();
-      const code = data.affiliate?.code || form.business.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || form.name.toLowerCase().replace(/\s+/g, '-');
+      const code = data.affiliate?.code || (form.business || form.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'partner';
       const link = `${window.location.origin}/landing.html?ref=${code}`;
       setGeneratedCode(code);
       setReferralLink(link);
@@ -127,7 +146,7 @@ export const Register = () => {
       setSuccess(true);
     } catch (err) {
       // Offline fallback
-      const code = (form.business || form.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const code = (form.business || form.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'partner';
       const link = `${window.location.origin}/landing.html?ref=${code}`;
       setGeneratedCode(code);
       setReferralLink(link);
@@ -150,10 +169,10 @@ export const Register = () => {
   const tier = selectedTier ? TIERS[selectedTier] : null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-darkBg text-white">
+    <div className="min-h-screen flex flex-col bg-darkBg text-white w-full max-w-full overflow-x-hidden relative font-sans selection:bg-neonRed selection:text-white">
 
       {/* Nav */}
-      <nav className="fixed top-0 w-full z-50 py-4 px-6 flex justify-between items-center bg-darkBg/90 backdrop-blur-md border-b border-slate-900">
+      <nav className="fixed top-0 left-0 right-0 w-full z-50 py-3.5 px-4 sm:px-6 flex justify-between items-center bg-darkBg/95 backdrop-blur-md border-b border-slate-900 max-w-full">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
           <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-black text-white shadow-lg glow-pink">R</div>
           <span className="font-grotesk font-bold text-xl tracking-tight">Rule7<span className="text-neonRed">Media</span></span>
@@ -164,21 +183,25 @@ export const Register = () => {
               ← Change Tier
             </button>
           )}
-          <button onClick={() => navigate('/admin/login')} className="text-slate-400 hover:text-white transition-colors">Partner Login</button>
-          <button onClick={() => navigate('/')} className="text-slate-400 hover:text-white transition-colors">Home</button>
+          <button onClick={() => navigate('/admin/login')} className="text-slate-400 hover:text-white transition-colors bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-800">
+            Partner Login
+          </button>
+          <button onClick={() => navigate('/')} className="text-slate-400 hover:text-white transition-colors hidden sm:block">
+            Home
+          </button>
         </div>
       </nav>
 
-      <div className="flex-1 pt-28 pb-16 px-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="flex-1 pt-24 pb-16 px-4 sm:px-6 w-full max-w-full overflow-hidden">
+        <div className="max-w-4xl mx-auto w-full">
 
           {!success ? (
             <>
               {/* Header */}
-              <div className="text-center mb-10">
-                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-neonCyan px-4 py-1.5 bg-neonCyan/10 rounded-full border border-neonCyan/20 mb-5">
-                  <Link2 className="w-3.5 h-3.5" />
-                  <span>ReferrQ Affiliate Network</span>
+              <div className="text-center mb-10 w-full">
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-neonCyan px-4 py-1.5 bg-neonCyan/10 rounded-full border border-neonCyan/20 mb-5 max-w-full">
+                  <Link2 className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">ReferrQ Affiliate Network</span>
                 </div>
                 <h1 className="text-3xl md:text-4xl font-grotesk font-black text-white mb-3">
                   {tier ? `${tier.emoji} ${tier.name}` : 'Join ReferrQ'}
@@ -190,12 +213,12 @@ export const Register = () => {
 
               {/* STEP 1 — Tier Selection */}
               {!selectedTier && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 w-full max-w-full">
                   {Object.values(TIERS).map((t) => (
                     <button
                       key={t.id}
                       onClick={() => setSelectedTier(t.id)}
-                      className={`glass-card rounded-2xl p-7 text-left transition-all duration-300 hover:translate-y-[-4px] hover:border-slate-600 group ${
+                      className={`glass-card rounded-2xl p-6 sm:p-7 text-left transition-all duration-300 hover:translate-y-[-4px] hover:border-slate-600 group w-full ${
                         t.id === 'elite' ? 'border-neonRed/30 bg-neonRed/3 shadow-xl' : ''
                       }`}
                     >
@@ -228,9 +251,9 @@ export const Register = () => {
 
               {/* STEP 2 — Registration Form */}
               {selectedTier && (
-                <div className="max-w-xl mx-auto">
+                <div className="max-w-xl mx-auto w-full">
                   {/* Selected tier badge */}
-                  <div className={`flex items-center gap-3 p-4 rounded-xl border mb-6 ${tier.badgeColor}`}>
+                  <div className={`flex items-center gap-3 p-4 rounded-xl border mb-6 ${tier.badgeColor} w-full`}>
                     <span className="text-2xl">{tier.emoji}</span>
                     <div>
                       <div className={`text-xs font-black uppercase tracking-wider`}>{tier.name}</div>
@@ -238,7 +261,7 @@ export const Register = () => {
                     </div>
                   </div>
 
-                  <div className="glass-card rounded-2xl p-7 relative overflow-hidden">
+                  <div className="glass-card rounded-2xl p-6 sm:p-7 relative overflow-hidden w-full">
                     <div className={`absolute top-0 right-0 w-48 h-48 bg-${tier.color}/4 rounded-full filter blur-3xl pointer-events-none`}></div>
 
                     <h2 className="text-base font-grotesk font-bold text-white mb-5 flex items-center gap-2">
@@ -253,8 +276,15 @@ export const Register = () => {
                           <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
                             <User className="w-3 h-3 inline mr-1" />Full Name <span className="text-neonRed">*</span>
                           </label>
-                          <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="e.g. John Smith"
-                            className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" />
+                          <input 
+                            type="text" 
+                            name="name" 
+                            value={form.name} 
+                            onChange={handleChange} 
+                            placeholder="e.g. John Smith"
+                            required
+                            className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" 
+                          />
                         </div>
 
                         {selectedTier !== 'quick' && (
@@ -262,34 +292,60 @@ export const Register = () => {
                             <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
                               <Building2 className="w-3 h-3 inline mr-1" />Business Name <span className="text-neonRed">*</span>
                             </label>
-                            <input type="text" name="business" value={form.business} onChange={handleChange} placeholder="e.g. Rapid Wrap Sydney"
-                              className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" />
+                            <input 
+                              type="text" 
+                              name="business" 
+                              value={form.business} 
+                              onChange={handleChange} 
+                              placeholder="e.g. Rapid Wrap Sydney"
+                              required
+                              className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" 
+                            />
                           </div>
                         )}
                       </div>
 
                       <div>
                         <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
-                          <Mail className="w-3 h-3 inline mr-1" />Email <span className="text-neonRed">*</span>
+                          <Mail className="w-3 h-3 inline mr-1" />Business Email <span className="text-neonRed">*</span>
                         </label>
-                        <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="john@rapidwrapsydney.com"
-                          className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" />
+                        <input 
+                          type="email" 
+                          name="email" 
+                          value={form.email} 
+                          onChange={handleChange} 
+                          placeholder="john@rapidwrapsydney.com"
+                          required
+                          className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" 
+                        />
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
-                            Country <span className="text-neonRed">*</span>
+                            Country / Territory <span className="text-neonRed">*</span>
                           </label>
-                          <input type="text" name="country" value={form.country} onChange={handleChange} placeholder="e.g. Germany" required
-                            className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" />
+                          <input 
+                            type="text" 
+                            name="country" 
+                            value={form.country} 
+                            onChange={handleChange} 
+                            placeholder="e.g. Australia, USA, UK" 
+                            required
+                            className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" 
+                          />
                         </div>
                         <div>
                           <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
                             Audience Size <span className="text-neonRed">*</span>
                           </label>
-                          <select name="audienceSize" value={form.audienceSize} onChange={handleChange} required
-                            className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs select-none">
+                          <select 
+                            name="audienceSize" 
+                            value={form.audienceSize} 
+                            onChange={handleChange} 
+                            required
+                            className="w-full glass-input rounded-lg p-3 text-slate-100 bg-slate-900 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs select-none"
+                          >
                             <option value="">Select audience size</option>
                             <option value="< 1,000">Less than 1,000</option>
                             <option value="1,000 - 10,000">1,000 to 10,000</option>
@@ -304,27 +360,45 @@ export const Register = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                               <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
-                                <Globe className="w-3 h-3 inline mr-1" />Website
+                                <Globe className="w-3 h-3 inline mr-1" />Website (Optional)
                               </label>
-                              <input type="url" name="website" value={form.website} onChange={handleChange} placeholder="https://yoursite.com"
-                                className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" />
+                              <input 
+                                type="text" 
+                                name="website" 
+                                value={form.website} 
+                                onChange={handleChange} 
+                                placeholder="e.g. rapidwrap.com.au (or leave blank)"
+                                className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" 
+                              />
                             </div>
                             <div>
                               <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
-                                <MapPin className="w-3 h-3 inline mr-1" />Territory / City
+                                <MapPin className="w-3 h-3 inline mr-1" />Protected City / Territory
                                 {selectedTier === 'elite' && <span className="text-neonRed"> *</span>}
                               </label>
-                              <input type="text" name="territory" value={form.territory} onChange={handleChange} placeholder="e.g. Sydney, NSW"
-                                className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" />
+                              <input 
+                                type="text" 
+                                name="territory" 
+                                value={form.territory} 
+                                onChange={handleChange} 
+                                placeholder="e.g. Sydney, NSW (30-Mile Radius)"
+                                className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" 
+                              />
                             </div>
                           </div>
 
                           <div>
                             <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">
-                              <Link2 className="w-3 h-3 inline mr-1" />Referral Code (Optional)
+                              <Link2 className="w-3 h-3 inline mr-1" />Referral / Affiliate Code (Optional)
                             </label>
-                            <input type="text" name="referralCode" value={form.referralCode} onChange={handleChange} placeholder="Who referred you?"
-                              className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs" />
+                            <input 
+                              type="text" 
+                              name="referralCode" 
+                              value={form.referralCode} 
+                              onChange={handleChange} 
+                              placeholder="Who referred you? (e.g. partner-code)"
+                              className="w-full glass-input rounded-lg p-3 text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonCyan text-xs font-mono" 
+                            />
                           </div>
                         </>
                       )}
@@ -336,8 +410,11 @@ export const Register = () => {
                         </div>
                       )}
 
-                      <button type="submit" disabled={loading}
-                        className={`w-full p-4 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-60 mt-2 ${tier.btnColor}`}>
+                      <button 
+                        type="submit" 
+                        disabled={loading}
+                        className={`w-full p-4 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-60 mt-2 ${tier.btnColor}`}
+                      >
                         {loading ? <span>Creating Account...</span> : <>
                           <span>{selectedTier === 'quick' ? '⚡ Get My Link Now' : `Create ${tier.name} Account`}</span>
                           <ChevronRight className="w-4 h-4" />

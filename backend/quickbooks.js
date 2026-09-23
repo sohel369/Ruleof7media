@@ -1,4 +1,4 @@
-﻿const axios = require('axios');
+const axios = require('axios');
 
 const CLIENT_ID = process.env.QUICKBOOKS_CLIENT_ID || 'AByGYa5mP1EHE5VxsgDPYellx2E13OCLBorrOgDQ4PNGxSywch';
 const CLIENT_SECRET = process.env.QUICKBOOKS_CLIENT_SECRET || '8erhvBkwNCbPbuj0GWMlccCPEhgaLH5K0aFXaEOw';

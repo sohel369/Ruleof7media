@@ -171,6 +171,50 @@ const COMPARISON_ROWS = [
 
 const FAQS = [
   {
+    q: 'Q. How much can I earn in affiliate commissions?',
+    summary: 'Rule 7 Media provides wrapping shops with access to potential commission opportunities while they continue to operate their existing wrap businesses. Subject to the affiliate terms, eligibility requirements, customer participation, and successful campaign completion, subscribers may be eligible to earn commissions from advertiser and vehicle-owner subscriptions, subscriptions purchased by other wrapping shops they refer, completed reverse-auction campaigns, and automotive-sector advertising referrals. For a qualifying referred wrapping-shop subscription, the referring shop may be eligible to receive a commission equal to 22% of the subscription amount, subject to the current programme terms, payment status, cancellation or refund rules, and any other eligibility conditions. The amounts below are hypothetical calculations based on stated assumptions; they are not representations of actual, average, typical, or expected participant earnings. Rule 7 Media does not guarantee that any subscriber will earn commissions or recover the subscription cost, and actual earnings may be lower or zero.',
+    details: {
+      intro: 'Your Rule 7 Media subscription is designed to be more than a software cost—it gives your wrapping business access to a new recurring-revenue opportunity, qualified campaign demand, practical education, and CRM and accounting integrations. Affiliate income is not unlimited or guaranteed, because the platform protects value through exclusivity. However, the illustrative earning potential shows how a relatively small number of successful referrals or completed campaigns could offset your subscription and create meaningful additional income alongside the wrap work you already do.',
+      points: [
+        {
+          num: '1',
+          title: 'Recurring advertiser and vehicle-owner subscriptions',
+          desc: 'The platform offers exclusivity across 25 industries within each 30-mile radius. Using current average monthly subscriptions of $180 for an advertiser and $45 for a vehicle owner, the combined monthly value is $225 per industry. At a 22% affiliate commission, that is $49.50 per active industry—or up to an illustrative $1,237.50 per month across all 25 industries.'
+        },
+        {
+          num: '2',
+          title: 'Referred wrapping-shop subscriptions',
+          desc: 'A wrapping shop may also refer another wrapping shop to Rule 7 Media. If the referred shop purchases an eligible subscription and all programme conditions are satisfied, the referring shop may earn a commission equal to 22% of the qualifying subscription amount. For example, if an eligible referred-shop subscription were similar to your own then 5 referrals would more than recover your own subscription. This is a hypothetical calculation only; actual commissions depend on the subscription purchased, attribution, payment status, cancellations, refunds, eligibility, and the current affiliate terms, and may be lower or zero.'
+        },
+        {
+          num: '3',
+          title: 'A practical route to subscription break-even',
+          desc: 'Based on the current model, just over six 12-month campaigns booked over 12 months could cover the cost of your subscription. In other words, the subscription does not need every industry to be filled before it can begin paying for itself.'
+        },
+        {
+          num: '4',
+          title: 'Commission from completed reverse-auction campaigns',
+          desc: 'Buyers and sellers pay a final auction fee. A typical 12-month campaign may settle at around $24,000, although actual values may be higher or lower. On the examples provided, each completed auction could generate an affiliate commission of approximately $264 to $528. One completed auction in each of 25 industries would equate to an illustrative total of $6,600 to $13,200.'
+        },
+        {
+          num: '5',
+          title: 'Additional automotive-sector advertising income',
+          desc: 'You can also recruit advertisers across 19 dedicated automotive sectors. At an illustrative $100 per monthly placement, the full opportunity would represent $1,900 in monthly placements and a potential 22% affiliate commission of $418 per month.'
+        }
+      ],
+      benefitsHeading: 'Why the subscription can represent a low commercial risk',
+      benefits: [
+        'You keep focusing on your core business: selling and delivering vehicle wraps.',
+        'You gain access to a new market: advertisers and vehicle owners seeking campaign-ready wrapping services.',
+        'You have several ways to recover the subscription cost: recurring subscriptions, completed auctions, and automotive advertising referrals.',
+        'You receive tools that support conversion and administration: education, CRM capability, and accounting integrations.',
+        'The upside can continue after break-even: once commissions have covered the subscription, further qualifying income may contribute directly to business growth.'
+      ],
+      summaryConclusion: 'Put simply: Rule 7 Media is intended to help a wrapping shop turn activity it already performs—winning wrap work, speaking with vehicle owners, and building advertiser relationships—into additional commission opportunities. The examples above illustrate how the subscription may be recovered with a modest number of successful campaigns while leaving substantial upside if adoption grows.',
+      disclaimer: 'All figures are examples only, are stated in USD, and are not guarantees of earnings. Actual results will depend on sales activity, campaign values, advertiser and vehicle-owner participation, auction outcomes, territory, and other factors. Other territories are priced pro rata in EUR, CAD, GBP, AUD, JPY, CNY, and additional supported currencies.'
+    }
+  },
+  {
     q: 'Do I have to buy the video series to use the dashboard?',
     a: 'No. The series is completely optional. You can start with any plan and add the branded, unbranded or fully bespoke version later.'
   },
@@ -236,6 +280,7 @@ export const Pricing = () => {
 
   // FAQ open states
   const [openFaq, setOpenFaq] = useState(null);
+  const [faqDetailsExpanded, setFaqDetailsExpanded] = useState(false);
 
   // Billing details form
   const [billing, setBilling] = useState({
@@ -371,18 +416,18 @@ export const Pricing = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-darkBg text-white flex flex-col font-sans selection:bg-neonRed selection:text-white pb-16">
+    <div className="min-h-screen bg-darkBg text-white flex flex-col font-sans selection:bg-neonRed selection:text-white pb-16 w-full max-w-full overflow-x-hidden relative">
 
       {/* Nav */}
-      <nav className="fixed top-0 w-full z-50 py-4 px-6 flex justify-between items-center bg-darkBg/90 backdrop-blur-md border-b border-slate-900">
+      <nav className="fixed top-0 left-0 right-0 w-full z-50 py-3.5 px-4 sm:px-6 flex justify-between items-center bg-darkBg/95 backdrop-blur-md border-b border-slate-900 max-w-full">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
           <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-black text-white shadow-lg">R</div>
           <span className="font-grotesk font-bold text-xl tracking-tight">Rule7<span className="text-neonRed">Media</span></span>
         </div>
-        <div className="flex items-center gap-5 text-xs font-semibold">
+        <div className="flex items-center gap-3 sm:gap-5 text-xs font-semibold">
           {step !== 'plans' && (
             <button onClick={handleBack} className="text-slate-400 hover:text-white transition-colors flex items-center gap-1">
-              ← Back to Plans
+              ← Back
             </button>
           )}
           <a 
@@ -414,14 +459,14 @@ export const Pricing = () => {
         <div className="pt-20">
 
           {/* Hero Section */}
-          <section className="relative pt-12 pb-16 px-6 overflow-hidden border-b border-slate-900/80">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-neonRed/10 rounded-full filter blur-[100px] pointer-events-none"></div>
-            <div className="absolute top-24 right-1/4 w-[400px] h-[250px] bg-neonCyan/10 rounded-full filter blur-[120px] pointer-events-none"></div>
+          <section className="relative pt-12 pb-16 px-4 sm:px-6 overflow-hidden border-b border-slate-900/80 w-full max-w-full">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] max-w-full h-[300px] bg-neonRed/10 rounded-full filter blur-[100px] pointer-events-none"></div>
+            <div className="absolute top-24 right-0 sm:right-1/4 w-[320px] sm:w-[400px] max-w-full h-[250px] bg-neonCyan/10 rounded-full filter blur-[120px] pointer-events-none"></div>
 
-            <div className="max-w-4xl mx-auto text-center relative z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neonRed/10 border border-neonRed/30 text-neonRed text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Rule7 Dashboard for Signwriters & Vehicle Wrapping Businesses</span>
+            <div className="max-w-4xl mx-auto text-center relative z-10 w-full">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neonRed/10 border border-neonRed/30 text-neonRed text-xs font-bold uppercase tracking-widest mb-6 shadow-sm max-w-full">
+                <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="truncate">Rule7 Dashboard for Signwriters & Vehicle Wrapping Businesses</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-grotesk font-black text-white tracking-tight leading-[1.15] mb-6">
@@ -441,7 +486,7 @@ export const Pricing = () => {
               </div>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10 w-full">
                 <button
                   onClick={scrollToPlans}
                   className="w-full sm:w-auto px-8 py-4 bg-neonRed hover:bg-neonRed/90 text-white font-bold text-sm rounded-xl transition-all shadow-xl glow-pink flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
@@ -470,7 +515,7 @@ export const Pricing = () => {
               </div>
 
               {/* Advantage Strip */}
-              <div className="pt-6 border-t border-slate-800/80">
+              <div className="pt-6 border-t border-slate-800/80 w-full">
                 <div className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
                   <span className="text-white">Educate the Customer</span>
                   <span className="text-slate-600">·</span>
@@ -487,8 +532,8 @@ export const Pricing = () => {
           </section>
 
           {/* Section: Why Rule7 is the Complete Ecosystem (5 Advantages) */}
-          <section className="py-16 px-6 bg-slate-950/40 border-b border-slate-900">
-            <div className="max-w-6xl mx-auto">
+          <section className="py-16 px-4 sm:px-6 bg-slate-950/40 border-b border-slate-900 overflow-hidden w-full max-w-full">
+            <div className="max-w-6xl mx-auto w-full">
               <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="text-xs font-bold uppercase tracking-widest text-neonCyan px-3 py-1 bg-neonCyan/10 rounded-full border border-neonCyan/20">
                   Unrivalled Advantages
@@ -578,8 +623,8 @@ export const Pricing = () => {
           </section>
 
           {/* Section: Pricing Plans */}
-          <section id="pricing-plans-grid" className="py-20 px-6 relative">
-            <div className="max-w-7xl mx-auto">
+          <section id="pricing-plans-grid" className="py-20 px-4 sm:px-6 relative overflow-hidden w-full max-w-full">
+            <div className="max-w-7xl mx-auto w-full">
               <div className="text-center max-w-3xl mx-auto mb-8">
                 <span className="text-xs font-bold uppercase tracking-widest text-neonRed px-3 py-1 bg-neonRed/10 rounded-full border border-neonRed/20">
                   Transparent Pricing
@@ -598,7 +643,7 @@ export const Pricing = () => {
                   <Globe className="w-3.5 h-3.5 text-neonCyan" />
                   Select Your Currency:
                 </span>
-                <div className="inline-flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl">
+                <div className="inline-flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl flex-wrap justify-center">
                   {Object.entries(CURRENCIES).map(([k, c]) => (
                     <button
                       key={k}
@@ -725,8 +770,8 @@ export const Pricing = () => {
           </section>
 
           {/* Section: Optional Add-On: Own the Education Series */}
-          <section className="py-16 px-6 bg-slate-950/60 border-y border-slate-900">
-            <div className="max-w-6xl mx-auto">
+          <section className="py-16 px-4 sm:px-6 bg-slate-950/60 border-y border-slate-900 overflow-hidden w-full max-w-full">
+            <div className="max-w-6xl mx-auto w-full">
               <div className="text-center max-w-3xl mx-auto mb-10">
                 <span className="text-xs font-bold uppercase tracking-widest text-neonCyan px-3 py-1 bg-neonCyan/10 rounded-full border border-neonCyan/20">
                   Optional Add-On
@@ -866,8 +911,8 @@ export const Pricing = () => {
           )}
 
           {/* Section: How Rule7 Compares (Comparison Table) */}
-          <section className="py-20 px-6">
-            <div className="max-w-5xl mx-auto">
+          <section className="py-20 px-4 sm:px-6 overflow-hidden w-full max-w-full">
+            <div className="max-w-5xl mx-auto w-full">
               <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="text-xs font-bold uppercase tracking-widest text-neonCyan px-3 py-1 bg-neonCyan/10 rounded-full border border-neonCyan/20">
                   Comprehensive Comparison
@@ -881,9 +926,9 @@ export const Pricing = () => {
               </div>
 
               {/* Table wrapper */}
-              <div className="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
+              <div className="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-2xl w-full max-w-full">
+                <div className="overflow-x-auto w-full max-w-full">
+                  <table className="w-full min-w-[600px] text-left border-collapse">
                     <thead>
                       <tr className="border-b border-slate-800 bg-slate-900/80">
                         <th className="p-4 text-xs font-bold uppercase tracking-wider text-slate-300 w-2/5">
@@ -923,7 +968,7 @@ export const Pricing = () => {
               </div>
 
               {/* Key Takeaway Card */}
-              <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-neonRed/10 via-slate-900 to-neonCyan/10 border border-slate-800 relative overflow-hidden">
+              <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-neonRed/10 via-slate-900 to-neonCyan/10 border border-slate-800 relative overflow-hidden w-full max-w-full">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-neonRed/20 border border-neonRed/40 flex items-center justify-center text-neonRed flex-shrink-0 mt-0.5">
                     <Sparkles className="w-5 h-5" />
@@ -940,8 +985,8 @@ export const Pricing = () => {
           </section>
 
           {/* Section: Frequently Asked Questions */}
-          <section className="py-16 px-6 bg-slate-950/40 border-t border-slate-900">
-            <div className="max-w-4xl mx-auto">
+          <section className="py-16 px-4 sm:px-6 bg-slate-950/40 border-t border-slate-900 overflow-hidden w-full max-w-full">
+            <div className="max-w-4xl mx-auto w-full">
               <div className="text-center max-w-2xl mx-auto mb-12">
                 <span className="text-xs font-bold uppercase tracking-widest text-neonCyan px-3 py-1 bg-neonCyan/10 rounded-full border border-neonCyan/20">
                   Got Questions?
@@ -957,6 +1002,8 @@ export const Pricing = () => {
               <div className="space-y-3">
                 {FAQS.map((faq, idx) => {
                   const isOpen = openFaq === idx;
+                  const hasDetails = Boolean(faq.details);
+
                   return (
                     <div
                       key={idx}
@@ -968,12 +1015,83 @@ export const Pricing = () => {
                         onClick={() => setOpenFaq(isOpen ? null : idx)}
                         className="w-full p-4 sm:p-5 text-left flex justify-between items-center gap-4 text-xs sm:text-sm font-bold text-white hover:text-neonCyan transition-colors"
                       >
-                        <span>{faq.q}</span>
+                        <span className="flex items-center gap-2">
+                          {hasDetails && <Sparkles className="w-4 h-4 text-neonGreen flex-shrink-0" />}
+                          {faq.q}
+                        </span>
                         <ChevronDown className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-neonCyan' : ''}`} />
                       </button>
+
                       {isOpen && (
-                        <div className="px-4 pb-5 sm:px-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
-                          {faq.a}
+                        <div className="px-4 pb-5 sm:px-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-4 space-y-4">
+                          {/* Main answer / summary */}
+                          <p>{faq.summary || faq.a}</p>
+
+                          {/* Expandable Rich Details for Affiliate FAQ */}
+                          {hasDetails && (
+                            <div className="pt-2">
+                              <button
+                                type="button"
+                                onClick={() => setFaqDetailsExpanded(p => !p)}
+                                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-neonGreen/10 hover:bg-neonGreen/20 text-neonGreen text-xs font-bold border border-neonGreen/30 transition-all"
+                              >
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span>{faqDetailsExpanded ? 'Hide Detailed Breakdown' : 'More Detail (Expandable Breakdown)'}</span>
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${faqDetailsExpanded ? 'rotate-180' : ''}`} />
+                              </button>
+
+                              {faqDetailsExpanded && (
+                                <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                  {/* Intro */}
+                                  <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-300 text-xs leading-relaxed">
+                                    {faq.details.intro}
+                                  </div>
+
+                                  {/* 5 Earning Potential Points */}
+                                  <div className="space-y-3">
+                                    {faq.details.points.map((pt) => (
+                                      <div key={pt.num} className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex items-start gap-3">
+                                        <div className="w-6 h-6 rounded-lg bg-neonCyan/20 text-neonCyan font-black text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                                          {pt.num}
+                                        </div>
+                                        <div>
+                                          <strong className="text-white block font-bold mb-1 text-xs">{pt.title}</strong>
+                                          <p className="text-slate-300 text-[11px] leading-relaxed">{pt.desc}</p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+
+                                  {/* Why low commercial risk */}
+                                  <div className="p-4 rounded-xl bg-neonGreen/5 border border-neonGreen/20 space-y-2.5">
+                                    <h4 className="text-xs font-black uppercase tracking-wider text-neonGreen flex items-center gap-1.5">
+                                      <Shield className="w-4 h-4" />
+                                      {faq.details.benefitsHeading}
+                                    </h4>
+                                    <ul className="space-y-1.5 pl-1">
+                                      {faq.details.benefits.map((b, bi) => (
+                                        <li key={bi} className="flex items-start gap-2 text-[11px] text-slate-200">
+                                          <CheckCircle2 className="w-3.5 h-3.5 text-neonGreen flex-shrink-0 mt-0.5" />
+                                          <span>{b}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+
+                                  {/* Put simply summary */}
+                                  <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-300 text-xs leading-relaxed italic">
+                                    {faq.details.summaryConclusion}
+                                  </div>
+
+                                  {/* Pro-rata Currency & Disclaimer */}
+                                  <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-800 text-[10px] text-slate-400 leading-relaxed flex items-start gap-2">
+                                    <AlertCircle className="w-3.5 h-3.5 text-slate-400 flex-shrink-0 mt-0.5" />
+                                    <span>{faq.details.disclaimer}</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -984,10 +1102,10 @@ export const Pricing = () => {
           </section>
 
           {/* Section: Why This Matters */}
-          <section className="py-16 px-6 border-t border-slate-900 relative overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-neonRed/5 rounded-full filter blur-[100px] pointer-events-none"></div>
+          <section className="py-16 px-4 sm:px-6 border-t border-slate-900 relative overflow-hidden w-full max-w-full">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-neonRed/5 rounded-full filter blur-[100px] pointer-events-none"></div>
 
-            <div className="max-w-4xl mx-auto glass-card p-8 sm:p-12 rounded-3xl border border-slate-800 relative z-10 text-center">
+            <div className="max-w-4xl mx-auto glass-card p-6 sm:p-12 rounded-3xl border border-slate-800 relative z-10 text-center w-full">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-[11px] font-bold uppercase tracking-wider mb-4">
                 The Rule7 Difference
               </div>
@@ -1019,7 +1137,7 @@ export const Pricing = () => {
           </section>
 
           {/* Footer Trust Line */}
-          <div className="py-8 px-6 text-center border-t border-slate-900 bg-slate-950">
+          <div className="py-8 px-4 sm:px-6 text-center border-t border-slate-900 bg-slate-950 overflow-hidden w-full max-w-full">
             <p className="text-xs text-slate-400 font-medium">
               No hidden fees. Built exclusively for Signwriters and Vehicle Wrapping Businesses.
             </p>
@@ -1033,7 +1151,7 @@ export const Pricing = () => {
 
       {/* STEP 2: Subscription Details */}
       {step === 'details' && selectedPlan && (
-        <div className="flex-1 max-w-4xl w-full mx-auto px-6 pb-16 pt-24">
+        <div className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 pb-16 pt-24 overflow-hidden">
           <div className="text-center mb-8">
             <span className={`text-xs font-bold uppercase tracking-widest text-${selectedPlan.color} px-3 py-1 bg-${selectedPlan.color}/10 rounded-full border border-${selectedPlan.color}/20`}>
               {selectedPlan.name}

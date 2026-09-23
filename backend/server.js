@@ -10,8 +10,9 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_place
 const db = require('./db');
 const { calculateScore } = require('./scoring');
 const { sendEmail, getCredentials } = require('./mailer');
-const { geocodeAddress } = require('./utils');
+const { geocodeAddress, getIpGeoLocation, detectLocationMismatch } = require('./utils');
 const quickbooks = require('./quickbooks');
+const sage = require('./sage');
 
 const app = express();
 const server = http.createServer(app);
@@ -63,16 +64,23 @@ app.get('/api/leads', async (req, res) => {
   try {
     const { refId, assignedAffiliateId, stage, industry, search } = req.query;
     const result = await db.query('SELECT * FROM leads');
-      let leads = result.rows.map(row => ({
-        ...(row.extra_data || {}),
-        ...row,
-        name: row.client_name || row.name,
-        email: row.client_email || row.email,
-        company: row.client_business_name || row.company,
-        assignedAffiliateId: row.assigned_affiliate_id,
-        refId: row.ref_id,
-        leadId: row.legacy_lead_id || row.lead_id
-      }));
+      let leads = result.rows.map(row => {
+        const extra = typeof row.extra_data === 'string' ? JSON.parse(row.extra_data) : (row.extra_data || {});
+        return {
+          ...extra,
+          ...row,
+          name: row.client_name || extra.name || row.name,
+          email: row.client_email || extra.email || row.email,
+          company: row.client_business_name || extra.company || row.company,
+          assignedAffiliateId: row.assigned_affiliate_id,
+          refId: row.ref_id,
+          leadId: row.legacy_lead_id || row.lead_id,
+          ipCountry: row.ip_country || extra.ipCountry,
+          ipCity: row.ip_city || extra.ipCity,
+          isMismatch: row.is_mismatch !== undefined && row.is_mismatch !== null ? row.is_mismatch : (extra.isMismatch || false),
+          mismatchAlert: row.mismatch_alert || extra.mismatchAlert || ''
+        };
+      });
     
     // Filtering
     if (refId) {
@@ -127,7 +135,11 @@ app.get('/api/leads/:id', async (req, res) => {
       phone: row.client_phone || extra.phone || row.phone,
       assignedAffiliateId: row.assigned_affiliate_id,
       refId: row.ref_id,
-      leadId: row.legacy_lead_id || row.lead_id
+      leadId: row.legacy_lead_id || row.lead_id,
+      ipCountry: row.ip_country || extra.ipCountry,
+      ipCity: row.ip_city || extra.ipCity,
+      isMismatch: row.is_mismatch !== undefined && row.is_mismatch !== null ? row.is_mismatch : (extra.isMismatch || false),
+      mismatchAlert: row.mismatch_alert || extra.mismatchAlert || ''
     };
     
     // Add dynamic live breakdown just in case
@@ -205,20 +217,38 @@ app.get('/api/leads/:id', async (req, res) => {
             }
          }
 
-         const extraData = JSON.stringify(data);
-         await db.query(
-           `INSERT INTO leads (legacy_lead_id, client_name, client_email, client_business_name, assigned_affiliate_id, ref_id, extra_data, client_lat, client_lon, domain)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-            ON CONFLICT (legacy_lead_id) DO UPDATE SET 
-              client_name = EXCLUDED.client_name, 
-              client_email = EXCLUDED.client_email, 
-              client_business_name = EXCLUDED.client_business_name,
-              assigned_affiliate_id = COALESCE(leads.assigned_affiliate_id, EXCLUDED.assigned_affiliate_id),
-              ref_id = EXCLUDED.ref_id,
-              extra_data = EXCLUDED.extra_data,
-              domain = COALESCE(leads.domain, EXCLUDED.domain)`,
-           [leadId, data.name, data.email, data.company || '', assigned_affiliate_id, data.refId || data.ref || null, extraData, client_lat, client_lon, domain]
-         );
+          // IP Geolocation and Mismatch Detection
+          const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.headers['x-real-ip'] || req.socket.remoteAddress || req.ip || '127.0.0.1';
+          const ipGeo = await getIpGeoLocation(clientIp);
+          const locationCheck = detectLocationMismatch(data.country ? `${data.state || ''}, ${data.country}` : data.state, ipGeo);
+
+          const extraData = JSON.stringify({
+            ...data,
+            ipAddress: ipGeo.ip,
+            ipCountry: ipGeo.country,
+            ipCity: ipGeo.city,
+            isMismatch: locationCheck.isMismatch,
+            mismatchAlert: locationCheck.alertMessage
+          });
+
+          await db.query(
+            `INSERT INTO leads (legacy_lead_id, client_name, client_email, client_business_name, assigned_affiliate_id, ref_id, extra_data, client_lat, client_lon, domain, ip_address, ip_country, ip_city, is_mismatch, mismatch_alert)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+             ON CONFLICT (legacy_lead_id) DO UPDATE SET 
+               client_name = EXCLUDED.client_name, 
+               client_email = EXCLUDED.client_email, 
+               client_business_name = EXCLUDED.client_business_name,
+               assigned_affiliate_id = COALESCE(leads.assigned_affiliate_id, EXCLUDED.assigned_affiliate_id),
+               ref_id = EXCLUDED.ref_id,
+               extra_data = EXCLUDED.extra_data,
+               domain = COALESCE(leads.domain, EXCLUDED.domain),
+               ip_address = EXCLUDED.ip_address,
+               ip_country = EXCLUDED.ip_country,
+               ip_city = EXCLUDED.ip_city,
+               is_mismatch = EXCLUDED.is_mismatch,
+               mismatch_alert = EXCLUDED.mismatch_alert`,
+            [leadId, data.name, data.email, data.company || '', assigned_affiliate_id, data.refId || data.ref || null, extraData, client_lat, client_lon, domain, ipGeo.ip, ipGeo.country, ipGeo.city, locationCheck.isMismatch, locationCheck.alertMessage]
+          );
       }
 
       // Send Gmail Notification on completion (Step 7 or Step 8 / Strategy Session)
@@ -435,20 +465,30 @@ app.post('/api/affiliates/apply', async (req, res) => {
       }
     }
 
+    // Extract IP Geolocation and Mismatch Detection
+    const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.headers['x-real-ip'] || req.socket.remoteAddress || req.ip || '127.0.0.1';
+    const ipGeo = await getIpGeoLocation(clientIp);
+    const locationCheck = detectLocationMismatch(country !== 'Global' ? `${territory}, ${country}` : territory, ipGeo);
+
     const insertResult = await db.query(
-      `INSERT INTO affiliates (code, name, company, email, website, territory, country, audience_size, tier, lat, lon)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
-      [code, name, company, email, website || '', territory || 'Global', country || 'Global', audienceSize || '< 1,000', tier || 'Starter', lat, lon]
+      `INSERT INTO affiliates (code, name, company, email, website, territory, country, audience_size, tier, lat, lon, ip_address, ip_country, ip_city, is_mismatch, mismatch_alert)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`,
+      [code, name, company, email, website || '', territory || 'Global', country || 'Global', audienceSize || '< 1,000', tier || 'Starter', lat, lon, ipGeo.ip, ipGeo.country, ipGeo.city, locationCheck.isMismatch, locationCheck.alertMessage]
     );
     const newAffiliate = insertResult.rows[0];
 
-    // Notify CRM Admin of new affiliate application
+    // Notify CRM Admin of new affiliate application with IP telemetry
     io.emit('new_lead', {
       event: 'partner_application',
       code: newAffiliate.code,
       name: newAffiliate.name,
       company: newAffiliate.company,
       email: newAffiliate.email,
+      territory: newAffiliate.territory,
+      ipCountry: ipGeo.country,
+      ipCity: ipGeo.city,
+      isMismatch: locationCheck.isMismatch,
+      mismatchAlert: locationCheck.alertMessage,
       timestamp: new Date()
     });
 
@@ -735,6 +775,33 @@ app.get('/api/accounting/quickbooks/status', (req, res) => {
 app.post('/api/accounting/quickbooks/push-quote', async (req, res) => {
   try {
     const result = await quickbooks.pushQuoteToQuickBooks(req.body);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 13. Sage Accounting OAuth & Sync Endpoints
+app.get('/api/accounting/sage/auth-url', (req, res) => {
+  const url = sage.getAuthorizationUrl(req.query.state || 'rule7_partner');
+  res.json({ success: true, url });
+});
+
+app.get('/api/accounting/sage/callback', async (req, res) => {
+  const { code } = req.query;
+  if (code) {
+    await sage.exchangeAuthCode(code);
+  }
+  res.redirect('/partner/dashboard?sage_connected=true');
+});
+
+app.get('/api/accounting/sage/status', (req, res) => {
+  res.json(sage.getStatus());
+});
+
+app.post('/api/accounting/sage/push-quote', async (req, res) => {
+  try {
+    const result = await sage.pushQuoteToSage(req.body);
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });

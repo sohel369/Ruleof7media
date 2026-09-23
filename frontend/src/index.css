@@ -14,13 +14,21 @@
     --glow-pink: 0 0 20px rgba(255, 51, 153, 0.2);
   }
 
+  html, body, #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+    position: relative;
+    box-sizing: border-box;
+  }
+
   body {
     background-color: #040409;
     background-image: 
       radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.03) 0%, transparent 40%),
       radial-gradient(circle at 90% 80%, rgba(181, 95, 230, 0.03) 0%, transparent 40%);
     background-attachment: fixed;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
   }
 
   /* Custom Webkit scrollbars */

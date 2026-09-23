@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useSocket } from '../context/SocketContext';
 import { 
@@ -6,9 +6,62 @@ import {
 } from 'recharts';
 import { 
   Users, BarChart3, TrendingUp, DollarSign, Search, Shield, Filter, MapPin, 
-  ChevronRight, Calendar, ArrowUpRight, Zap, RefreshCw, Send, CheckCircle2, Lock, Eye
+  ChevronRight, ChevronDown, Calendar, ArrowUpRight, Zap, RefreshCw, Send, CheckCircle2, Lock, Eye,
+  Flame, Sparkles, HelpCircle, Menu, X, LogOut, Phone, Mail
 } from 'lucide-react';
 import { GlobalFooter } from '../components/GlobalFooter';
+
+// 25 Local Industry Categories
+const LOCAL_INDUSTRIES = [
+  "Trades & Home Services (Plumbing, Electrical, HVAC, Roofing)",
+  "Storage, Logistics and Removalists",
+  "Automotive Services & Detailing",
+  "IT, Cyber & Tech Support Services",
+  "Retail, Commercial & Hospitality",
+  "Health, Medical & Fitness Clinics",
+  "Real Estate & Property Management",
+  "Construction, Scaffolding & Civil Works",
+  "Landscaping, Tree Lopping & Fencing",
+  "Cleaning & Facility Services",
+  "Security, Locksmiths & Fire Safety",
+  "Catering, Events & Mobile Hospitality",
+  "Pest Control & Hygiene Services",
+  "Legal, Accounting & Financial Advisory",
+  "Solar, Energy & Electrical Infrastructure",
+  "Waste Management & Recycling",
+  "Veterinary & Mobile Pet Services",
+  "Painting & Surface Coating",
+  "Glazing, Windows & Doors",
+  "Telecommunications & Network Cabling",
+  "Heavy Equipment & Machinery Hire",
+  "Agriculture, Farming & Rural Services",
+  "Marine & Boating Services",
+  "Education, Tutoring & Training",
+  "Transportation, Couriers & Last-Mile Delivery"
+];
+
+// 19 Automotive Sector Niches
+const AUTOMOTIVE_SECTORS = [
+  "Vehicle Dealerships (New & Used)",
+  "Mechanical Workshops & Auto Repair",
+  "Panel Beating & Smash Repairs",
+  "Auto Detailing & Paint Protection (PPF)",
+  "Tyre, Wheel & Alignment Centres",
+  "Auto Electrical & Diagnostic Specialists",
+  "Windscreen & Auto Glass Replacement",
+  "Towing & Roadside Emergency Fleets",
+  "Performance, Tuning & Dyno Tuning",
+  "Car Audio, Security & Accessories",
+  "4WD, Off-Road & Camping Fitouts",
+  "Commercial Fleet Maintenance & Management",
+  "Car Rental, Hire & Share Fleets",
+  "Mobile Mechanics & On-Site Servicing",
+  "Auto Dismantlers & Recyclers",
+  "Mufflers, Exhausts & Brakes Specialists",
+  "Transmission & Drivetrain Centres",
+  "Air Conditioning & Heating Auto Services",
+  "Motorcycle & Powersports Dealerships"
+];
 
 export const Admin = () => {
   const navigate = useNavigate();
@@ -20,6 +73,7 @@ export const Admin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('r7_admin_logged_in') === 'true');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const loggedInPartnerCode = '';
 
   // Core Data States
@@ -32,6 +86,27 @@ export const Admin = () => {
   const [filterStage, setFilterStage] = useState('');
   const [filterIndustry, setFilterIndustry] = useState('');
   const [filterAffiliate, setFilterAffiliate] = useState('');
+  const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false);
+  const [industrySearchTerm, setIndustrySearchTerm] = useState('');
+  const industryDropdownRef = useRef(null);
+
+  // Close custom dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (industryDropdownRef.current && !industryDropdownRef.current.contains(e.target)) {
+        setIsIndustryDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredIndustriesList = LOCAL_INDUSTRIES.filter(ind => 
+    ind.toLowerCase().includes(industrySearchTerm.toLowerCase())
+  );
+  const filteredAutoList = AUTOMOTIVE_SECTORS.filter(sec => 
+    sec.toLowerCase().includes(industrySearchTerm.toLowerCase())
+  );
 
   // Webhook Simulation state
   const [webhookUrl, setWebhookUrl] = useState('https://api.rapidwrapsydney.com.au/crm/webhook-catch');
@@ -192,16 +267,85 @@ export const Admin = () => {
     }
   }, [isLoggedIn, path]);
 
+  // Helper: 100-Point Lead Scoring Priority Tier Badges
+  const getStageInfo = (score, stage) => {
+    const numScore = Number(score) || 0;
+    if (numScore >= 85 || stage === 'Hot') {
+      return {
+        label: 'Hot Priority',
+        badge: 'bg-neonRed/15 text-neonRed border-neonRed/30',
+        icon: '🔥',
+        pointsText: '85-100 pts',
+        tierName: 'Hot'
+      };
+    }
+    if (numScore >= 70 || stage === 'Warm High') {
+      return {
+        label: 'Warm High',
+        badge: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+        icon: '⚡',
+        pointsText: '70-84 pts',
+        tierName: 'Warm High'
+      };
+    }
+    if (numScore >= 55 || stage === 'Warm') {
+      return {
+        label: 'Warm',
+        badge: 'bg-neonGreen/15 text-neonGreen border-neonGreen/30',
+        icon: '🌿',
+        pointsText: '55-69 pts',
+        tierName: 'Warm'
+      };
+    }
+    if (numScore >= 35 || stage === 'Cool') {
+      return {
+        label: 'Cool',
+        badge: 'bg-neonCyan/15 text-neonCyan border-neonCyan/30',
+        icon: '❄️',
+        pointsText: '35-54 pts',
+        tierName: 'Cool'
+      };
+    }
+    return {
+      label: 'Low',
+      badge: 'bg-slate-800/80 text-slate-400 border-slate-700',
+      icon: '⚪',
+      pointsText: '< 35 pts',
+      tierName: 'Low'
+    };
+  };
+
   // Filter leads — if partner logged in, show ONLY their leads
   const effectiveAffiliateFilter = loggedInPartnerCode || filterAffiliate;
   const filteredLeads = leads.filter(l => {
     const searchMatch = !searchTerm || 
       (l.name && l.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (l.company && l.company.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (l.email && l.email.toLowerCase().includes(searchTerm.toLowerCase()));
+      (l.email && l.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (l.phone && l.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (l.industry && l.industry.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (l.serviceTerritories && l.serviceTerritories.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    const stageMatch = !filterStage || l.stage === filterStage;
-    const industryMatch = !filterIndustry || l.industry === filterIndustry;
+    // 100-Point Lead Score Tier Matching
+    const stageMatch = !filterStage || (() => {
+      const score = Number(l.score) || 0;
+      if (filterStage === 'Hot') return score >= 85 || l.stage === 'Hot';
+      if (filterStage === 'Warm High') return (score >= 70 && score < 85) || l.stage === 'Warm High';
+      if (filterStage === 'Warm') return (score >= 55 && score < 70) || l.stage === 'Warm';
+      if (filterStage === 'Cool') return (score >= 35 && score < 55) || l.stage === 'Cool';
+      if (filterStage === 'Low' || filterStage === 'Cold') return score < 35 || l.stage === 'Low' || l.stage === 'Cold';
+      return l.stage === filterStage;
+    })();
+
+    // 25 Industries & 19 Automotive Sectors Flexible Matching
+    const industryMatch = !filterIndustry || (() => {
+      if (!l.industry) return false;
+      const leadInd = l.industry.toLowerCase();
+      const targetInd = filterIndustry.toLowerCase();
+      const cleanTarget = targetInd.split('(')[0].trim().toLowerCase();
+      return leadInd.includes(cleanTarget) || cleanTarget.includes(leadInd) || leadInd.includes(targetInd);
+    })();
+
     const affiliateMatch = !effectiveAffiliateFilter || l.refId === effectiveAffiliateFilter || l.assignedAffiliateId === effectiveAffiliateFilter;
     
     return searchMatch && stageMatch && industryMatch && affiliateMatch;
@@ -212,7 +356,7 @@ export const Admin = () => {
   const avgScore = totalLeads > 0 
     ? Math.round(leads.reduce((sum, l) => sum + (l.score || 0), 0) / totalLeads)
     : 0;
-  const hotLeadsCount = leads.filter(l => l.stage === 'Hot').length;
+  const hotLeadsCount = leads.filter(l => (Number(l.score) || 0) >= 70 || l.stage === 'Hot' || l.stage === 'Warm High').length;
   const conversionRate = totalLeads > 0 
     ? ((leads.filter(l => l.status === 'Completed').length / totalLeads) * 100).toFixed(1)
     : '0.0';
@@ -221,19 +365,17 @@ export const Admin = () => {
   // Recharts Chart Formatter: Funnel Completion rates per video
   const funnelStepsData = [
     { name: 'Video 1', rate: 100 },
-    { name: 'Video 2', rate: Math.round((leads.filter(l => l.status === 'Completed' || l.status.match(/Video [2-7] Complete/)).length / totalLeads) * 100) || 0 },
-    { name: 'Video 3', rate: Math.round((leads.filter(l => l.status === 'Completed' || l.status.match(/Video [3-7] Complete/)).length / totalLeads) * 100) || 0 },
-    { name: 'Video 4', rate: Math.round((leads.filter(l => l.status === 'Completed' || l.status.match(/Video [4-7] Complete/)).length / totalLeads) * 100) || 0 },
-    { name: 'Video 5', rate: Math.round((leads.filter(l => l.status === 'Completed' || l.status.match(/Video [5-7] Complete/)).length / totalLeads) * 100) || 0 },
-    { name: 'Video 6', rate: Math.round((leads.filter(l => l.status === 'Completed' || l.status.match(/Video [6-7] Complete/)).length / totalLeads) * 100) || 0 },
-    { name: 'Video 7', rate: Math.round((leads.filter(l => l.status === 'Completed').length / totalLeads) * 100) || 0 }
+    { name: 'Video 2', rate: Math.round((leads.filter(l => l.status === 'Completed' || (l.status && l.status.match(/Video [2-7] Complete/))).length / (totalLeads || 1)) * 100) || 0 },
+    { name: 'Video 3', rate: Math.round((leads.filter(l => l.status === 'Completed' || (l.status && l.status.match(/Video [3-7] Complete/))).length / (totalLeads || 1)) * 100) || 0 },
+    { name: 'Video 4', rate: Math.round((leads.filter(l => l.status === 'Completed' || (l.status && l.status.match(/Video [4-7] Complete/))).length / (totalLeads || 1)) * 100) || 0 },
+    { name: 'Video 5', rate: Math.round((leads.filter(l => l.status === 'Completed' || (l.status && l.status.match(/Video [5-7] Complete/))).length / (totalLeads || 1)) * 100) || 0 },
+    { name: 'Video 6', rate: Math.round((leads.filter(l => l.status === 'Completed' || (l.status && l.status.match(/Video [6-7] Complete/))).length / (totalLeads || 1)) * 100) || 0 },
+    { name: 'Video 7', rate: Math.round((leads.filter(l => l.status === 'Completed').length / (totalLeads || 1)) * 100) || 0 }
   ];
 
-  // Colors for scoring labels
+  // Legacy fallback
   const getStageColor = (stage) => {
-    if (stage === 'Hot') return 'text-neonRed bg-neonRed/10 border-neonRed/20';
-    if (stage === 'Warm') return 'text-neonAmber bg-neonAmber/10 border-neonAmber/20';
-    return 'text-neonBlue bg-neonBlue/10 border-neonBlue/20';
+    return getStageInfo(0, stage).badge;
   };
 
   // Render Login Panel
@@ -338,30 +480,90 @@ export const Admin = () => {
       </aside>
 
       {/* Main body wrapper */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
         
         {/* Top Header bar */}
-        <header className="glass-card border-x-0 border-t-0 py-4 px-6 flex justify-between items-center bg-darkSecondary/40 backdrop-blur-md">
+        <header className="glass-card border-x-0 border-t-0 py-3.5 px-4 sm:px-6 flex justify-between items-center bg-darkSecondary/60 backdrop-blur-md sticky top-0 z-40">
           <div className="flex items-center gap-3">
-            <h2 className="font-grotesk font-bold text-white text-base">
-              {isDashboard ? 'HQ CRM Overview' :
-               isLeadsList ? 'Lead Pipeline Database' :
-               isLeadDetail ? 'Lead Engagement Profile' :
-               isRoutingView ? 'Webhook simulator' :
-               isReportsView ? 'Analytical Reports' :
-               isSettingsView ? 'Lead scoring custom weights' : 'CRM Dashboard'}
-            </h2>
+            <button
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+              className="lg:hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+            >
+              {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+            <div>
+              <h2 className="font-grotesk font-bold text-white text-sm sm:text-base leading-tight">
+                {isDashboard ? 'HQ CRM Overview' :
+                 isLeadsList ? 'Lead Pipeline Database' :
+                 isLeadDetail ? 'Lead Engagement Profile' :
+                 isRoutingView ? 'Webhook simulator' :
+                 isReportsView ? 'Analytical Reports' :
+                 isSettingsView ? 'Lead scoring custom weights' : 'CRM Dashboard'}
+              </h2>
+              <span className="text-[10px] text-slate-400 block lg:hidden font-mono">
+                {loggedInPartnerCode ? `Partner: ${loggedInPartnerCode}` : 'HQ Admin'}
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-950 px-2.5 py-1 rounded-full border border-slate-900">
-              Data Source: 7-Video Qualification Funnel
+          <div className="flex items-center gap-2 sm:gap-4 text-xs">
+            <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-950 px-2.5 py-1 rounded-full border border-slate-900">
+              7-Video Qualification Funnel
             </span>
+            <button
+              onClick={handleLogout}
+              className="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-neonRed/10 border border-slate-800 text-slate-400 hover:text-neonRed text-[11px] font-semibold transition-all flex items-center gap-1.5"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
           </div>
         </header>
 
+        {/* Mobile Navigation Drawer */}
+        {mobileNavOpen && (
+          <div className="lg:hidden bg-slate-950/95 border-b border-slate-900 p-4 space-y-1 text-xs font-semibold animate-slide-in">
+            <button 
+              onClick={() => { navigate('/admin/dashboard'); setMobileNavOpen(false); }} 
+              className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 ${isDashboard ? 'bg-neonPurple/15 text-neonPurple border-l-2 border-neonPurple' : 'text-slate-400 hover:text-white'}`}
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>HQ Overview</span>
+            </button>
+            <button 
+              onClick={() => { navigate('/admin/leads'); setMobileNavOpen(false); }} 
+              className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 ${isLeadsList || isLeadDetail ? 'bg-neonPurple/15 text-neonPurple border-l-2 border-neonPurple' : 'text-slate-400 hover:text-white'}`}
+            >
+              <Users className="w-4 h-4" />
+              <span>Leads Pipeline</span>
+              <span className="ml-auto bg-neonPurple/20 text-neonPurple text-[10px] px-2 py-0.5 rounded-full font-bold">{leads.length}</span>
+            </button>
+            <button 
+              onClick={() => { navigate('/admin/routing'); setMobileNavOpen(false); }} 
+              className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 ${isRoutingView ? 'bg-neonPurple/15 text-neonPurple border-l-2 border-neonPurple' : 'text-slate-400 hover:text-white'}`}
+            >
+              <Send className="w-4 h-4" />
+              <span>Webhook Simulator</span>
+            </button>
+            <button 
+              onClick={() => { navigate('/admin/reports'); setMobileNavOpen(false); }} 
+              className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 ${isReportsView ? 'bg-neonPurple/15 text-neonPurple border-l-2 border-neonPurple' : 'text-slate-400 hover:text-white'}`}
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>Conversion Analytics</span>
+            </button>
+            <button 
+              onClick={() => { navigate('/admin/settings'); setMobileNavOpen(false); }} 
+              className={`w-full text-left px-3.5 py-2.5 rounded-lg transition-all flex items-center gap-3 ${isSettingsView ? 'bg-neonPurple/15 text-neonPurple border-l-2 border-neonPurple' : 'text-slate-400 hover:text-white'}`}
+            >
+              <Zap className="w-4 h-4" />
+              <span>Scoring Engine Settings</span>
+            </button>
+          </div>
+        )}
+
         {/* View Layout Container */}
-        <div className="flex-1 p-6 overflow-y-auto">
+        <div className="flex-1 p-3 sm:p-6 overflow-y-auto w-full max-w-full overflow-x-hidden">
 
           {/* ─── VIEW 1: ADMIN HOME DASHBOARD ─── */}
           {isDashboard && (
@@ -432,7 +634,8 @@ export const Admin = () => {
                     
                     {/* leads mini queue */}
                     <div className="bg-slate-950/40 rounded-xl border border-slate-900 overflow-hidden">
-                      <div className="px-4 py-3 bg-slate-950/90 text-[10px] font-bold text-slate-500 uppercase grid grid-cols-5 border-b border-slate-900">
+                      {/* Desktop Header */}
+                      <div className="hidden sm:grid px-4 py-3 bg-slate-950/90 text-[10px] font-bold text-slate-500 uppercase grid-cols-5 border-b border-slate-900">
                         <span>Company</span>
                         <span>Industry</span>
                         <span>Score</span>
@@ -440,7 +643,38 @@ export const Admin = () => {
                         <span className="text-right">Action</span>
                       </div>
                       
-                      <div className="divide-y divide-slate-900/60">
+                      {/* Mobile Card List (<640px) */}
+                      <div className="block sm:hidden divide-y divide-slate-900/80 p-2 space-y-2">
+                        {leads.slice(0, 5).map(lead => {
+                          const stageInfo = getStageInfo(lead.score, lead.stage);
+                          return (
+                            <div key={lead.leadId} className="p-3 bg-slate-900/60 rounded-lg border border-slate-800/80 space-y-2.5">
+                              <div className="flex justify-between items-start gap-2">
+                                <div className="min-w-0 flex-1">
+                                  <span className="font-bold text-white text-xs block truncate">{lead.company || 'Private Lead'}</span>
+                                  <span className="text-[10px] text-slate-400 block truncate">{lead.industry || 'General Trades'}</span>
+                                </div>
+                                <span className={`inline-flex items-center gap-1 font-semibold font-mono px-2 py-0.5 rounded text-[10px] border shrink-0 ${stageInfo.badge}`}>
+                                  <span>{stageInfo.icon}</span>
+                                  <span>{lead.score || 50}</span>
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-900/60 pt-2">
+                                <span className="font-mono text-slate-400 truncate max-w-[150px]">Ref: <strong className="text-slate-200">{lead.refId || 'Organic'}</strong></span>
+                                <button 
+                                  onClick={() => navigate(`/admin/leads/${lead.leadId}`)} 
+                                  className="px-2.5 py-1 bg-neonPurple/10 text-neonPurple hover:bg-neonPurple hover:text-white rounded border border-neonPurple/20 text-[10px] font-bold transition-all"
+                                >
+                                  Detail →
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Desktop Rows (>=640px) */}
+                      <div className="hidden sm:block divide-y divide-slate-900/60">
                         {leads.slice(0, 5).map(lead => (
                           <div key={lead.leadId} className="px-4 py-3 text-xs grid grid-cols-5 items-center hover:bg-slate-900/10">
                             <div>
@@ -523,44 +757,141 @@ export const Admin = () => {
           {isLeadsList && (
             <div className="space-y-6 animate-slide-in">
               {/* Filters Panel */}
-              <div className="glass-card p-4 rounded-xl grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+              <div className="glass-card p-4 rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center relative z-30">
                 {/* Search */}
-                <div className="relative col-span-2">
-                  <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3.5" />
+                <div className="relative col-span-1 sm:col-span-2 lg:col-span-1">
+                  <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                   <input
                     type="text"
-                    placeholder="Search by Company, Name, or Email..."
+                    placeholder="Search by Company, Name, Email, Territory..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    className="w-full glass-input rounded-lg pl-9 pr-3 py-2.5 text-xs text-slate-100 placeholder-slate-600"
+                    className="w-full glass-input rounded-lg pl-9 pr-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:ring-1 focus:ring-neonPurple"
                   />
                 </div>
                 
-                {/* Filter Stage */}
+                {/* Filter Stage (100-Pt Tiers) */}
                 <select
                   value={filterStage}
                   onChange={e => setFilterStage(e.target.value)}
                   className="bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-neonPurple"
                 >
-                  <option value="">Filter by Score Label</option>
-                  <option value="Cold">Cold (0-40)</option>
-                  <option value="Warm">Warm (41-70)</option>
-                  <option value="Hot">Hot (71-100)</option>
+                  <option value="">All Lead Score Tiers (100-pt)</option>
+                  <option value="Hot">🔥 Hot Priority (85-100 pts)</option>
+                  <option value="Warm High">⚡ Warm High (70-84 pts)</option>
+                  <option value="Warm">🌿 Warm (55-69 pts)</option>
+                  <option value="Cool">❄️ Cool (35-54 pts)</option>
+                  <option value="Low">⚪ Low (&lt;35 pts)</option>
                 </select>
 
-                {/* Filter Industry */}
-                <select
-                  value={filterIndustry}
-                  onChange={e => setFilterIndustry(e.target.value)}
-                  className="bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-neonPurple"
-                >
-                  <option value="">Filter by Sector</option>
-                  <option value="Trades & Home Services">Trades & Home Services</option>
-                  <option value="Storage, Logistics and Removalists">Storage & Logistics</option>
-                  <option value="Automotive Services">Automotive Services</option>
-                  <option value="IT & Tech Support Services">IT & Tech Support</option>
-                  <option value="Retail & Commerce">Retail & Commerce</option>
-                </select>
+                {/* Custom Responsive Sector Filter (25 Industries & 19 Auto) */}
+                <div className="relative w-full min-w-0" ref={industryDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setIsIndustryDropdownOpen(!isIndustryDropdownOpen)}
+                    className="w-full bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-neonPurple flex justify-between items-center text-left hover:border-slate-700 transition-all cursor-pointer"
+                  >
+                    <span className="truncate mr-2 font-medium">
+                      {filterIndustry || "All Sectors (25 Industries & 19 Auto)"}
+                    </span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${isIndustryDropdownOpen ? 'rotate-180 text-neonPurple' : ''}`} />
+                  </button>
+
+                  {isIndustryDropdownOpen && (
+                    <div 
+                      style={{ backgroundColor: '#080c18' }}
+                      className="absolute left-0 right-0 z-50 mt-1.5 max-h-80 w-full max-w-full overflow-y-auto rounded-xl border border-slate-700 shadow-[0_12px_40px_rgba(0,0,0,0.95)] animate-slide-in p-1.5 text-xs divide-y divide-slate-800/80"
+                    >
+                      {/* Search box inside dropdown */}
+                      <div style={{ backgroundColor: '#080c18' }} className="p-1 pb-2 sticky top-0 z-20">
+                        <input
+                          type="text"
+                          placeholder="Search 44 sectors..."
+                          value={industrySearchTerm}
+                          onChange={e => setIndustrySearchTerm(e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-700 text-white placeholder-slate-400 rounded-lg p-2 text-xs outline-none focus:ring-1 focus:ring-neonPurple"
+                          onClick={e => e.stopPropagation()}
+                          autoFocus
+                        />
+                      </div>
+
+                      <div className="pt-1.5 space-y-1">
+                        {/* All option */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFilterIndustry('');
+                            setIsIndustryDropdownOpen(false);
+                            setIndustrySearchTerm('');
+                          }}
+                          className={`w-full text-left p-2.5 px-3 rounded-lg text-xs transition-colors hover:bg-neonPurple hover:text-white truncate block ${
+                            !filterIndustry ? 'bg-neonPurple/25 text-neonPurple font-bold border border-neonPurple/40' : 'text-slate-200'
+                          }`}
+                        >
+                          All Sectors (25 Industries &amp; 19 Auto)
+                        </button>
+
+                        {/* 25 Local Industries */}
+                        {filteredIndustriesList.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            <div className="px-2.5 py-1 text-[9.5px] font-bold text-neonCyan uppercase tracking-wider bg-slate-900/90 rounded border border-slate-800">
+                              ── 25 Local Industry Categories ──
+                            </div>
+                            {filteredIndustriesList.map((ind, idx) => (
+                              <button
+                                key={`ind-${idx}`}
+                                type="button"
+                                onClick={() => {
+                                  setFilterIndustry(ind);
+                                  setIsIndustryDropdownOpen(false);
+                                  setIndustrySearchTerm('');
+                                }}
+                                className={`w-full text-left p-2 px-3 rounded-lg text-xs transition-colors hover:bg-neonPurple hover:text-white truncate block ${
+                                  filterIndustry === ind ? 'bg-neonPurple/25 text-neonPurple font-bold border border-neonPurple/40' : 'text-slate-200'
+                                }`}
+                                title={ind}
+                              >
+                                {ind}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* 19 Automotive Sectors */}
+                        {filteredAutoList.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            <div className="px-2.5 py-1 text-[9.5px] font-bold text-neonPink uppercase tracking-wider bg-slate-900/90 rounded border border-slate-800">
+                              ── 19 Automotive Sector Niches ──
+                            </div>
+                            {filteredAutoList.map((sec, idx) => (
+                              <button
+                                key={`sec-${idx}`}
+                                type="button"
+                                onClick={() => {
+                                  setFilterIndustry(sec);
+                                  setIsIndustryDropdownOpen(false);
+                                  setIndustrySearchTerm('');
+                                }}
+                                className={`w-full text-left p-2 px-3 rounded-lg text-xs transition-colors hover:bg-neonPurple hover:text-white truncate block ${
+                                  filterIndustry === sec ? 'bg-neonPurple/25 text-neonPurple font-bold border border-neonPurple/40' : 'text-slate-200'
+                                }`}
+                                title={sec}
+                              >
+                                {sec}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {filteredIndustriesList.length === 0 && filteredAutoList.length === 0 && (
+                          <div className="p-4 text-center text-slate-400 text-xs italic">
+                            No sector matches "{industrySearchTerm}"
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {/* Filter Affiliate */}
                 <select
@@ -568,74 +899,245 @@ export const Admin = () => {
                   onChange={e => setFilterAffiliate(e.target.value)}
                   className="bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-neonPurple"
                 >
-                  <option value="">Filter by Referral Partner</option>
+                  <option value="">All Referral Partners</option>
                   {affiliates.map(a => (
-                    <option key={a.code} value={a.code}>{a.company}</option>
+                    <option key={a.code} value={a.code}>{a.company} ({a.code})</option>
                   ))}
-                  <option value="">Direct / Organic</option>
+                  <option value="">Direct / Organic Traffic</option>
                 </select>
               </div>
 
               {/* Leads Table */}
               <div className="glass-card rounded-2xl overflow-hidden">
-                <div className="p-4 border-b border-slate-900 flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Total Leads Matching Filters: <strong className="text-white">{filteredLeads.length}</strong></span>
+                <div className="p-4 border-b border-slate-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-400">
+                      Total Filtered Leads: <strong className="text-white font-mono">{filteredLeads.length}</strong>
+                    </span>
+                    {(searchTerm || filterStage || filterIndustry || filterAffiliate) && (
+                      <button
+                        onClick={() => {
+                          setSearchTerm('');
+                          setFilterStage('');
+                          setFilterIndustry('');
+                          setFilterAffiliate('');
+                        }}
+                        className="text-[10px] text-neonPurple hover:underline font-bold ml-2"
+                      >
+                        Clear Filters
+                      </button>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider bg-slate-950 px-2.5 py-1 rounded-full border border-slate-900">
+                    100-Point Algorithmic Routing
+                  </span>
                 </div>
                 
-                <table className="w-full text-xs text-left">
-                  <thead>
-                    <tr className="bg-slate-950/80 text-slate-500 border-b border-slate-900 font-bold uppercase tracking-wider text-[10px]">
-                      <th className="p-4">Business Company</th>
-                      <th className="p-4">Contact</th>
-                      <th className="p-4">Progress Gate</th>
-                      <th className="p-4">Lead score</th>
-                      <th className="p-4">Referral partner</th>
-                      <th className="p-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-900/60">
-                    {filteredLeads.map(lead => (
-                      <tr key={lead.leadId} className="hover:bg-slate-900/10">
-                        <td className="p-4">
-                          <span className="font-semibold text-white block">{lead.company || 'Private Firm'}</span>
-                          <span className="text-[10px] text-slate-500">{lead.industry || 'Unspecified Industry'}</span>
-                        </td>
-                        <td className="p-4">
-                          <span className="text-slate-300 block">{lead.name}</span>
-                          <span className="text-[10px] text-slate-500">{lead.email}</span>
-                        </td>
-                        <td className="p-4">
-                          <span className="text-slate-300">{lead.status}</span>
-                        </td>
-                        <td className="p-4">
-                          <span className={`font-semibold font-mono px-2.5 py-0.5 rounded text-[10px] border ${getStageColor(lead.stage)}`}>
-                            {lead.score} - {lead.stage}
+                {/* Mobile View: Stacked Responsive Cards (<640px) */}
+                <div className="block sm:hidden divide-y divide-slate-900/80">
+                  {filteredLeads.map(lead => {
+                    const stageInfo = getStageInfo(lead.score, lead.stage);
+                    return (
+                      <div key={lead.leadId} className="p-4 space-y-3 hover:bg-slate-900/20 transition-colors">
+                        {/* Company & Score */}
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="min-w-0 flex-1">
+                            <span className="font-bold text-white text-sm block leading-tight truncate">
+                              {lead.company || 'Private Business'}
+                            </span>
+                            <span className="text-[11px] text-slate-400 block mt-0.5 truncate">
+                              {lead.industry || 'Local Commercial Trades'}
+                            </span>
+                          </div>
+                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border font-mono shrink-0 ${stageInfo.badge}`}>
+                            <span>{stageInfo.icon}</span>
+                            <span>{lead.score || 50}/100</span>
                           </span>
-                        </td>
-                        <td className="p-4 font-mono text-[10px] text-slate-400">
-                          {lead.assignedAffiliateId ? (
-                            <span className="text-neonCyan">{lead.assignedAffiliateId}</span>
-                          ) : (
-                            <span>{lead.refId || 'Organic Search'}</span>
-                          )}
-                        </td>
-                        <td className="p-4 text-right">
-                          <button 
-                            onClick={() => navigate(`/admin/leads/${lead.leadId}`)}
-                            className="px-3 py-1.5 bg-neonPurple/10 text-neonPurple hover:bg-neonPurple hover:text-white rounded border border-neonPurple/20 transition-all font-semibold"
+                        </div>
+
+                        {/* Contact & Territory Grid */}
+                        <div className="grid grid-cols-1 gap-1.5 text-xs bg-slate-950/60 p-3 rounded-lg border border-slate-900/80">
+                          <div className="flex items-center gap-1.5 text-slate-300">
+                            <span className="text-slate-500 text-[10px] font-medium w-16 shrink-0">Contact:</span>
+                            <strong className="text-white truncate">{lead.name}</strong>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-slate-400">
+                            <span className="text-slate-500 text-[10px] font-medium w-16 shrink-0">Email:</span>
+                            <span className="truncate text-slate-300 font-mono text-[11px]">{lead.email}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-slate-300 pt-1 border-t border-slate-900/60">
+                            <MapPin className="w-3.5 h-3.5 text-neonCyan shrink-0" />
+                            <span className="truncate text-[11px] text-slate-300">{lead.serviceTerritories || lead.territory || 'Sydney (30-Mile Protected)'}</span>
+                          </div>
+
+                          {/* IP Location Check Badge */}
+                          {lead.isMismatch ? (
+                            <div className="mt-1 p-2 rounded bg-neonRed/15 border border-neonRed/30 text-[10.5px] text-neonRed flex items-start gap-1.5 font-semibold">
+                              <span>🚩</span>
+                              <span className="leading-tight">{lead.mismatchAlert || `Location Mismatch: IP is from ${lead.ipCountry}`}</span>
+                            </div>
+                          ) : lead.ipCountry ? (
+                            <div className="mt-0.5 flex items-center gap-1 text-[10px] text-slate-400 font-mono">
+                              <Shield className="w-3 h-3 text-neonGreen shrink-0" />
+                              <span>IP Verified: <strong>{lead.ipCountry} {lead.ipCity ? `(${lead.ipCity})` : ''}</strong></span>
+                            </div>
+                          ) : null}
+                        </div>
+
+                        {/* Status & Partner Meta */}
+                        <div className="flex justify-between items-center text-[10px] text-slate-400">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-850 text-slate-300 font-medium">
+                              {lead.status || 'Active'}
+                            </span>
+                            <span className="font-mono text-slate-400">
+                              Ref: <strong className={lead.assignedAffiliateId ? "text-neonCyan font-bold" : "text-slate-300"}>{lead.assignedAffiliateId || lead.refId || 'Organic'}</strong>
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Explore CTA Button */}
+                        <button 
+                          onClick={() => navigate(`/admin/leads/${lead.leadId}`)}
+                          className="w-full py-2.5 bg-neonPurple/15 text-neonPurple hover:bg-neonPurple hover:text-white rounded-lg border border-neonPurple/30 transition-all font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                          <span>Explore Lead Details</span>
+                          <span>→</span>
+                        </button>
+                      </div>
+                    );
+                  })}
+                  {filteredLeads.length === 0 && (
+                    <div className="p-6 text-center">
+                      <div className="glass-card p-6 text-center rounded-xl border-dashed border-slate-800 space-y-2.5">
+                        <div className="w-10 h-10 rounded-full bg-neonPurple/10 text-neonPurple flex items-center justify-center mx-auto border border-neonPurple/20">
+                          <Users className="w-5 h-5" />
+                        </div>
+                        <h3 className="font-bold text-white text-xs">No Leads Found</h3>
+                        <p className="text-[11px] text-slate-400 leading-relaxed">
+                          No leads match the current filters.
+                        </p>
+                        {(searchTerm || filterStage || filterIndustry || filterAffiliate) && (
+                          <button
+                            onClick={() => {
+                              setSearchTerm('');
+                              setFilterStage('');
+                              setFilterIndustry('');
+                              setFilterAffiliate('');
+                            }}
+                            className="mt-2 px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-200 rounded-lg text-xs font-bold transition-all"
                           >
-                            Explore Detail
+                            Reset Filters
                           </button>
-                        </td>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Desktop View: Full Table (>=640px) */}
+                <div className="hidden sm:block overflow-x-auto w-full">
+                  <table className="w-full text-xs text-left min-w-[700px]">
+                    <thead>
+                      <tr className="bg-slate-950/80 text-slate-400 border-b border-slate-900 font-bold uppercase tracking-wider text-[9px]">
+                        <th className="p-4">Business &amp; Sector</th>
+                        <th className="p-4">Contact Person</th>
+                        <th className="p-4">Local Territory</th>
+                        <th className="p-4">100-Pt Score</th>
+                        <th className="p-4">Progress Gate</th>
+                        <th className="p-4">Partner Route</th>
+                        <th className="p-4 text-right">Actions</th>
                       </tr>
-                    ))}
-                    {filteredLeads.length === 0 && (
-                      <tr>
-                        <td colSpan="6" className="text-center py-20 text-slate-500">No leads match the specified query filters.</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900/60">
+                      {filteredLeads.map(lead => {
+                        const stageInfo = getStageInfo(lead.score, lead.stage);
+                        return (
+                          <tr key={lead.leadId} className="hover:bg-slate-900/20 transition-colors">
+                            <td className="p-4">
+                              <span className="font-semibold text-white block">{lead.company || 'Private Business'}</span>
+                              <span className="text-[10px] text-slate-400 block mt-0.5">{lead.industry || 'Local Commercial Trades'}</span>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-slate-200 block font-medium">{lead.name}</span>
+                              <span className="text-[10px] text-slate-500 block mt-0.5">{lead.email}</span>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-1 text-[11px] text-slate-300">
+                                <MapPin className="w-3 h-3 text-neonCyan shrink-0" />
+                                <span className="truncate max-w-[150px]">{lead.serviceTerritories || lead.territory || 'Sydney (30-Mile Protected)'}</span>
+                              </div>
+                              {lead.isMismatch ? (
+                                <span className="inline-flex items-center gap-1 text-[9px] text-neonRed font-bold mt-1 bg-neonRed/10 px-1.5 py-0.5 rounded border border-neonRed/20" title={lead.mismatchAlert}>
+                                  🚩 IP Mismatch ({lead.ipCountry || 'Foreign'})
+                                </span>
+                              ) : lead.ipCountry ? (
+                                <span className="text-[9px] text-slate-500 font-mono block mt-0.5">
+                                  IP: {lead.ipCountry}
+                                </span>
+                              ) : null}
+                            </td>
+                            <td className="p-4">
+                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border font-mono ${stageInfo.badge}`}>
+                                <span>{stageInfo.icon}</span>
+                                <span>{lead.score || 50}/100</span>
+                                <span className="font-sans font-semibold">({stageInfo.tierName})</span>
+                              </span>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
+                                {lead.status || 'Active'}
+                              </span>
+                            </td>
+                            <td className="p-4 font-mono text-[10px]">
+                              {lead.assignedAffiliateId ? (
+                                <span className="text-neonCyan font-bold">{lead.assignedAffiliateId}</span>
+                              ) : (
+                                <span className="text-slate-500">{lead.refId || 'Organic Search'}</span>
+                              )}
+                            </td>
+                            <td className="p-4 text-right">
+                              <button 
+                                onClick={() => navigate(`/admin/leads/${lead.leadId}`)}
+                                className="px-3 py-1.5 bg-neonPurple/10 text-neonPurple hover:bg-neonPurple hover:text-white rounded-lg border border-neonPurple/20 transition-all font-bold text-[11px]"
+                              >
+                                Explore Detail →
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {filteredLeads.length === 0 && (
+                        <tr>
+                          <td colSpan="7" className="p-10 text-center">
+                            <div className="glass-card p-8 text-center rounded-2xl border-dashed border-slate-800 max-w-lg mx-auto space-y-3">
+                              <div className="w-10 h-10 rounded-full bg-neonPurple/10 text-neonPurple flex items-center justify-center mx-auto border border-neonPurple/20">
+                                <Users className="w-5 h-5" />
+                              </div>
+                              <h3 className="font-bold text-white text-sm">No Leads Match Your Selected Filters</h3>
+                              <p className="text-xs text-slate-400 leading-relaxed">
+                                Leads completing the 7-video qualification funnel within their 30-mile protected territory will automatically stream in here via live WebSockets.
+                              </p>
+                              {(searchTerm || filterStage || filterIndustry || filterAffiliate) && (
+                                <button
+                                  onClick={() => {
+                                    setSearchTerm('');
+                                    setFilterStage('');
+                                    setFilterIndustry('');
+                                    setFilterAffiliate('');
+                                  }}
+                                  className="mt-2 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-200 rounded-lg text-xs font-bold transition-all"
+                                >
+                                  Reset All Filters
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
@@ -657,15 +1159,22 @@ export const Admin = () => {
                   
                   {/* General Profile Card */}
                   <div className="glass-card rounded-2xl p-6">
-                    <div className="flex justify-between items-start border-b border-slate-900 pb-4 mb-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-900 pb-4 mb-4">
                       <div>
                         <h2 className="text-xl font-grotesk font-black text-white">{selectedLead.company || 'Private Business'}</h2>
-                        <span className="text-xs text-slate-500">Industry: {selectedLead.industry || 'Trades'}</span>
+                        <span className="text-xs text-slate-400">Industry Sector: <strong className="text-slate-200">{selectedLead.industry || 'Local Commercial Trades'}</strong></span>
                       </div>
-                      <div className="text-right">
-                        <span className={`font-mono text-xs font-semibold px-3 py-1 rounded-full border ${getStageColor(selectedLead.stage)}`}>
-                          Qualification Score: {selectedLead.score}/100 ({selectedLead.stage})
-                        </span>
+                      <div className="text-left sm:text-right">
+                        {(() => {
+                          const info = getStageInfo(selectedLead.score, selectedLead.stage);
+                          return (
+                            <span className={`inline-flex items-center gap-1.5 font-mono text-xs font-bold px-3 py-1.5 rounded-full border ${info.badge}`}>
+                              <span>{info.icon}</span>
+                              <span>{selectedLead.score || 50}/100</span>
+                              <span className="font-sans font-semibold">({info.label})</span>
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -744,6 +1253,41 @@ export const Admin = () => {
                         </div>
                       </div>
                     )}
+
+                    {/* IP & Location Security Verification */}
+                    <div className="mt-6 border-t border-slate-900 pt-4">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-neonCyan" />
+                        <span>IP &amp; Territory Security Verification</span>
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-900">
+                          <span className="text-slate-500 text-[10px] block mb-0.5">Submitted Territory / Country</span>
+                          <strong className="text-white block">{selectedLead.serviceTerritories || selectedLead.territory || selectedLead.country || 'Sydney, Australia'}</strong>
+                        </div>
+                        <div className="p-3 bg-slate-950/60 rounded-lg border border-slate-900">
+                          <span className="text-slate-500 text-[10px] block mb-0.5">Detected IP Geolocation</span>
+                          <strong className="text-white block">{selectedLead.ipCountry || 'Local Network'} {selectedLead.ipCity ? `(${selectedLead.ipCity})` : ''}</strong>
+                        </div>
+                      </div>
+
+                      {selectedLead.isMismatch ? (
+                        <div className="mt-3 p-3 rounded-lg bg-neonRed/15 border border-neonRed/30 text-xs text-neonRed flex items-start gap-2">
+                          <span className="text-base">🚩</span>
+                          <div>
+                            <strong className="block font-bold">Location Mismatch Alert</strong>
+                            <span className="text-[11px] text-slate-300 block mt-0.5 leading-relaxed">
+                              {selectedLead.mismatchAlert || `User submitted local territory "${selectedLead.serviceTerritories || 'Australia'}", but their internet connection originated from ${selectedLead.ipCountry}.`}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="mt-3 p-2.5 rounded-lg bg-neonGreen/10 border border-neonGreen/20 text-xs text-neonGreen flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-neonGreen shrink-0" />
+                          <span className="text-[11px] font-medium">IP matches registered territory region. Zero security flags.</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Funnel Timelines */}

@@ -5,7 +5,7 @@ export const GlobalFooter = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0B0F19] pt-12 pb-12 px-6 border-t border-slate-800 z-20 w-full font-sans">
+    <footer className="bg-[#0B0F19] pt-12 pb-12 px-4 sm:px-6 border-t border-slate-800 z-20 w-full max-w-full overflow-hidden font-sans">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
           <div className="max-w-2xl text-left">

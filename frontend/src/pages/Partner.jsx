@@ -13,6 +13,13 @@ export const Partner = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Login & Session States
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('r7_partner_logged_in') === 'true');
+  const [partnerCode, setPartnerCode] = useState(() => localStorage.getItem('r7_partner_code') || '');
+  const [partnerName, setPartnerName] = useState(() => localStorage.getItem('r7_partner_name') || '');
+  const [partnerCodeInput, setPartnerCodeInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   const path = location.pathname;
   const isRegisterPage = path === '/partner/register';
   const isApplyPage = path === '/partner/apply';
@@ -21,13 +28,6 @@ export const Partner = () => {
 
   const selectedPlan = localStorage.getItem('r7_selected_plan') || 'Growth';
   const paymentComplete = localStorage.getItem('r7_payment_complete') === 'true';
-
-  // Login & Session States
-  const [partnerCodeInput, setPartnerCodeInput] = useState('');
-  const [loginError, setLoginError] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('r7_partner_logged_in') === 'true');
-  const [partnerCode, setPartnerCode] = useState(() => localStorage.getItem('r7_partner_code') || '');
-  const [partnerName, setPartnerName] = useState(() => localStorage.getItem('r7_partner_name') || '');
 
   // Registration Form State with comprehensive pre-population
   const [form, setForm] = useState(() => {
@@ -39,7 +39,7 @@ export const Partner = () => {
       website: searchParams.get('website') || localStorage.getItem('r7_lead_website') || '',
       territory: searchParams.get('territory') || searchParams.get('state') || localStorage.getItem('r7_billing_territory') || localStorage.getItem('r7_lead_state') || 'Sydney CBD (30-Mile Radius)',
       phone: searchParams.get('phone') || localStorage.getItem('r7_billing_phone') || localStorage.getItem('r7_lead_phone') || '',
-      overnightFitting: 'Yes'
+      overnightFitting: searchParams.get('overnight') || localStorage.getItem('r7_billing_overnight') || 'Yes'
     };
   });
   const [loading, setLoading] = useState(false);
@@ -1624,6 +1624,25 @@ export const Partner = () => {
     );
   }
 
-  // Default fallback
-  return <div className="min-h-screen bg-darkBg"><GlobalFooter /></div>;
+  // Default fallback - safe UI in case no route conditions match
+  return (
+    <div className="min-h-screen bg-darkBg text-white flex flex-col justify-between">
+      <div className="flex-1 flex items-center justify-center py-20 px-4">
+        <div className="max-w-md w-full glass-card rounded-2xl p-8 text-center space-y-4">
+          <div className="w-12 h-12 rounded-full bg-neonCyan/20 text-neonCyan flex items-center justify-center mx-auto mb-2 border border-neonCyan/30">
+            <Lock className="w-6 h-6" />
+          </div>
+          <h2 className="text-xl font-bold font-grotesk">Partner Portal</h2>
+          <p className="text-xs text-slate-400">Access your wrap shop leads and partner dashboard.</p>
+          <button
+            onClick={() => navigate('/partner/login')}
+            className="w-full py-3 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold rounded-xl text-xs transition-all shadow-lg glow-cyan"
+          >
+            Go to Partner Login
+          </button>
+        </div>
+      </div>
+      <GlobalFooter />
+    </div>
+  );
 };

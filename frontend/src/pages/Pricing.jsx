@@ -369,9 +369,11 @@ export const Pricing = () => {
     localStorage.setItem('r7_selected_plan', selectedPlan ? selectedPlan.name : 'Standalone Addon');
     localStorage.setItem('r7_selected_addon', selectedAddon || 'none');
     localStorage.setItem('r7_addon_billing', addonBillingType);
+    localStorage.setItem('r7_billing_name', billing.contactName);
     localStorage.setItem('r7_billing_email', billing.email);
     localStorage.setItem('r7_billing_business', billing.businessName);
     localStorage.setItem('r7_billing_territory', billing.territory);
+    localStorage.setItem('r7_billing_overnight', billing.overnightFitting || 'Yes');
     localStorage.setItem('r7_selected_currency', currency);
 
     try {

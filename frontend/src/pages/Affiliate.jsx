@@ -202,20 +202,33 @@ export const Affiliate = () => {
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
       <nav className="glass-card border-x-0 border-t-0 fixed top-0 w-full z-50 py-4 px-6 flex justify-between items-center bg-darkBg/95 backdrop-blur-md">
-        <div className="flex items-center gap-2" onClick={() => navigate('/')}>
-          <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-bold text-white cursor-pointer">R</div>
-          <span className="font-grotesk font-bold text-lg cursor-pointer">Rule7<span className="text-neonRed">Media</span></span>
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+          <div className="w-8 h-8 rounded-lg bg-neonRed flex items-center justify-center font-bold text-white">R</div>
+          <span className="font-grotesk font-bold text-lg">Rule7<span className="text-neonRed">Media</span></span>
         </div>
-        <div className="flex items-center gap-2 md:gap-4 text-xs font-semibold">
-          <button onClick={() => navigate('/affiliate')} className={`px-3 py-1.5 rounded-lg ${isHub ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Affiliate Hub</button>
-          <button onClick={() => navigate('/affiliate/dashboard')} className={`px-3 py-1.5 rounded-lg ${isDashboard ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Dashboard</button>
-          <button onClick={() => navigate('/affiliate/links')} className={`px-3 py-1.5 rounded-lg ${isLinks ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Referral Links</button>
-          <button onClick={() => navigate('/affiliate/earnings')} className={`px-3 py-1.5 rounded-lg ${isEarnings ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Earnings & Tiers</button>
-          <button onClick={() => navigate('/affiliate/assets')} className={`px-3 py-1.5 rounded-lg ${isAssets ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Assets Kit</button>
-          {isLoggedIn && (
-            <button onClick={handleLogout} className="px-3 py-1.5 rounded-lg text-slate-400 hover:text-neonRed flex items-center gap-1.5 transition-colors">
-              <LogOut className="w-3.5 h-3.5" /> Logout
-            </button>
+        <div className="flex items-center gap-3 md:gap-4 text-xs font-semibold">
+          {isLoggedIn ? (
+            <>
+              <button onClick={() => navigate('/affiliate/dashboard')} className={`px-3 py-1.5 rounded-lg ${isDashboard ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Dashboard</button>
+              <button onClick={() => navigate('/affiliate/links')} className={`px-3 py-1.5 rounded-lg ${isLinks ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Referral Links</button>
+              <button onClick={() => navigate('/affiliate/earnings')} className={`px-3 py-1.5 rounded-lg ${isEarnings ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Earnings (22%)</button>
+              <button onClick={() => navigate('/affiliate/assets')} className={`px-3 py-1.5 rounded-lg ${isAssets ? 'bg-neonCyan/10 text-neonCyan' : 'text-slate-400 hover:text-white'}`}>Assets Kit</button>
+              <button onClick={handleLogout} className="px-3 py-1.5 rounded-lg text-slate-400 hover:text-neonRed flex items-center gap-1.5 transition-colors">
+                <LogOut className="w-3.5 h-3.5" /> Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => navigate('/funnel')} className="text-slate-400 hover:text-white transition-colors">
+                Advertiser Portal
+              </button>
+              <button onClick={() => navigate('/pricing')} className="text-slate-400 hover:text-white transition-colors">
+                Pricing Plans
+              </button>
+              <button onClick={() => navigate('/affiliate/login')} className="px-3.5 py-1.5 bg-neonCyan text-darkBg hover:bg-neonCyan/90 font-bold rounded-lg transition-all shadow-md glow-cyan">
+                Partner Login
+              </button>
+            </>
           )}
         </div>
       </nav>
@@ -253,38 +266,50 @@ export const Affiliate = () => {
               <h1 className="text-3xl md:text-4xl font-grotesk font-black text-white mt-4 leading-tight">Monetize Your Local Presence with Rule7Media</h1>
               <p className="text-sm text-slate-400 mt-3 max-w-lg mx-auto">Are you a vehicle wrapping shop, billboard owner, or local advertising agency? Route leads, generate recurring commission, and protect your territory rights.</p>
               
-              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                <div className="glass-card p-6 rounded-xl space-y-4 border border-neonCyan/25 bg-neonCyan/2 flex flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-neonCyan px-2 py-0.5 bg-neonCyan/10 border border-neonCyan/25 rounded-full">Standard Tier</span>
-                    <h3 className="font-grotesk font-black text-lg text-white mt-2">Join Programme</h3>
-                    <p className="text-xs text-slate-400 mt-2">5% commission. Ideal for single location wrap shops looking for geographic territory protection and manual verification.</p>
+              {/* Streamlined 22% Wrap Shop Partner Card */}
+              <div className="mt-8 max-w-xl mx-auto">
+                <div className="glass-card p-8 rounded-2xl border-2 border-neonRed/40 bg-gradient-to-b from-neonRed/10 via-darkSecondary/80 to-darkBg relative overflow-hidden shadow-2xl">
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-neonRed/10 rounded-full filter blur-3xl pointer-events-none"></div>
+                  
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <span className="text-xs font-black uppercase tracking-wider text-neonRed px-3 py-1 bg-neonRed/15 border border-neonRed/30 rounded-full flex items-center gap-1.5">
+                      <Star className="w-3.5 h-3.5" /> 22% Recurring Partner
+                    </span>
+                    <span className="text-xs font-bold text-neonGreen bg-neonGreen/10 px-2.5 py-0.5 rounded-full border border-neonGreen/20">
+                      30-Mile Protected Zone
+                    </span>
                   </div>
-                  <button onClick={() => navigate('/register?tier=standard')} className="w-full mt-4 py-2.5 bg-neonCyan text-darkBg font-bold text-xs rounded-lg transition-all hover:bg-neonCyan/90">
-                    Join Programme
-                  </button>
-                </div>
 
-                <div className="glass-card p-6 rounded-xl space-y-4 border border-neonRed/25 bg-neonRed/2 flex flex-col justify-between relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-neonRed/5 rounded-full filter blur-xl"></div>
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-neonRed px-2 py-0.5 bg-neonRed/10 border border-neonRed/25 rounded-full">👑 Elite Partner</span>
-                    <h3 className="font-grotesk font-black text-xl text-white mt-2">Join Elite</h3>
-                    <p className="text-xs text-slate-400 mt-2">22% commission. Best for premium fleet publishers. Lock priority territory rights, custom co-branding, and webhook syncing.</p>
-                  </div>
-                  <button onClick={() => navigate('/register?tier=elite')} className="w-full mt-4 py-2.5 bg-neonRed text-white font-bold text-xs rounded-lg transition-all hover:bg-neonRed/90 glow-pink">
-                    Join Elite
-                  </button>
-                </div>
+                  <h3 className="font-grotesk font-black text-2xl text-white">Wrap Shop Partner Programme</h3>
+                  <p className="text-xs text-slate-300 mt-2.5 leading-relaxed">
+                    Earn <strong>22% recurring affiliate commissions</strong> on advertiser and vehicle-owner subscriptions, plus revenue from reverse-auction campaigns and automotive referrals.
+                  </p>
 
-                <div className="glass-card p-6 rounded-xl space-y-4 border border-neonGreen/25 bg-neonGreen/2 flex flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-neonGreen px-2 py-0.5 bg-neonGreen/10 border border-neonGreen/25 rounded-full">⚡ Instant Setup</span>
-                    <h3 className="font-grotesk font-black text-xl text-white mt-2">Instant Signup</h3>
-                    <p className="text-xs text-slate-400 mt-2">5% commission. Get your custom referral tracking link generated immediately in 60 seconds with no approval wait.</p>
+                  <div className="grid grid-cols-2 gap-3 my-6 text-left text-xs text-slate-300">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-neonGreen shrink-0" />
+                      <span>22% Recurring Payouts</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-neonGreen shrink-0" />
+                      <span>30-Mile Territory Lock</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-neonGreen shrink-0" />
+                      <span>QR Funnel Attribution</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-neonGreen shrink-0" />
+                      <span>Automatic CRM Routing</span>
+                    </div>
                   </div>
-                  <button onClick={() => navigate('/register?tier=quick')} className="w-full mt-4 py-2.5 bg-neonGreen text-darkBg font-bold text-xs rounded-lg transition-all hover:bg-neonGreen/90">
-                    Instant Signup
+
+                  <button 
+                    onClick={() => navigate('/register?tier=elite')} 
+                    className="w-full py-3.5 bg-neonRed hover:bg-neonRed/90 text-white font-bold text-sm rounded-xl transition-all shadow-xl glow-pink flex items-center justify-center gap-2"
+                  >
+                    <span>Join 22% Partner Programme</span>
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>

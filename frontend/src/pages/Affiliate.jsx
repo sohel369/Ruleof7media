@@ -236,8 +236,8 @@ export const Affiliate = () => {
       {/* Main Content Area */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 pt-24 pb-16">
         
-        {/* Affiliate Selector Dropdown (for testing and dashboard swaps) */}
-        {!isHub && !isApply && !isLogin && (
+        {/* Affiliate Selector Dropdown (only visible in debug mode if ?debug=true) */}
+        {!isHub && !isApply && !isLogin && location.search.includes('debug=true') && (
           <div className="mb-6 glass-card p-4 rounded-xl flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-3">
               <Star className="w-5 h-5 text-neonAmber" />
@@ -376,8 +376,8 @@ export const Affiliate = () => {
               </div>
               <div className="glass-card p-6 rounded-xl space-y-3">
                 <div className="w-10 h-10 bg-neonGreen/15 text-neonGreen rounded-lg flex items-center justify-center border border-neonGreen/20"><DollarSign className="w-5 h-5" /></div>
-                <h3 className="font-grotesk font-bold text-base text-white">Tiered Commissions</h3>
-                <p className="text-xs text-slate-400">Scale payouts from Starter (5%) to Growth (10%) up to Pro (15%) as your referral conversion volume grows.</p>
+                <h3 className="font-grotesk font-bold text-base text-white">22% Direct Commissions</h3>
+                <p className="text-xs text-slate-400">Earn a direct 22% recurring commission on all subscribed advertisers and vehicle wrap contracts within your protected territory.</p>
               </div>
             </div>
           </div>

@@ -126,13 +126,13 @@ export const Landing = () => {
 
   // Full system flow steps
   const flowSteps = [
-    { icon: '🏪', label: 'Affiliate', sub: 'Wrapping shop registers', color: 'neonCyan' },
+    { icon: '🏪', label: 'Wrap Partner', sub: 'Wrapping shop registers', color: 'neonCyan' },
     { icon: '🔗', label: 'Referral Link', sub: 'Gets unique ?ref= URL', color: 'neonCyan' },
-    { icon: '📱', label: 'Customer Scans', sub: 'QR on wrapped vehicle', color: 'neonAmber' },
+    { icon: '📱', label: 'Prospect Entry', sub: 'Clicks link or scans QR', color: 'neonAmber' },
     { icon: '🎥', label: 'Video 1–7', sub: 'Watches education series', color: 'neonAmber' },
     { icon: '🧠', label: 'Lead Qualified', sub: 'Score 0–100 computed', color: 'neonRed' },
-    { icon: '📊', label: 'Dashboard', sub: 'Lead routed to affiliate', color: 'neonGreen' },
-    { icon: '💰', label: 'Commission', sub: '5–15% earned per close', color: 'neonGreen' },
+    { icon: '📊', label: 'CRM Routing', sub: 'Lead routed to wrap shop', color: 'neonGreen' },
+    { icon: '💰', label: 'Commission', sub: '22% recurring earnings', color: 'neonGreen' },
   ];
 
   return (

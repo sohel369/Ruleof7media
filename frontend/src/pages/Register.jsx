@@ -47,12 +47,12 @@ export const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Detect pre-selected tier from URL: /register?tier=elite
+  // Default directly to 22% Elite Partner tier for wrapping shops
   const params = new URLSearchParams(location.search);
   const urlTier = params.get('tier');
-  const initialTier = TIERS[urlTier] ? urlTier : null;
+  const initialTier = 'elite';
 
-  const [selectedTier, setSelectedTier] = useState(initialTier);
+  const [selectedTier, setSelectedTier] = useState('elite');
 
   // Comprehensive pre-population from URL params and localStorage
   const [form, setForm] = useState(() => {

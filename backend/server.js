@@ -66,7 +66,7 @@ app.get('/api/leads', async (req, res) => {
     const result = await db.query('SELECT * FROM leads');
       let leads = result.rows.map(row => {
         const extra = typeof row.extra_data === 'string' ? JSON.parse(row.extra_data) : (row.extra_data || {});
-        return {
+        const baseLead = {
           ...extra,
           ...row,
           name: row.client_name || extra.name || row.name,
@@ -79,6 +79,15 @@ app.get('/api/leads', async (req, res) => {
           ipCity: row.ip_city || extra.ipCity,
           isMismatch: row.is_mismatch !== undefined && row.is_mismatch !== null ? row.is_mismatch : (extra.isMismatch || false),
           mismatchAlert: row.mismatch_alert || extra.mismatchAlert || ''
+        };
+        const scored = calculateScore(baseLead);
+        return {
+          ...baseLead,
+          score: scored.score,
+          stage: scored.stage,
+          priorityLabel: scored.priorityLabel,
+          recommendedAction: scored.recommendedAction,
+          breakdown: scored.breakdown
         };
       });
     

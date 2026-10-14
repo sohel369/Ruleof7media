@@ -355,6 +355,8 @@ export const Funnel = () => {
   const currentStep = stepId ? parseInt(stepId.replace('video-', '')) : 0;
   const isCompletePage = location.pathname === '/funnel/complete';
   const isLandingPage = location.pathname === '/funnel' || location.pathname === '/funnel/';
+  const searchParams = new URLSearchParams(location.search);
+  const isDirectReveal = searchParams.get('mode') === 'direct' || searchParams.get('reveal') === 'true' || searchParams.get('type') === 'wrap';
 
   // State
   const [formData, setFormData] = useState(() => {
@@ -906,11 +908,34 @@ export const Funnel = () => {
           <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-400">
             <a href="#benefits" className="hover:text-white transition-colors">Benefits</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
-            <a href="#why-vehicle" className="hover:text-white transition-colors">Advantage</a>
+            <a href="#why-vehicle" className="hover:text-white transition-colors">{isDirectReveal ? 'Vehicle Advantage' : 'Advantage'}</a>
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* A/B Testing Switcher */}
+            <button
+              onClick={() => {
+                const p = new URLSearchParams(location.search);
+                if (isDirectReveal) {
+                  p.delete('mode');
+                  p.delete('reveal');
+                  p.delete('type');
+                } else {
+                  p.set('mode', 'direct');
+                }
+                const qs = p.toString();
+                navigate(`/funnel${qs ? `?${qs}` : ''}`);
+              }}
+              title="A/B Testing: Click to toggle between Curiosity Non-Reveal and Direct Wrap Reveal"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono font-bold uppercase bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white transition-colors"
+            >
+              <span className="text-slate-500">A/B:</span>
+              <span className={isDirectReveal ? 'text-neonPink' : 'text-neonCyan'}>
+                {isDirectReveal ? 'Direct Wrap' : 'Non-Reveal'}
+              </span>
+            </button>
+
             {refId && (
               <div className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-bold uppercase bg-neonGreen/10 text-neonGreen px-3 py-1 rounded-full border border-neonGreen/20 animate-pulse">
                 <span className="w-1.5 h-1.5 rounded-full bg-neonGreen"></span>
@@ -918,7 +943,7 @@ export const Funnel = () => {
               </div>
             )}
             <button
-              onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}`)}
+              onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}${isDirectReveal ? '&mode=direct' : ''}`)}
               className="px-3 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-neonCyan/20 to-neonPurple/20 border border-neonCyan/30 text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider rounded-lg sm:rounded-xl hover:from-neonCyan/30 hover:to-neonPurple/30 transition-all duration-300 whitespace-nowrap"
             >
               Verify <span className="hidden sm:inline">Eligibility</span>
@@ -931,20 +956,26 @@ export const Funnel = () => {
           {/* Left: Text copy & stats */}
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-neonCyan/10 text-neonCyan border border-neonCyan/25 shadow-inner w-fit">
-              <span>✨</span> Grow Your Business With Vehicle Advertising
+              <span>✨</span> {isDirectReveal ? 'Grow Your Business With Vehicle Advertising' : 'The Rule of 7 Local Authority Framework'}
             </div>
             
             <h1 className="text-4xl sm:text-6xl font-black font-grotesk tracking-tight text-white leading-[1.08]">
-              Reach Thousands of Local Customers <span className="bg-gradient-to-r from-neonCyan via-neonPurple to-neonPink bg-clip-text text-transparent">Every Single Day</span>
+              {isDirectReveal ? (
+                <>Reach Thousands of Local Customers <span className="bg-gradient-to-r from-neonCyan via-neonPurple to-neonPink bg-clip-text text-transparent">Every Single Day</span></>
+              ) : (
+                <>Stop Burning Budget on Digital Ads. <span className="bg-gradient-to-r from-neonCyan via-neonPurple to-neonPink bg-clip-text text-transparent">Dominate Your Local Market</span></>
+              )}
             </h1>
 
             <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl">
-              Discover how your local business can generate massive brand supremacy and community trust through professionally wrapped vehicles. Watch our free 7-video series to unlock the proven ROI frameworks of mobile transit branding.
+              {isDirectReveal 
+                ? "Discover how your local business can generate massive brand supremacy and community trust through professionally wrapped vehicles. Watch our free 7-video series to unlock the proven ROI frameworks of mobile transit branding."
+                : "Discover how forward-thinking local businesses escape endless digital ad spend and build unstoppable brand supremacy where their customers live, work, and commute. Watch our free 7-part video series to unlock the proven Rule of 7 Local Authority Framework."}
             </p>
 
             <div className="pt-2 flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}`)}
+                onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}${isDirectReveal ? '&mode=direct' : ''}`)}
                 className="px-8 py-4 bg-neonRed hover:bg-neonRed/90 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-xl shadow-neonRed/20 hover:scale-[1.02] transform duration-200"
               >
                 <span>Watch Free Onboarding Series</span>
@@ -955,34 +986,94 @@ export const Funnel = () => {
             {/* Stats Bar */}
             <div className="grid grid-cols-3 gap-6 pt-10 border-t border-slate-900 max-w-lg">
               <div>
-                <span className="text-2xl font-black text-white font-grotesk block mb-1">20,000+</span>
-                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Daily Views / Car</span>
+                <span className="text-2xl font-black text-white font-grotesk block mb-1">
+                  {isDirectReveal ? '20,000+' : '30,000+'}
+                </span>
+                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">
+                  {isDirectReveal ? 'Daily Views / Car' : 'Daily Community Reach'}
+                </span>
               </div>
               <div>
                 <span className="text-2xl font-black text-neonCyan font-grotesk block mb-1">50x - 100x</span>
-                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Lower CPM than CPC</span>
+                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">
+                  {isDirectReveal ? 'Lower CPM than CPC' : 'Lower Cost vs Search PPC'}
+                </span>
               </div>
               <div>
                 <span className="text-2xl font-black text-neonPink font-grotesk block mb-1">97%</span>
-                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Brand Recall</span>
+                <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">
+                  {isDirectReveal ? 'Brand Recall' : 'Real-World Recall'}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Right: Premium wrapped vehicle mockup image */}
+          {/* Right: Mockup or Curiosity Matrix Graphic */}
           <div className="lg:col-span-5 relative w-full flex justify-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-neonCyan/10 to-neonPurple/10 rounded-3xl filter blur-2xl opacity-60"></div>
-            <div className="relative glass-card p-3 rounded-3xl border border-slate-900 shadow-2xl w-full max-w-sm hover:scale-[1.02] transition-transform duration-300">
-              <img 
-                src="/assets/vehicle_wrap.png" 
-                alt="Wrapped vehicle advertising mockup"
-                className="w-full h-auto rounded-2xl object-cover shadow-lg"
-              />
-              <div className="p-4 text-center space-y-1.5">
-                <span className="text-[10px] font-bold text-neonCyan uppercase tracking-widest block">Premium Out-Of-Home Ads</span>
-                <p className="text-[10px] text-slate-400">Generate non-stop neighborhood visibility with wrapped local fleets.</p>
+            {isDirectReveal ? (
+              <div className="relative glass-card p-3 rounded-3xl border border-slate-900 shadow-2xl w-full max-w-sm hover:scale-[1.02] transition-transform duration-300">
+                <img 
+                  src="/assets/vehicle_wrap.png" 
+                  alt="Wrapped vehicle advertising mockup"
+                  className="w-full h-auto rounded-2xl object-cover shadow-lg"
+                />
+                <div className="p-4 text-center space-y-1.5">
+                  <span className="text-[10px] font-bold text-neonCyan uppercase tracking-widest block">Premium Out-Of-Home Ads</span>
+                  <p className="text-[10px] text-slate-400">Generate non-stop neighborhood visibility with wrapped local fleets.</p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="relative glass-card p-6 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-md space-y-5 hover:scale-[1.01] transition-transform duration-300">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-neonCyan animate-ping"></span>
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-neonCyan font-bold">2026 Marketing Benchmark</span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800">LOCAL IMPACT MATRIX</span>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Digital Ads Dilemma */}
+                  <div className="p-3.5 rounded-xl bg-slate-950/80 border border-red-500/20 space-y-1.5">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-red-400 font-bold flex items-center gap-1.5">
+                        <span>✕</span> Online Digital Ads (PPC / Social)
+                      </span>
+                      <span className="text-red-400 font-mono font-bold">$25 - $65+ CPM</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">Auction prices climb monthly. 86% banner & ad blindness. Brand visibility vanishes the exact second budget runs out.</p>
+                  </div>
+
+                  {/* Rule of 7 Framework */}
+                  <div className="p-3.5 rounded-xl bg-gradient-to-r from-neonCyan/10 to-neonPurple/10 border border-neonCyan/30 space-y-1.5">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-neonCyan font-bold flex items-center gap-1.5">
+                        <span>✔</span> The Rule of 7 Authority Framework
+                      </span>
+                      <span className="text-neonCyan font-mono font-bold">&lt; $0.35 CPM</span>
+                    </div>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">Continuous 24/7 community presence. 97% real-world recall. Builds an untouchable local brand monopoly.</p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-400">Territory Status:</span>
+                  <span className="inline-flex items-center gap-1.5 text-neonGreen font-bold font-mono">
+                    <span className="w-2 h-2 rounded-full bg-neonGreen"></span>
+                    1 Category / Market Protected
+                  </span>
+                </div>
+
+                <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                  <div className="text-left">
+                    <span className="text-[9px] text-slate-400 uppercase tracking-widest block font-bold">Free Video Training</span>
+                    <span className="text-xs font-bold text-white">Video 1: The Digital Ad Dilemma</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-neonRed px-2 py-1 bg-neonRed/10 rounded border border-neonRed/20">7:42 Mins</span>
+                </div>
+              </div>
+            )}
           </div>
         </header>
 
@@ -996,35 +1087,59 @@ export const Funnel = () => {
           </div>
         </section>
 
-        {/* Benefits of Vehicle Advertising */}
+        {/* Benefits Section */}
         <section id="benefits" className="py-24 px-6 max-w-6xl mx-auto space-y-16">
           <div className="text-center max-w-xl mx-auto space-y-2">
-            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Why Out-of-Home Branding Outperforms</h2>
-            <p className="text-xs text-slate-400">Avoid expensive online PPC auctions. Put your brand message directly where your local target market lives.</p>
+            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">
+              {isDirectReveal ? 'Why Out-of-Home Branding Outperforms' : 'Why Real-World Frequency Outperforms Digital Noise'}
+            </h2>
+            <p className="text-xs text-slate-400">
+              {isDirectReveal 
+                ? 'Avoid expensive online PPC auctions. Put your brand message directly where your local target market lives.'
+                : 'Avoid hyper-competitive digital bidding wars. Anchor your brand in the physical world where your highest-value customers make buying decisions.'}
+            </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
             <div className="glass-card p-6 border-l-2 border-l-neonCyan flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-neonCyan/10 flex items-center justify-center text-lg flex-shrink-0">📈</div>
               <div className="space-y-1.5">
-                <h4 className="font-bold text-white text-sm">Reach Thousands of Local Customers</h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">Vehicles drive where your prospects live and work, capturing high-density community attention without relying on search boxes.</p>
+                <h4 className="font-bold text-white text-sm">
+                  {isDirectReveal ? 'Reach Thousands of Local Customers' : 'Hyperlocal Community Saturation'}
+                </h4>
+                <p className="text-slate-400 leading-relaxed text-[11px]">
+                  {isDirectReveal 
+                    ? 'Vehicles drive where your prospects live and work, capturing high-density community attention without relying on search boxes.'
+                    : 'Reach prospective clients where they live, work, and commute every day — capturing high-density local attention without fickle algorithms.'}
+                </p>
               </div>
             </div>
             
             <div className="glass-card p-6 border-l-2 border-l-neonPurple flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-neonPurple/10 flex items-center justify-center text-lg flex-shrink-0">💸</div>
               <div className="space-y-1.5">
-                <h4 className="font-bold text-white text-sm">Lower Customer Acquisition Cost</h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">Outdoor transit advertising costs pennies per thousand views (CPM) compared to skyrocketing digital CPC auction bids.</p>
+                <h4 className="font-bold text-white text-sm">
+                  {isDirectReveal ? 'Lower Customer Acquisition Cost' : '90%+ Lower Customer Acquisition Cost'}
+                </h4>
+                <p className="text-slate-400 leading-relaxed text-[11px]">
+                  {isDirectReveal 
+                    ? 'Outdoor transit advertising costs pennies per thousand views (CPM) compared to skyrocketing digital CPC auction bids.'
+                    : 'Real-world high-frequency touchpoints cost pennies per thousand impressions compared to skyrocketing online auction bids.'}
+                </p>
               </div>
             </div>
 
             <div className="glass-card p-6 border-l-2 border-l-neonAmber flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-neonAmber/10 flex items-center justify-center text-lg flex-shrink-0">🚗</div>
+              <div className="w-10 h-10 rounded-xl bg-neonAmber/10 flex items-center justify-center text-lg flex-shrink-0">{isDirectReveal ? '🚗' : '🏛️'}</div>
               <div className="space-y-1.5">
-                <h4 className="font-bold text-white text-sm">24/7 Mobile Exposure</h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">Your advertisement promotes your brand continuously. Your wraps work while driving, parked on job sites, or servicing clients.</p>
+                <h4 className="font-bold text-white text-sm">
+                  {isDirectReveal ? '24/7 Mobile Exposure' : '24/7 Always-On Community Presence'}
+                </h4>
+                <p className="text-slate-400 leading-relaxed text-[11px]">
+                  {isDirectReveal 
+                    ? 'Your advertisement promotes your brand continuously. Your wraps work while driving, parked on job sites, or servicing clients.'
+                    : 'Unlike digital ads that vanish once daily budgets are spent, tangible local authority commands permanent mindshare 24/7.'}
+                </p>
               </div>
             </div>
 
@@ -1032,7 +1147,11 @@ export const Funnel = () => {
               <div className="w-10 h-10 rounded-xl bg-neonRed/10 flex items-center justify-center text-lg flex-shrink-0">🎯</div>
               <div className="space-y-1.5">
                 <h4 className="font-bold text-white text-sm">Measurable Real-World ROI</h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">Custom QR scan codes and regional landing pages bridge physical wraps directly to digital conversion tracking engines.</p>
+                <p className="text-slate-400 leading-relaxed text-[11px]">
+                  {isDirectReveal 
+                    ? 'Custom QR scan codes and regional landing pages bridge physical wraps directly to digital conversion tracking engines.'
+                    : 'Precision tracking mechanisms and dedicated local landing pages bridge physical community presence directly to conversion analytics.'}
+                </p>
               </div>
             </div>
           </div>
@@ -1041,7 +1160,7 @@ export const Funnel = () => {
         {/* Simulated Video Player Hook section */}
         <section className="py-16 px-6 max-w-4xl mx-auto">
           <div 
-            onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}`)}
+            onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}${isDirectReveal ? '&mode=direct' : ''}`)}
             className="group relative bg-slate-950/60 rounded-3xl border border-slate-900 overflow-hidden cursor-pointer hover:border-neonRed/40 transition-all duration-300 p-8 shadow-2xl text-center space-y-6"
           >
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10 pointer-events-none"></div>
@@ -1081,7 +1200,9 @@ export const Funnel = () => {
               "For decades, business owners across almost every industry have been led to believe that internet advertising is the only viable marketing solution, despite many campaigns failing to deliver a meaningful return on investment."
             </p>
             <p className="text-xs text-slate-500 leading-relaxed max-w-2xl mx-auto">
-              Rule 7 Media provides a two-tier solution: educating potential advertisers on the powerful benefits of offline campaigns while matching them with verified local wrapping partners in protected territory zones.
+              {isDirectReveal 
+                ? 'Rule 7 Media provides a two-tier solution: educating potential advertisers on the powerful benefits of offline campaigns while matching them with verified local wrapping partners in protected territory zones.'
+                : 'Rule 7 Media provides a two-tier solution: educating local business owners on the compounding power of real-world visibility while matching qualifying businesses with certified execution partners in protected territory zones.'}
             </p>
           </div>
         </section>
@@ -1090,7 +1211,9 @@ export const Funnel = () => {
         <section id="how-it-works" className="py-24 px-6 max-w-6xl mx-auto space-y-16">
           <div className="text-center max-w-xl mx-auto space-y-2">
             <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">The 4-Step Onboarding Flow</h2>
-            <p className="text-xs text-slate-400">From digital education to high-impact physical wrapped vehicles.</p>
+            <p className="text-xs text-slate-400">
+              {isDirectReveal ? 'From digital education to high-impact physical wrapped vehicles.' : 'From digital education to high-impact community dominance.'}
+            </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs text-slate-400">
@@ -1114,29 +1237,35 @@ export const Funnel = () => {
 
             <div className="glass-card p-6 space-y-4 hover:border-slate-800 transition-all">
               <span className="text-neonGreen font-grotesk font-black text-lg block">04</span>
-              <h4 className="font-bold text-white text-sm">Wrapping Match</h4>
-              <p className="leading-relaxed">Get routed to a certified wrapping shop partner to construct your wraps.</p>
+              <h4 className="font-bold text-white text-sm">
+                {isDirectReveal ? 'Wrapping Match' : 'Protected Partner Match'}
+              </h4>
+              <p className="leading-relaxed">
+                {isDirectReveal ? 'Get routed to a certified wrapping shop partner to construct your wraps.' : 'Get routed to a vetted, certified regional partner in your protected territory zone.'}
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Why Businesses Choose Out-of-Home */}
+        {/* Why Businesses Choose Out-of-Home / Real-World Presence */}
         <section id="why-vehicle" className="py-24 px-6 bg-slate-950/20 border-t border-slate-900/60 text-center">
           <div className="max-w-4xl mx-auto space-y-12">
-            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Why Businesses Choose Vehicle Advertising</h2>
+            <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">
+              {isDirectReveal ? 'Why Businesses Choose Vehicle Advertising' : 'Why Leading Businesses Choose Real-World Local Authority'}
+            </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-xl mx-auto text-left text-xs text-slate-300">
-              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Lower CPM costs than search ads</div>
+              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Lower CPM costs than search & social ads</div>
               <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Hyperlocal target market reach</div>
-              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> 24/7 continuous visibility</div>
-              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Long-term, durable outdoor branding</div>
-              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Builds instant neighborhood trust</div>
-              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Non-intrusive local ad format</div>
+              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> 24/7 continuous local visibility</div>
+              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Long-term, durable community trust</div>
+              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Builds instant neighborhood credibility</div>
+              <div className="flex items-center gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-900"><span className="text-neonGreen font-bold text-sm">✔</span> Zero dependency on tech platform algorithms</div>
             </div>
             
             <div className="pt-6">
               <button
-                onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}`)}
+                onClick={() => navigate(`/funnel/video-1${refId ? `?ref=${refId}` : ''}${isDirectReveal ? '&mode=direct' : ''}`)}
                 className="px-10 py-4 bg-neonRed hover:bg-neonRed/90 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-xl shadow-neonRed/20 hover:scale-[1.02] transform duration-200"
               >
                 Start Onboarding Now
@@ -1149,11 +1278,13 @@ export const Funnel = () => {
         <section id="faq" className="py-24 px-6 max-w-5xl mx-auto space-y-12">
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-black text-white font-grotesk tracking-tight">Frequently Asked Questions</h2>
-            <p className="text-xs text-slate-400">Everything you need to know about vehicle advertising frameworks.</p>
+            <p className="text-xs text-slate-400">
+              {isDirectReveal ? 'Everything you need to know about vehicle advertising frameworks.' : 'Everything you need to know about the Rule of 7 local framework.'}
+            </p>
           </div>
 
           <div className="space-y-4">
-            {[
+            {(isDirectReveal ? [
               {
                 q: "What is the Rule of 7 in local advertising?",
                 a: "The Rule of 7 states that a prospect needs to see your brand at least 7 times before taking action. Wrapped fleet vehicles provide these high-frequency views naturally as they circulate through your service radius."
@@ -1170,7 +1301,24 @@ export const Funnel = () => {
                 q: "How do I get matched with a wrapping partner?",
                 a: "After completing the 7-video series, our engine profiles your fleet size, territory budget, and matches you with a certified, protected wrap shop partner in your area to construct and verify wraps."
               }
-            ].map((item, idx) => {
+            ] : [
+              {
+                q: "What is the Rule of 7 in local advertising?",
+                a: "The Rule of 7 is a foundational marketing principle stating that a prospect must encounter your brand at least 7 times before taking action. Real-world high-frequency touchpoints create natural, repeated impressions throughout your local service territory."
+              },
+              {
+                q: "Why are internet ads burning budget for local businesses?",
+                a: "Online ad platforms use competitive bidding models where cost-per-click increases every year. Combined with ad blockers, banner blindness, and AI content overload, local businesses pay more each month for diminishing returns."
+              },
+              {
+                q: "How do physical real-world campaigns track ROI?",
+                a: "Our framework connects high-visibility real-world touchpoints to digital tracking tags, dedicated territory landing pages, and direct call routing — giving you clear attribution on community reach and conversion rates."
+              },
+              {
+                q: "How does the protected partner matching work?",
+                a: "After you complete the 7-video series and territory assessment, our platform matches qualifying businesses with a certified, territory-exclusive regional partner to implement your high-frequency local campaign."
+              }
+            ]).map((item, idx) => {
               const isOpen = activeFaq === idx;
               return (
                 <div 

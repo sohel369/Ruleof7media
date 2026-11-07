@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   CheckCircle2, 
@@ -377,7 +377,7 @@ export const Pricing = () => {
     localStorage.setItem('r7_selected_currency', currency);
 
     try {
-      const res = await fetch('/api/create-payment-intent', {
+      const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -393,18 +393,51 @@ export const Pricing = () => {
       const data = await res.json();
 
       if (data.checkoutUrl) {
+        // Send the visitor to Stripe's hosted payment page.
         window.location.href = data.checkoutUrl;
       } else {
-        localStorage.setItem('r7_payment_complete', 'true');
-        navigate('/partner/register');
+        // Never mark a plan as paid unless Stripe confirms it.
+        setError(data.error || 'We could not start the payment. Please try again or contact support.');
       }
     } catch (err) {
-      localStorage.setItem('r7_payment_complete', 'true');
-      navigate('/partner/register');
+      setError('We could not reach the payment service. Please try again in a moment.');
     } finally {
       setLoadingPlan(null);
     }
   };
+
+  // When Stripe sends the visitor back, confirm the payment really succeeded
+  // before unlocking partner registration.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    const canceled = params.get('canceled');
+
+    if (canceled) {
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
+    if (!sessionId) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/verify-checkout-session?session_id=${encodeURIComponent(sessionId)}`);
+        const data = await res.json();
+        if (cancelled) return;
+        if (data.paid) {
+          localStorage.setItem('r7_payment_complete', 'true');
+          window.history.replaceState({}, '', window.location.pathname);
+          navigate('/partner/register');
+        } else {
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      } catch (err) {
+        // Leave the flag unset; the visitor can retry from the pricing page.
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [navigate]);
 
   const handleBack = () => {
     if (step === 'details') setStep('plans');

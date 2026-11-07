@@ -5,7 +5,7 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const db = require('./db');
 const { calculateScore } = require('./scoring');
@@ -760,6 +760,81 @@ app.post('/api/create-payment-intent', async (req, res) => {
   } catch (err) {
     console.error('Error creating payment intent:', err);
     res.status(500).json({ error: err.message });
+  }
+});
+
+// 11b. POST Create Stripe Checkout Session (hosted Stripe payment page)
+// The frontend redirects the visitor to the returned checkoutUrl. Payment is
+// only treated as complete after /api/verify-checkout-session confirms it.
+const CHECKOUT_CURRENCIES = ['usd', 'aud', 'gbp', 'cad', 'eur'];
+
+app.post('/api/create-checkout-session', async (req, res) => {
+  try {
+    const { amount, currency, planName, addonName, email, businessName } = req.body;
+    const amountNum = Number(amount);
+    const cur = String(currency || 'usd').toLowerCase();
+
+    if (!Number.isFinite(amountNum) || amountNum <= 0 || amountNum > 100000) {
+      return res.status(400).json({ error: 'A valid amount is required' });
+    }
+    if (!CHECKOUT_CURRENCIES.includes(cur)) {
+      return res.status(400).json({ error: 'Unsupported currency' });
+    }
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return res.status(500).json({ error: 'Payments are not configured yet' });
+    }
+
+    const proto = req.get('x-forwarded-proto') || req.protocol;
+    const origin = process.env.PUBLIC_SITE_URL || req.get('origin') || `${proto}://${req.get('host')}`;
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      customer_email: email || undefined,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: cur,
+            unit_amount: Math.round(amountNum * 100), // Stripe expects the smallest currency unit
+            product_data: {
+              name: planName || 'Rule7Media Plan',
+              description: addonName && addonName !== 'none' ? `Add-on: ${addonName}` : undefined
+            }
+          }
+        }
+      ],
+      metadata: {
+        planName: String(planName || ''),
+        addonName: String(addonName || ''),
+        businessName: String(businessName || '')
+      },
+      success_url: `${origin}/pricing?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/pricing?canceled=1`
+    });
+
+    res.json({ checkoutUrl: session.url, sessionId: session.id });
+  } catch (err) {
+    console.error('Error creating checkout session:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 11c. GET Verify a Stripe Checkout Session was really paid
+app.get('/api/verify-checkout-session', async (req, res) => {
+  try {
+    const sessionId = String(req.query.session_id || '');
+    if (!/^cs_/.test(sessionId)) {
+      return res.status(400).json({ paid: false, error: 'Invalid session id' });
+    }
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    res.json({
+      paid: session.payment_status === 'paid',
+      email: (session.customer_details && session.customer_details.email) || session.customer_email || null,
+      planName: (session.metadata && session.metadata.planName) || null
+    });
+  } catch (err) {
+    console.error('Error verifying checkout session:', err);
+    res.status(500).json({ paid: false, error: err.message });
   }
 });
 
